@@ -329,4 +329,7 @@ xcuserdata
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+#app images
+assets/images/
+
 # End of https://www.toptal.com/developers/gitignore/api/dotenv,visualstudiocode,macos,flutter,dart,xcode,cocoapods,android,kotlin,java,swift,swiftpackagemanager
