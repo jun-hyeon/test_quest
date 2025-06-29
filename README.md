@@ -1,15 +1,29 @@
-# 🧪 TestQuest
+# 🧪 TestQuest (개발 중..)
 
 **TestQuest**는 게임의 CBT, OBT, 알파 테스트 정보를 한눈에 확인하고 공유할 수 있는 커뮤니티 기반 Flutter 앱입니다.
 
 ---
 
+## 📱 앱 미리보기
+
+| 다크 테마 | 라이트 테마 |
+|-----------|--------------|
+| ![스플래시스크린](assets/screenshots/test_quest_splash_screen_dark_theme.gif) |  ![스플래시스크린](assets/screenshots/test_quest_splash_screen_light_theme.gif) |
+| ![로그인](assets/screenshots/test_quest_login_dark_theme.png) | ![로그인](assets/screenshots/test_quest_login_light_theme.png) |
+| ![회원가입](assets/screenshots/test_quest_signup_dark_theme.png) |  ![회원가입](assets/screenshots/test_quest_signup_light_theme.png)|
+| ![회원가입 - 2](assets/screenshots/test_quest_signup_2_dark_theme.png) |  ![회원가입](assets/screenshots/test_quest_signup_2_light_theme.png)|
+| ![캘린더](assets/screenshots/test_quest_calendar_dark_theme.png) | ![캘린더](assets/screenshots/test_quest_calendar_light_theme.png) |
+| ![커뮤니티](assets/screenshots/test_quest_community_dark_theme.png) | ![커뮤니티](assets/screenshots/test_quest_community_light_theme.png) |
+| ![마이페이지](assets/screenshots/test_quest_my_page_dark_theme.png) | ![마이페이지](assets/screenshots/test_quest_my_page_light_theme.png) |
+| ![설정](assets/screenshots/test_quest_settings_dark_theme.png) |  ![설정](assets/screenshots/test_quest_settings_light_theme.png) |
+
+
 ## 🚀 주요 기능
 
-- 📅 게임 테스트 일정 모아보기
-- 🔍 CBT/OBT 정보 검색 및 필터링
-- 🗣 유저 간 커뮤니티/댓글 기능 (추후 예정)
-- 🧭 알림 및 푸시 기능 (예정)
+- 📅 게임 테스트 일정 모아보기 (개발 중)
+- 🔍 CBT/OBT 정보 검색 및 필터링 (추후 에정)
+- 🗣 유저 간 커뮤니티 (추후 예정)
+- 🧭 알림 및 푸시 기능 (개발 중)
 
 ---
 
@@ -24,47 +38,26 @@
 | Freezed      | 불변 데이터 모델,                    |
 | Dio          | HTTP 통신                         |
 | json_serializable | JSON 직렬화 자동화             |
-| Drift | 저장소                                    |
 ---
 
 ## 📦 프로젝트 구조
 
 ```
-lib/
- ├── auth/               # 로그인/회원가입
- ├── common/               # 공통 위젯, 설정
- ├── schedule/           # 테스트 일정 관련 로직
- ├── util/               # dio 및 알림, 권한, 
- ├── db/                 # Drift DB 관리
+lib
+ ├── archive
+ ├── common          # 공통 위젯, 설정
+ ├── community       # 게시판 글 관련 화면 및 로직
+ ├── mypage          # 사용자 프로필 관련 화면 및 로직
+ ├── schedule        # 테스트 일정 관련 화면 및 로직
+ ├── settings        # 설정 화면 및 로직
+ ├── theme           # 테마 및 컬러
+ ├── user            # 로그인/회원가입
+ ├── util            # dio 및 알림, 권한 service모음 
  └── main.dart           # 앱 진입점
 ```
 
 ---
 
-## ▶️ 실행 방법
-
-```bash
-# 의존성 설치
-flutter pub get
-
-# build_runner로 코드 생성
-flutter pub run build_runner build --delete-conflicting-outputs
-
-# 앱 실행
-flutter run
-```
-
----
-
-## 📌 환경 파일 (.env)
-
-`.env` 파일은 Git에 포함되지 않습니다. 다음 형식으로 프로젝트 루트에 생성하세요:
-
-```env
-BASE_URL=https://your-api.com
-```
-
----
 
 ## 📝 라이선스
 
@@ -75,4 +68,4 @@ BASE_URL=https://your-api.com
 ## 👨‍💻 개발자
 
 APP - 최준현  
-BackEnd - 강찬혁
+BackEnd - [강찬혁](https://github.com/ChanHyeokKang99)
