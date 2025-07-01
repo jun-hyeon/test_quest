@@ -87,7 +87,12 @@ class NotificationService {
       scheduledDate,
       notificationDetails(),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: null,
+      matchDateTimeComponents: DateTimeComponents.dateAndTime,
     );
+  }
+
+  // CANCEL NOTIFICATION
+  Future<void> cancelNotification(int id) async {
+    await notificationsPlugin.cancel(id);
   }
 }

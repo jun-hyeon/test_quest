@@ -1,7 +1,7 @@
 // lib/schedule/component/event_card.dart
 
 import 'package:flutter/material.dart';
-import 'package:test_quest/schedule/model/calendar_event.dart';
+import 'package:test_quest/util/db/app_database.dart';
 
 class CalendarEventCard extends StatelessWidget {
   final CalendarEvent event;

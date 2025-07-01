@@ -1,13 +1,10 @@
-class CalendarEvent {
-  final String title;
+import 'package:drift/drift.dart';
 
-  final DateTime startDate;
-
-  final DateTime endDate;
-
-  CalendarEvent({
-    required this.title,
-    required this.startDate,
-    required this.endDate,
-  });
+class CalendarEvents extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get title => text().withLength(max: 32)();
+  TextColumn get body => text()();
+  DateTimeColumn get startDate => dateTime()();
+  DateTimeColumn get endDate => dateTime()();
 }
+
