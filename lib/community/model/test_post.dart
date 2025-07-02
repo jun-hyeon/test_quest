@@ -28,16 +28,16 @@ enum TestType {
 @freezed
 abstract class TestPost with _$TestPost {
   factory TestPost({
-    required String id,
+    required String? id,
     required String title,
     required String description,
     required TestPlatform platform,
     required TestType type,
-    @JsonKey(name: 'thumbnail_url') String? thumbnailUrl,
-    @JsonKey(name: 'link_url') String? linkUrl,
-    @JsonKey(name: 'start_date') required DateTime startDate,
-    @JsonKey(name: 'end_date') required DateTime endDate,
-    @JsonKey(name: 'created_at') required DateTime createdAt,
+    String? thumbnailUrl,
+    String? linkUrl,
+    required DateTime startDate,
+    required DateTime endDate,
+    required DateTime createdAt,
   }) = _TestPost;
 
   factory TestPost.fromJson(Map<String, dynamic> json) =>

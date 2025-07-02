@@ -173,7 +173,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
             // 로그인 버튼
             CustomButton(
-              text: '로그인',
+              child: Text('로그인'),
               onPressed: () async => await _handleLogin(),
             ),
             const SizedBox(height: 16),

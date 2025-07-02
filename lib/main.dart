@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:test_quest/common/view/root_tab.dart';
 import 'package:test_quest/common/view/splash_screen.dart';
+import 'package:test_quest/community/view/post_create_screen.dart';
 import 'package:test_quest/settings/provider/theme_provider.dart';
 import 'package:test_quest/settings/view/settings_view.dart';
 import 'package:test_quest/theme/theme_data.dart';
@@ -52,7 +53,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
         // Add other routes here if needed
       },
-      home: const SplashScreen(),
+      home: const PostCreateScreen(),
     );
   }
 }

@@ -105,7 +105,7 @@ class _ProfileSignupScreenState extends ConsumerState<ProfileSignupScreen> {
             ),
             const SizedBox(height: 24),
             CustomButton(
-              text: '다음',
+              child: Text('다음'),
               onPressed: () {
                 if (_formKey.currentState?.validate() != true) return;
                 notifier.setEmailPassword(
@@ -148,7 +148,7 @@ class _ProfileSignupScreenState extends ConsumerState<ProfileSignupScreen> {
             ),
             const SizedBox(height: 24),
             CustomButton(
-              text: '회원가입 완료',
+              child: const Text('회원가입 완료'),
               onPressed: () {
                 if (_formKey.currentState?.validate() != true) return;
                 notifier.setProfile(

@@ -15,20 +15,15 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$TestPost {
-  String get id;
+  String? get id;
   String get title;
   String get description;
   TestPlatform get platform;
   TestType get type;
-  @JsonKey(name: 'thumbnail_url')
   String? get thumbnailUrl;
-  @JsonKey(name: 'link_url')
   String? get linkUrl;
-  @JsonKey(name: 'start_date')
   DateTime get startDate;
-  @JsonKey(name: 'end_date')
   DateTime get endDate;
-  @JsonKey(name: 'created_at')
   DateTime get createdAt;
 
   /// Create a copy of TestPost
@@ -80,16 +75,16 @@ abstract mixin class $TestPostCopyWith<$Res> {
       _$TestPostCopyWithImpl;
   @useResult
   $Res call(
-      {String id,
+      {String? id,
       String title,
       String description,
       TestPlatform platform,
       TestType type,
-      @JsonKey(name: 'thumbnail_url') String? thumbnailUrl,
-      @JsonKey(name: 'link_url') String? linkUrl,
-      @JsonKey(name: 'start_date') DateTime startDate,
-      @JsonKey(name: 'end_date') DateTime endDate,
-      @JsonKey(name: 'created_at') DateTime createdAt});
+      String? thumbnailUrl,
+      String? linkUrl,
+      DateTime startDate,
+      DateTime endDate,
+      DateTime createdAt});
 }
 
 /// @nodoc
@@ -104,7 +99,7 @@ class _$TestPostCopyWithImpl<$Res> implements $TestPostCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? id = freezed,
     Object? title = null,
     Object? description = null,
     Object? platform = null,
@@ -116,10 +111,10 @@ class _$TestPostCopyWithImpl<$Res> implements $TestPostCopyWith<$Res> {
     Object? createdAt = null,
   }) {
     return _then(_self.copyWith(
-      id: null == id
+      id: freezed == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       title: null == title
           ? _self.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -169,16 +164,16 @@ class _TestPost implements TestPost {
       required this.description,
       required this.platform,
       required this.type,
-      @JsonKey(name: 'thumbnail_url') this.thumbnailUrl,
-      @JsonKey(name: 'link_url') this.linkUrl,
-      @JsonKey(name: 'start_date') required this.startDate,
-      @JsonKey(name: 'end_date') required this.endDate,
-      @JsonKey(name: 'created_at') required this.createdAt});
+      this.thumbnailUrl,
+      this.linkUrl,
+      required this.startDate,
+      required this.endDate,
+      required this.createdAt});
   factory _TestPost.fromJson(Map<String, dynamic> json) =>
       _$TestPostFromJson(json);
 
   @override
-  final String id;
+  final String? id;
   @override
   final String title;
   @override
@@ -188,19 +183,14 @@ class _TestPost implements TestPost {
   @override
   final TestType type;
   @override
-  @JsonKey(name: 'thumbnail_url')
   final String? thumbnailUrl;
   @override
-  @JsonKey(name: 'link_url')
   final String? linkUrl;
   @override
-  @JsonKey(name: 'start_date')
   final DateTime startDate;
   @override
-  @JsonKey(name: 'end_date')
   final DateTime endDate;
   @override
-  @JsonKey(name: 'created_at')
   final DateTime createdAt;
 
   /// Create a copy of TestPost
@@ -259,16 +249,16 @@ abstract mixin class _$TestPostCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String id,
+      {String? id,
       String title,
       String description,
       TestPlatform platform,
       TestType type,
-      @JsonKey(name: 'thumbnail_url') String? thumbnailUrl,
-      @JsonKey(name: 'link_url') String? linkUrl,
-      @JsonKey(name: 'start_date') DateTime startDate,
-      @JsonKey(name: 'end_date') DateTime endDate,
-      @JsonKey(name: 'created_at') DateTime createdAt});
+      String? thumbnailUrl,
+      String? linkUrl,
+      DateTime startDate,
+      DateTime endDate,
+      DateTime createdAt});
 }
 
 /// @nodoc
@@ -283,7 +273,7 @@ class __$TestPostCopyWithImpl<$Res> implements _$TestPostCopyWith<$Res> {
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? id = null,
+    Object? id = freezed,
     Object? title = null,
     Object? description = null,
     Object? platform = null,
@@ -295,10 +285,10 @@ class __$TestPostCopyWithImpl<$Res> implements _$TestPostCopyWith<$Res> {
     Object? createdAt = null,
   }) {
     return _then(_TestPost(
-      id: null == id
+      id: freezed == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       title: null == title
           ? _self.title
           : title // ignore: cast_nullable_to_non_nullable
