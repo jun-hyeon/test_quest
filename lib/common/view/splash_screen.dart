@@ -4,11 +4,10 @@ import 'dart:io';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:test_quest/common/view/root_tab.dart';
 import 'package:test_quest/user/provider/auth_provider.dart';
 import 'package:test_quest/user/provider/auth_state.dart';
-import 'package:test_quest/user/view/login_screen.dart';
 import 'package:test_quest/util/service/permission_service.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -37,15 +36,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       authProvider,
       (previous, next) {
         if (!mounted) return;
-
         if (next is Authenticated) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const RootTab()),
-          );
+          context.go("/root");
         } else if (next is Unauthenticated) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const LoginScreen()),
-          );
+          context.go("/login");
         }
       },
     );

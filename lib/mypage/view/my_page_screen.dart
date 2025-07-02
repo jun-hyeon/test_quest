@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:test_quest/common/component/card_tile.dart';
 import 'package:test_quest/mypage/widget/circle_network_image.dart';
 import 'package:test_quest/user/provider/auth_provider.dart';
@@ -69,7 +70,7 @@ class _MyPageScreenState extends ConsumerState<MyPageScreen> {
                     icon: Icons.settings,
                     title: "설정",
                     onTap: () {
-                      Navigator.pushNamed(context, '/settings');
+                      context.push("/settings");
                     },
                     style: const TextStyle(fontSize: 16)),
                 const SizedBox(height: 10),
@@ -79,8 +80,7 @@ class _MyPageScreenState extends ConsumerState<MyPageScreen> {
                   onTap: () {
                     // 로그아웃 처리
                     ref.read(authProvider.notifier).logout();
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/login', (route) => false);
+                    context.go("/login");
                   },
                   style: const TextStyle(fontSize: 16),
                 ),

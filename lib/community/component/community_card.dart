@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CommunityCard extends StatelessWidget {
-  final String thumbnailUrl;
+  final String? thumbnailUrl;
   final String title;
   final String author;
   final String startDate;
@@ -11,7 +11,7 @@ class CommunityCard extends StatelessWidget {
 
   const CommunityCard({
     super.key,
-    required this.thumbnailUrl,
+    this.thumbnailUrl,
     required this.title,
     required this.author,
     required this.startDate,
@@ -33,7 +33,7 @@ class CommunityCard extends StatelessWidget {
               width: 80,
               height: 80,
               child: Image.network(
-                thumbnailUrl,
+                thumbnailUrl ?? "",
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
@@ -52,11 +52,16 @@ class CommunityCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
                         ),
                       ),
                       const Spacer(),
@@ -87,7 +92,7 @@ class CommunityCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          status,
+                          status == '모집중' ? '모집 중' : '모집 완료',
                           style: TextStyle(
                             color: status == '모집중'
                                 ? Colors.green[800]

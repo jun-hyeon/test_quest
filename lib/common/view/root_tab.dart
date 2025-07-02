@@ -11,7 +11,7 @@ class RootTab extends StatefulWidget {
 }
 
 class _RootTabState extends State<RootTab> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   final List<Widget> _screens = [
     const ScheduleScreen(),
