@@ -13,7 +13,7 @@ ResponseModel<T> _$ResponseModelFromJson<T>(
     ResponseModel<T>(
       message: json['message'] as String,
       code: json['code'] as String,
-      data: fromJsonT(json['data']),
+      data: _$nullableGenericFromJson(json['data'], fromJsonT),
     );
 
 Map<String, dynamic> _$ResponseModelToJson<T>(
@@ -23,5 +23,17 @@ Map<String, dynamic> _$ResponseModelToJson<T>(
     <String, dynamic>{
       'message': instance.message,
       'code': instance.code,
-      'data': toJsonT(instance.data),
+      'data': _$nullableGenericToJson(instance.data, toJsonT),
     };
+
+T? _$nullableGenericFromJson<T>(
+  Object? input,
+  T Function(Object? json) fromJson,
+) =>
+    input == null ? null : fromJson(input);
+
+Object? _$nullableGenericToJson<T>(
+  T? input,
+  Object? Function(T value) toJson,
+) =>
+    input == null ? null : toJson(input);

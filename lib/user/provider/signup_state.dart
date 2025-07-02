@@ -2,11 +2,11 @@ sealed class SignupState {
   const SignupState();
 }
 
-enum SignupStep { account, profile }
+// enum SignupStep { account, profile }
 
 class SignupInitial extends SignupState {
-  final SignupStep step;
-  const SignupInitial({this.step = SignupStep.account});
+  // final SignupStep step;
+  const SignupInitial();
 }
 
 class SignupLoading extends SignupState {}

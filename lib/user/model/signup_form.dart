@@ -10,7 +10,7 @@ abstract class SignupForm with _$SignupForm {
     required String password,
     required String nickname,
     required String name,
-    String? profileImg,
+    String? profileImage,
   }) = _SignupForm;
 
   factory SignupForm.fromJson(Map<String, dynamic> json) =>

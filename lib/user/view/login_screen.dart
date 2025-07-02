@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_quest/common/component/custom_button.dart';
 import 'package:test_quest/common/component/custom_textfield.dart';
@@ -163,7 +164,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               children: [
                 TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/signup');
+                    context.push('/signup');
                   },
                   child: const Text("회원가입"),
                 ),
@@ -173,7 +174,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
             // 로그인 버튼
             CustomButton(
-              child: Text('로그인'),
+              child: const Text('로그인'),
               onPressed: () async => await _handleLogin(),
             ),
             const SizedBox(height: 16),

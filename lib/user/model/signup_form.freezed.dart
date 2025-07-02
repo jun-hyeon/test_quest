@@ -19,7 +19,7 @@ mixin _$SignupForm {
   String get password;
   String get nickname;
   String get name;
-  String? get profileImg;
+  String? get profileImage;
 
   /// Create a copy of SignupForm
   /// with the given fields replaced by the non-null parameter values.
@@ -42,18 +42,18 @@ mixin _$SignupForm {
             (identical(other.nickname, nickname) ||
                 other.nickname == nickname) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.profileImg, profileImg) ||
-                other.profileImg == profileImg));
+            (identical(other.profileImage, profileImage) ||
+                other.profileImage == profileImage));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, email, password, nickname, name, profileImg);
+      Object.hash(runtimeType, email, password, nickname, name, profileImage);
 
   @override
   String toString() {
-    return 'SignupForm(email: $email, password: $password, nickname: $nickname, name: $name, profileImg: $profileImg)';
+    return 'SignupForm(email: $email, password: $password, nickname: $nickname, name: $name, profileImage: $profileImage)';
   }
 }
 
@@ -68,7 +68,7 @@ abstract mixin class $SignupFormCopyWith<$Res> {
       String password,
       String nickname,
       String name,
-      String? profileImg});
+      String? profileImage});
 }
 
 /// @nodoc
@@ -87,7 +87,7 @@ class _$SignupFormCopyWithImpl<$Res> implements $SignupFormCopyWith<$Res> {
     Object? password = null,
     Object? nickname = null,
     Object? name = null,
-    Object? profileImg = freezed,
+    Object? profileImage = freezed,
   }) {
     return _then(_self.copyWith(
       email: null == email
@@ -106,9 +106,9 @@ class _$SignupFormCopyWithImpl<$Res> implements $SignupFormCopyWith<$Res> {
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      profileImg: freezed == profileImg
-          ? _self.profileImg
-          : profileImg // ignore: cast_nullable_to_non_nullable
+      profileImage: freezed == profileImage
+          ? _self.profileImage
+          : profileImage // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -122,7 +122,7 @@ class _SignupForm implements SignupForm {
       required this.password,
       required this.nickname,
       required this.name,
-      this.profileImg});
+      this.profileImage});
   factory _SignupForm.fromJson(Map<String, dynamic> json) =>
       _$SignupFormFromJson(json);
 
@@ -135,7 +135,7 @@ class _SignupForm implements SignupForm {
   @override
   final String name;
   @override
-  final String? profileImg;
+  final String? profileImage;
 
   /// Create a copy of SignupForm
   /// with the given fields replaced by the non-null parameter values.
@@ -163,18 +163,18 @@ class _SignupForm implements SignupForm {
             (identical(other.nickname, nickname) ||
                 other.nickname == nickname) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.profileImg, profileImg) ||
-                other.profileImg == profileImg));
+            (identical(other.profileImage, profileImage) ||
+                other.profileImage == profileImage));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, email, password, nickname, name, profileImg);
+      Object.hash(runtimeType, email, password, nickname, name, profileImage);
 
   @override
   String toString() {
-    return 'SignupForm(email: $email, password: $password, nickname: $nickname, name: $name, profileImg: $profileImg)';
+    return 'SignupForm(email: $email, password: $password, nickname: $nickname, name: $name, profileImage: $profileImage)';
   }
 }
 
@@ -191,7 +191,7 @@ abstract mixin class _$SignupFormCopyWith<$Res>
       String password,
       String nickname,
       String name,
-      String? profileImg});
+      String? profileImage});
 }
 
 /// @nodoc
@@ -210,7 +210,7 @@ class __$SignupFormCopyWithImpl<$Res> implements _$SignupFormCopyWith<$Res> {
     Object? password = null,
     Object? nickname = null,
     Object? name = null,
-    Object? profileImg = freezed,
+    Object? profileImage = freezed,
   }) {
     return _then(_SignupForm(
       email: null == email
@@ -229,9 +229,9 @@ class __$SignupFormCopyWithImpl<$Res> implements _$SignupFormCopyWith<$Res> {
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      profileImg: freezed == profileImg
-          ? _self.profileImg
-          : profileImg // ignore: cast_nullable_to_non_nullable
+      profileImage: freezed == profileImage
+          ? _self.profileImage
+          : profileImage // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }

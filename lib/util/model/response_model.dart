@@ -11,7 +11,7 @@ class ResponseModel<T> with _$ResponseModel<T> {
   @override
   String code;
   @override
-  T data;
+  T? data;
 
   ResponseModel({
     required this.message,

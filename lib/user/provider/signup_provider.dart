@@ -1,4 +1,5 @@
 import 'dart:developer' show log;
+import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,7 +30,7 @@ class SignupProvider extends Notifier<SignupState> {
   @override
   SignupState build() {
     _authRepository = ref.read(authRepositoryProvider);
-    return const SignupInitial(step: SignupStep.account);
+    return const SignupInitial();
   }
 
   void setEmailPassword({
@@ -61,7 +62,7 @@ class SignupProvider extends Notifier<SignupState> {
           password: _password,
           nickname: _nickname,
           name: _name,
-          profileImg: _image?.path,
+          profileImage: _image != null ? File(_image!.path).path : null,
         ),
       );
       if (response.code != '200') {
@@ -74,9 +75,9 @@ class SignupProvider extends Notifier<SignupState> {
     }
   }
 
-  void goToProfileStep() {
-    state = const SignupInitial(step: SignupStep.profile);
-  }
+  // void goToProfileStep() {
+  //   state = const SignupInitial(step: SignupStep.profile);
+  // }
 
   String? validateEmail(String? value) => Validator.validateEmail(value);
   String? validatePassword(String? value) => Validator.validatePassword(value);

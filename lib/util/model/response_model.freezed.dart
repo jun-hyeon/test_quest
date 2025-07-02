@@ -19,8 +19,8 @@ mixin _$ResponseModel<T> {
   set message(String value);
   String get code;
   set code(String value);
-  T get data;
-  set data(T value);
+  T? get data;
+  set data(T? value);
 
   /// Create a copy of ResponseModel
   /// with the given fields replaced by the non-null parameter values.
@@ -57,7 +57,7 @@ abstract mixin class $ResponseModelCopyWith<T, $Res> {
           ResponseModel<T> value, $Res Function(ResponseModel<T>) _then) =
       _$ResponseModelCopyWithImpl;
   @useResult
-  $Res call({String message, String code, T data});
+  $Res call({String message, String code, T? data});
 }
 
 /// @nodoc
@@ -89,7 +89,7 @@ class _$ResponseModelCopyWithImpl<T, $Res>
       data: freezed == data
           ? _self.data
           : data // ignore: cast_nullable_to_non_nullable
-              as T,
+              as T?,
     ));
   }
 }

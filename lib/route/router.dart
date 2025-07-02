@@ -5,6 +5,7 @@ import 'package:test_quest/community/model/test_post.dart';
 import 'package:test_quest/community/view/post_detail_screen.dart';
 import 'package:test_quest/settings/view/settings_view.dart';
 import 'package:test_quest/user/view/login_screen.dart';
+import 'package:test_quest/user/view/profile_signup_screen.dart';
 import 'package:test_quest/user/view/sign_up_screen.dart';
 
 final router = GoRouter(
@@ -12,7 +13,16 @@ final router = GoRouter(
   routes: [
     GoRoute(path: '/splash', builder: (context, state) => const SplashScreen()),
     GoRoute(path: "/login", builder: (context, state) => const LoginScreen()),
-    GoRoute(path: '/signup', builder: (context, state) => const SignUpScreen()),
+    GoRoute(
+      path: '/signup',
+      builder: (context, state) => const SignUpScreen(),
+      routes: [
+        GoRoute(
+          path: 'profile',
+          builder: (context, state) => const SignupProfileScreen(),
+        )
+      ],
+    ),
     GoRoute(
       path: '/root',
       builder: (context, state) => const RootTab(),

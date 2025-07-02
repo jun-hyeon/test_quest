@@ -11,7 +11,7 @@ _SignupForm _$SignupFormFromJson(Map<String, dynamic> json) => _SignupForm(
       password: json['password'] as String,
       nickname: json['nickname'] as String,
       name: json['name'] as String,
-      profileImg: json['profileImg'] as String?,
+      profileImage: json['profileImage'] as String?,
     );
 
 Map<String, dynamic> _$SignupFormToJson(_SignupForm instance) =>
@@ -20,5 +20,5 @@ Map<String, dynamic> _$SignupFormToJson(_SignupForm instance) =>
       'password': instance.password,
       'nickname': instance.nickname,
       'name': instance.name,
-      'profileImg': instance.profileImg,
+      'profileImage': instance.profileImage,
     };

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_quest/user/model/signup_form.dart';
 import 'package:test_quest/user/model/token_bundle.dart';
 import 'package:test_quest/user/repository/auth_repository.dart';
+import 'package:test_quest/util/extensions/signup_form_extension.dart';
 import 'package:test_quest/util/model/response_model.dart';
 import 'package:test_quest/util/provider/dio_provider.dart';
 import 'package:test_quest/util/result.dart';
@@ -48,10 +49,6 @@ class AuthRepositoryImpl implements AuthRepository {
       final responseData = ResponseModel<TokenBundle>.fromJson(response.data,
           (json) => TokenBundle.fromJson(json as Map<String, dynamic>));
 
-      if (responseData.data == null) {
-        throw Exception('로그인 응답이 비어 있습니다.');
-      }
-
       return responseData;
     } on DioException catch (e) {
       log('[auth_repository_impl.dart] 로그인 실패: ${e.response?.data}');
@@ -69,9 +66,10 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<ResponseModel<void>> signup({required SignupForm data}) async {
     try {
-      final json = data.toJson();
-      log(json.toString());
-      final response = await _dio.post('/auth/register', data: json);
+      _dio.options.headers['Content-Type'] = 'multipart/form-data';
+      final formData = await data.toFormData();
+      log(formData.toString());
+      final response = await _dio.post('/auth/register', data: formData);
       final responseData = ResponseModel<void>.fromJson(
         response.data,
         (_) {},
