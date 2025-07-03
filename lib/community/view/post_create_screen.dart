@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:test_quest/common/component/custom_button.dart';
 import 'package:test_quest/common/component/custom_textfield.dart';
+import 'package:test_quest/util/service/image_picker_service.dart';
 
 class PostCreateScreen extends ConsumerStatefulWidget {
   const PostCreateScreen({super.key});
@@ -15,6 +19,8 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
   final _linkController = TextEditingController();
+
+  XFile? _selectedImage;
 
   bool _isSubmitting = false;
 
@@ -41,11 +47,24 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
     // }
   }
 
+  void pickImage() async {
+    await ImagePickerService.pickAndSet(
+      source: ImageSource.gallery,
+      onImagePicked: (image) {
+        setState(() {
+          _selectedImage = image;
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: const Text('글 작성'),
         ),
@@ -54,50 +73,92 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
             padding: const EdgeInsets.all(16),
             child: Form(
               key: _formKey,
-              child: Column(
-                children: [
-                  CustomTextfield(
-                    obscure: false,
-                    controller: _titleController,
-                    hintText: '제목',
-                    validator: (value) => value == null || value.trim().isEmpty
-                        ? '제목을 입력하세요'
-                        : null,
-                  ),
-                  const SizedBox(height: 16),
-                  CustomTextfield(
-                    obscure: false,
-                    controller: _linkController,
-                    hintText: '링크',
-                    validator: (value) => value == null || value.trim().isEmpty
-                        ? '링크를 입력해주세요'
-                        : null,
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.top,
-                      textAlign: TextAlign.start,
-                      controller: _contentController,
-                      decoration:
-                          const InputDecoration(border: OutlineInputBorder()),
-                      maxLines: null,
-                      expands: true,
-                      keyboardType: TextInputType.multiline,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    CustomTextfield(
+                      obscure: false,
+                      controller: _titleController,
+                      hintText: '제목',
                       validator: (value) =>
                           value == null || value.trim().isEmpty
-                              ? '내용을 입력하세요'
+                              ? '제목을 입력하세요'
                               : null,
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  CustomButton(
-                    onPressed: _isSubmitting ? null : _submit,
-                    child: _isSubmitting
-                        ? const CircularProgressIndicator()
-                        : const Text('등록하기'),
-                  )
-                ],
+                    const SizedBox(height: 16),
+                    GestureDetector(
+                      onTap: pickImage,
+                      child: _selectedImage != null
+                          ? Image.file(
+                              fit: BoxFit.fill,
+                              File(_selectedImage!.path),
+                              width: double.infinity,
+                              height: 200,
+                            )
+                          : Container(
+                              height: 200,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: primaryColor,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.add_a_photo_outlined,
+                                      size: 48,
+                                      color: primaryColor,
+                                    ),
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                    const Text('사진을 추가하려면 탭하세요'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomTextfield(
+                      obscure: false,
+                      controller: _linkController,
+                      hintText: '링크',
+                      validator: (value) =>
+                          value == null || value.trim().isEmpty
+                              ? '링크를 입력해주세요'
+                              : null,
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      height: 300,
+                      child: TextFormField(
+                        textAlignVertical: TextAlignVertical.top,
+                        textAlign: TextAlign.start,
+                        controller: _contentController,
+                        decoration:
+                            const InputDecoration(border: OutlineInputBorder()),
+                        maxLines: null,
+                        expands: true,
+                        keyboardType: TextInputType.multiline,
+                        validator: (value) =>
+                            value == null || value.trim().isEmpty
+                                ? '내용을 입력하세요'
+                                : null,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomButton(
+                      onPressed: _isSubmitting ? null : _submit,
+                      child: _isSubmitting
+                          ? const CircularProgressIndicator()
+                          : const Text('등록하기'),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

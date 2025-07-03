@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:test_quest/common/view/root_tab.dart';
 import 'package:test_quest/common/view/splash_screen.dart';
 import 'package:test_quest/community/model/test_post.dart';
+import 'package:test_quest/community/view/post_create_screen.dart';
 import 'package:test_quest/community/view/post_detail_screen.dart';
 import 'package:test_quest/settings/view/settings_view.dart';
 import 'package:test_quest/user/view/login_screen.dart';
@@ -37,6 +38,10 @@ final router = GoRouter(
           //추후 id로 바꿀 것
           final post = state.extra as TestPost;
           return PostDetailScreen(post: post);
-        })
+        }),
+    GoRoute(
+      path: '/post_create',
+      builder: (context, state) => const PostCreateScreen(),
+    ),
   ],
 );

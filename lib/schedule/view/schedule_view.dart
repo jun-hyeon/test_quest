@@ -153,6 +153,13 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
         title: const Text('테스트 일정'),
         centerTitle: true,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        scrolledUnderElevation: 0,
+        shape: Border(
+          bottom: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 0.5,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),

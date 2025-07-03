@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:test_quest/common/component/custom_button.dart';
 import 'package:test_quest/common/component/custom_textfield.dart';
 import 'package:test_quest/user/provider/signup_provider.dart';
 import 'package:test_quest/user/provider/signup_state.dart';
-import 'package:test_quest/util/service/permission_service.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
@@ -43,9 +41,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
     super.dispose();
   }
-
- 
-
 
   @override
   Widget build(BuildContext context) {

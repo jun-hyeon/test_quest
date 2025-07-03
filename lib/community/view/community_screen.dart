@@ -61,8 +61,23 @@ class CommunityScreen extends StatelessWidget {
     ];
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        icon: const Icon(Icons.add),
+        label: const Text('글 작성'),
+        onPressed: () {
+          context.push('/post_create');
+        },
+      ),
       appBar: AppBar(
         title: const Text('조회'),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        scrolledUnderElevation: 0,
+        shape: Border(
+          bottom: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 0.5,
+          ),
+        ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(8),
