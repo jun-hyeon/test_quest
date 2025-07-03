@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:test_quest/common/component/custom_button.dart';
 import 'package:test_quest/common/component/custom_textfield.dart';
 import 'package:test_quest/common/component/profile_picker.dart';
 import 'package:test_quest/common/component/testquest_snackbar.dart';
 import 'package:test_quest/user/provider/signup_provider.dart';
 import 'package:test_quest/user/provider/signup_state.dart';
+import 'package:test_quest/util/service/permission_service.dart';
 
 class SignupProfileScreen extends ConsumerStatefulWidget {
   const SignupProfileScreen({
@@ -23,6 +25,17 @@ class _ProfileStepFormState extends ConsumerState<SignupProfileScreen> {
   final TextEditingController nameController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
   XFile? selectedImage;
+
+  Future<bool> checkPhotoCameraPermission() async {
+    final permission = ref.read(permissionProvider);
+    final photoGranted = await permission.requestPhotoPermission();
+    final cameraGranted = await permission.requestCameraPermission();
+
+    if (!photoGranted.isGranted || !cameraGranted.isGranted) {
+      return false;
+    }
+    return true;
+  }
 
   Future<void> pickImage() async {
     final picker = ImagePicker();
@@ -102,7 +115,37 @@ class _ProfileStepFormState extends ConsumerState<SignupProfileScreen> {
           const SizedBox(height: 16),
           ProfilePicker(selectedImage: selectedImage),
           const SizedBox(height: 16),
-          TextButton(onPressed: pickImage, child: const Text('프로필 이미지 선택')),
+          TextButton(
+            onPressed: () async {
+              final granted = await checkPhotoCameraPermission();
+              if (!granted) {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('권한 필요'),
+                    content:
+                        const Text('프로필 이미지를 선택하려면 권한이 필요합니다.\n설정에서 허용해주세요.'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('취소'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          openAppSettings();
+                          context.pop();
+                        },
+                        child: const Text('설정으로 이동'),
+                      ),
+                    ],
+                  ),
+                );
+                return;
+              }
+              await pickImage();
+            },
+            child: const Text('프로필 이미지 선택'),
+          ),
           const SizedBox(height: 16),
           CustomTextfield(
             controller: nicknameController,

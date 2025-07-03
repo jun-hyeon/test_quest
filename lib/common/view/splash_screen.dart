@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_quest/user/provider/auth_provider.dart';
 import 'package:test_quest/user/provider/auth_state.dart';
-import 'package:test_quest/util/service/permission_service.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -26,11 +24,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   Future<void> _initApp() async {
-    if (Platform.isIOS) {
-      await ref.read(permissionProvider).requestTrackingPermission();
-    }
-    await ref.read(permissionProvider).requestNotificationPermission();
-
     await Future.delayed(const Duration(milliseconds: 3000));
     ref.listenManual<AuthState>(
       authProvider,

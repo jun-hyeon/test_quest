@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +10,7 @@ import 'package:test_quest/common/component/custom_textfield.dart';
 import 'package:test_quest/common/component/testquest_snackbar.dart';
 import 'package:test_quest/user/provider/auth_provider.dart';
 import 'package:test_quest/user/provider/auth_state.dart';
+import 'package:test_quest/util/service/permission_service.dart';
 import 'package:test_quest/util/validator.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -26,6 +28,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    Future.microtask(() async {
+      _permissionRequest();
+    });
 
     _emailController.addListener(() {
       ref.read(authProvider.notifier).updateEmail(_emailController.text);
@@ -48,6 +53,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
+  void _permissionRequest() async {
+    if (Platform.isIOS) {
+      await ref.read(permissionProvider).requestTrackingPermission();
+    }
+    await ref.read(permissionProvider).requestNotificationPermission();
+  }
+
   void _listenAuthState() {
     ref.listenManual<AuthState>(authProvider, (previous, next) {
       if (!mounted) return;
@@ -57,7 +69,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           '로그인에 성공했습니다.',
         );
 
-        Navigator.pushNamedAndRemoveUntil(context, '/root', (route) => false);
+        context.go("/root");
       }
     });
   }
