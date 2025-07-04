@@ -4,7 +4,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'test_post.dart';
+part of 'test_post_request.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,106 +14,112 @@ part of 'test_post.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$TestPost {
-  String get id;
+mixin _$TestPostRequest {
+  String get userId;
+  String get author;
   String get title;
   String get description;
   TestPlatform get platform;
   TestType get type;
+  String get linkUrl;
   String? get boardImage;
-  String? get linkUrl;
-  DateTime get startDate;
-  DateTime get endDate;
-  DateTime get createdAt;
+  String get startDate;
+  String get endDate;
 
-  /// Create a copy of TestPost
+  /// Create a copy of TestPostRequest
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  $TestPostCopyWith<TestPost> get copyWith =>
-      _$TestPostCopyWithImpl<TestPost>(this as TestPost, _$identity);
+  $TestPostRequestCopyWith<TestPostRequest> get copyWith =>
+      _$TestPostRequestCopyWithImpl<TestPostRequest>(
+          this as TestPostRequest, _$identity);
 
-  /// Serializes this TestPost to a JSON map.
+  /// Serializes this TestPostRequest to a JSON map.
   Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is TestPost &&
-            (identical(other.id, id) || other.id == id) &&
+            other is TestPostRequest &&
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.author, author) || other.author == author) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.platform, platform) ||
                 other.platform == platform) &&
             (identical(other.type, type) || other.type == type) &&
+            (identical(other.linkUrl, linkUrl) || other.linkUrl == linkUrl) &&
             (identical(other.boardImage, boardImage) ||
                 other.boardImage == boardImage) &&
-            (identical(other.linkUrl, linkUrl) || other.linkUrl == linkUrl) &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
-            (identical(other.endDate, endDate) || other.endDate == endDate) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+            (identical(other.endDate, endDate) || other.endDate == endDate));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, description, platform,
-      type, boardImage, linkUrl, startDate, endDate, createdAt);
+  int get hashCode => Object.hash(runtimeType, userId, author, title,
+      description, platform, type, linkUrl, boardImage, startDate, endDate);
 
   @override
   String toString() {
-    return 'TestPost(id: $id, title: $title, description: $description, platform: $platform, type: $type, boardImage: $boardImage, linkUrl: $linkUrl, startDate: $startDate, endDate: $endDate, createdAt: $createdAt)';
+    return 'TestPostRequest(userId: $userId, author: $author, title: $title, description: $description, platform: $platform, type: $type, linkUrl: $linkUrl, boardImage: $boardImage, startDate: $startDate, endDate: $endDate)';
   }
 }
 
 /// @nodoc
-abstract mixin class $TestPostCopyWith<$Res> {
-  factory $TestPostCopyWith(TestPost value, $Res Function(TestPost) _then) =
-      _$TestPostCopyWithImpl;
+abstract mixin class $TestPostRequestCopyWith<$Res> {
+  factory $TestPostRequestCopyWith(
+          TestPostRequest value, $Res Function(TestPostRequest) _then) =
+      _$TestPostRequestCopyWithImpl;
   @useResult
   $Res call(
-      {String id,
+      {String userId,
+      String author,
       String title,
       String description,
       TestPlatform platform,
       TestType type,
+      String linkUrl,
       String? boardImage,
-      String? linkUrl,
-      DateTime startDate,
-      DateTime endDate,
-      DateTime createdAt});
+      String startDate,
+      String endDate});
 }
 
 /// @nodoc
-class _$TestPostCopyWithImpl<$Res> implements $TestPostCopyWith<$Res> {
-  _$TestPostCopyWithImpl(this._self, this._then);
+class _$TestPostRequestCopyWithImpl<$Res>
+    implements $TestPostRequestCopyWith<$Res> {
+  _$TestPostRequestCopyWithImpl(this._self, this._then);
 
-  final TestPost _self;
-  final $Res Function(TestPost) _then;
+  final TestPostRequest _self;
+  final $Res Function(TestPostRequest) _then;
 
-  /// Create a copy of TestPost
+  /// Create a copy of TestPostRequest
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? userId = null,
+    Object? author = null,
     Object? title = null,
     Object? description = null,
     Object? platform = null,
     Object? type = null,
+    Object? linkUrl = null,
     Object? boardImage = freezed,
-    Object? linkUrl = freezed,
     Object? startDate = null,
     Object? endDate = null,
-    Object? createdAt = null,
   }) {
     return _then(_self.copyWith(
-      id: null == id
-          ? _self.id
-          : id // ignore: cast_nullable_to_non_nullable
+      userId: null == userId
+          ? _self.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      author: null == author
+          ? _self.author
+          : author // ignore: cast_nullable_to_non_nullable
               as String,
       title: null == title
           ? _self.title
@@ -131,49 +137,47 @@ class _$TestPostCopyWithImpl<$Res> implements $TestPostCopyWith<$Res> {
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
               as TestType,
+      linkUrl: null == linkUrl
+          ? _self.linkUrl
+          : linkUrl // ignore: cast_nullable_to_non_nullable
+              as String,
       boardImage: freezed == boardImage
           ? _self.boardImage
           : boardImage // ignore: cast_nullable_to_non_nullable
               as String?,
-      linkUrl: freezed == linkUrl
-          ? _self.linkUrl
-          : linkUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
       startDate: null == startDate
           ? _self.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as String,
       endDate: null == endDate
           ? _self.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      createdAt: null == createdAt
-          ? _self.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as String,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _TestPost implements TestPost {
-  _TestPost(
-      {required this.id,
+class _TestPostRequest implements TestPostRequest {
+  _TestPostRequest(
+      {required this.userId,
+      required this.author,
       required this.title,
       required this.description,
       required this.platform,
       required this.type,
+      required this.linkUrl,
       this.boardImage,
-      this.linkUrl,
       required this.startDate,
-      required this.endDate,
-      required this.createdAt});
-  factory _TestPost.fromJson(Map<String, dynamic> json) =>
-      _$TestPostFromJson(json);
+      required this.endDate});
+  factory _TestPostRequest.fromJson(Map<String, dynamic> json) =>
+      _$TestPostRequestFromJson(json);
 
   @override
-  final String id;
+  final String userId;
+  @override
+  final String author;
   @override
   final String title;
   @override
@@ -183,27 +187,25 @@ class _TestPost implements TestPost {
   @override
   final TestType type;
   @override
+  final String linkUrl;
+  @override
   final String? boardImage;
   @override
-  final String? linkUrl;
+  final String startDate;
   @override
-  final DateTime startDate;
-  @override
-  final DateTime endDate;
-  @override
-  final DateTime createdAt;
+  final String endDate;
 
-  /// Create a copy of TestPost
+  /// Create a copy of TestPostRequest
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$TestPostCopyWith<_TestPost> get copyWith =>
-      __$TestPostCopyWithImpl<_TestPost>(this, _$identity);
+  _$TestPostRequestCopyWith<_TestPostRequest> get copyWith =>
+      __$TestPostRequestCopyWithImpl<_TestPostRequest>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$TestPostToJson(
+    return _$TestPostRequestToJson(
       this,
     );
   }
@@ -212,82 +214,87 @@ class _TestPost implements TestPost {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _TestPost &&
-            (identical(other.id, id) || other.id == id) &&
+            other is _TestPostRequest &&
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.author, author) || other.author == author) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.platform, platform) ||
                 other.platform == platform) &&
             (identical(other.type, type) || other.type == type) &&
+            (identical(other.linkUrl, linkUrl) || other.linkUrl == linkUrl) &&
             (identical(other.boardImage, boardImage) ||
                 other.boardImage == boardImage) &&
-            (identical(other.linkUrl, linkUrl) || other.linkUrl == linkUrl) &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
-            (identical(other.endDate, endDate) || other.endDate == endDate) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+            (identical(other.endDate, endDate) || other.endDate == endDate));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, description, platform,
-      type, boardImage, linkUrl, startDate, endDate, createdAt);
+  int get hashCode => Object.hash(runtimeType, userId, author, title,
+      description, platform, type, linkUrl, boardImage, startDate, endDate);
 
   @override
   String toString() {
-    return 'TestPost(id: $id, title: $title, description: $description, platform: $platform, type: $type, boardImage: $boardImage, linkUrl: $linkUrl, startDate: $startDate, endDate: $endDate, createdAt: $createdAt)';
+    return 'TestPostRequest(userId: $userId, author: $author, title: $title, description: $description, platform: $platform, type: $type, linkUrl: $linkUrl, boardImage: $boardImage, startDate: $startDate, endDate: $endDate)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$TestPostCopyWith<$Res>
-    implements $TestPostCopyWith<$Res> {
-  factory _$TestPostCopyWith(_TestPost value, $Res Function(_TestPost) _then) =
-      __$TestPostCopyWithImpl;
+abstract mixin class _$TestPostRequestCopyWith<$Res>
+    implements $TestPostRequestCopyWith<$Res> {
+  factory _$TestPostRequestCopyWith(
+          _TestPostRequest value, $Res Function(_TestPostRequest) _then) =
+      __$TestPostRequestCopyWithImpl;
   @override
   @useResult
   $Res call(
-      {String id,
+      {String userId,
+      String author,
       String title,
       String description,
       TestPlatform platform,
       TestType type,
+      String linkUrl,
       String? boardImage,
-      String? linkUrl,
-      DateTime startDate,
-      DateTime endDate,
-      DateTime createdAt});
+      String startDate,
+      String endDate});
 }
 
 /// @nodoc
-class __$TestPostCopyWithImpl<$Res> implements _$TestPostCopyWith<$Res> {
-  __$TestPostCopyWithImpl(this._self, this._then);
+class __$TestPostRequestCopyWithImpl<$Res>
+    implements _$TestPostRequestCopyWith<$Res> {
+  __$TestPostRequestCopyWithImpl(this._self, this._then);
 
-  final _TestPost _self;
-  final $Res Function(_TestPost) _then;
+  final _TestPostRequest _self;
+  final $Res Function(_TestPostRequest) _then;
 
-  /// Create a copy of TestPost
+  /// Create a copy of TestPostRequest
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? id = null,
+    Object? userId = null,
+    Object? author = null,
     Object? title = null,
     Object? description = null,
     Object? platform = null,
     Object? type = null,
+    Object? linkUrl = null,
     Object? boardImage = freezed,
-    Object? linkUrl = freezed,
     Object? startDate = null,
     Object? endDate = null,
-    Object? createdAt = null,
   }) {
-    return _then(_TestPost(
-      id: null == id
-          ? _self.id
-          : id // ignore: cast_nullable_to_non_nullable
+    return _then(_TestPostRequest(
+      userId: null == userId
+          ? _self.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      author: null == author
+          ? _self.author
+          : author // ignore: cast_nullable_to_non_nullable
               as String,
       title: null == title
           ? _self.title
@@ -305,26 +312,22 @@ class __$TestPostCopyWithImpl<$Res> implements _$TestPostCopyWith<$Res> {
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
               as TestType,
+      linkUrl: null == linkUrl
+          ? _self.linkUrl
+          : linkUrl // ignore: cast_nullable_to_non_nullable
+              as String,
       boardImage: freezed == boardImage
           ? _self.boardImage
           : boardImage // ignore: cast_nullable_to_non_nullable
               as String?,
-      linkUrl: freezed == linkUrl
-          ? _self.linkUrl
-          : linkUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
       startDate: null == startDate
           ? _self.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as String,
       endDate: null == endDate
           ? _self.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      createdAt: null == createdAt
-          ? _self.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as String,
     ));
   }
 }

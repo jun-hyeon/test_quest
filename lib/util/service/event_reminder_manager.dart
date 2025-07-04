@@ -29,6 +29,8 @@ class EventReminderManager {
     );
 
     final sixHourBefore = eventDate.subtract(const Duration(hours: 6));
+    // final now = DateTime.now();
+    // final testDate = now.add(const Duration(seconds: 5));
 
     await notificationService.showNotification(
       id: id * 10 + 1,

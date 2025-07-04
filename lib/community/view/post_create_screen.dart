@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:test_quest/common/component/custom_button.dart';
 import 'package:test_quest/common/component/custom_textfield.dart';
+import 'package:test_quest/community/model/test_post.dart';
 import 'package:test_quest/util/service/image_picker_service.dart';
 
 class PostCreateScreen extends ConsumerStatefulWidget {
@@ -19,6 +21,9 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
   final _linkController = TextEditingController();
+
+  TestType? _selectedType;
+  TestPlatform? _selectedPlatform;
 
   XFile? _selectedImage;
 
@@ -61,6 +66,7 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -85,6 +91,53 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
                               ? '제목을 입력하세요'
                               : null,
                     ),
+                    const SizedBox(height: 16),
+                    DropdownButtonFormField2<TestPlatform>(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) {
+                          if (_selectedPlatform == null) {
+                            return '플랫폼을 선택해주세요';
+                          }
+                          return null;
+                        },
+                        hint: const Text('플랫폼을 선택해주세요'),
+                        items: TestPlatform.values.map((platform) {
+                          return DropdownMenuItem(
+                            alignment: Alignment.center,
+                            value: platform,
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Text(platform.name)),
+                          );
+                        }).toList(),
+                        onChanged: (item) {
+                          setState(() {
+                            _selectedPlatform = item;
+                          });
+                        }),
+                    const SizedBox(height: 16),
+                    DropdownButtonFormField2<TestType>(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) {
+                          if (_selectedType == null) {
+                            return '테스트 타입을 선택해주세요';
+                          }
+                          return null;
+                        },
+                        hint: const Text('테스트 타입을 선택해주세요'),
+                        items: TestType.values.map((type) {
+                          return DropdownMenuItem(
+                            alignment: Alignment.center,
+                            value: type,
+                            child: Text(type.name),
+                          );
+                        }).toList(),
+                        onChanged: (item) {
+                          setState(() {
+                            _selectedType = item;
+                          });
+                        }),
                     const SizedBox(height: 16),
                     GestureDetector(
                       onTap: pickImage,
@@ -123,24 +176,16 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
                             ),
                     ),
                     const SizedBox(height: 16),
-                    CustomTextfield(
-                      obscure: false,
-                      controller: _linkController,
-                      hintText: '링크',
-                      validator: (value) =>
-                          value == null || value.trim().isEmpty
-                              ? '링크를 입력해주세요'
-                              : null,
-                    ),
-                    const SizedBox(height: 16),
                     SizedBox(
                       height: 300,
                       child: TextFormField(
                         textAlignVertical: TextAlignVertical.top,
                         textAlign: TextAlign.start,
                         controller: _contentController,
-                        decoration:
-                            const InputDecoration(border: OutlineInputBorder()),
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: '내용을 입력해주세요'
+                        ),
                         maxLines: null,
                         expands: true,
                         keyboardType: TextInputType.multiline,
@@ -149,6 +194,16 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
                                 ? '내용을 입력하세요'
                                 : null,
                       ),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomTextfield(
+                      obscure: false,
+                      controller: _linkController,
+                      hintText: '링크',
+                      validator: (value) =>
+                          value == null || value.trim().isEmpty
+                              ? '링크를 입력해주세요'
+                              : null,
                     ),
                     const SizedBox(height: 16),
                     CustomButton(

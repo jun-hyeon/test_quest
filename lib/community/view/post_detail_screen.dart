@@ -45,11 +45,11 @@ class PostDetailScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            if (post.thumbnailUrl != null)
+            if (post.boardImage != null)
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  post.thumbnailUrl!,
+                  post.boardImage!,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return const Placeholder(

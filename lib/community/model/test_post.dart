@@ -28,12 +28,12 @@ enum TestType {
 @freezed
 abstract class TestPost with _$TestPost {
   factory TestPost({
-    required String? id,
+    required String id,
     required String title,
     required String description,
     required TestPlatform platform,
     required TestType type,
-    String? thumbnailUrl,
+    String? boardImage,
     String? linkUrl,
     required DateTime startDate,
     required DateTime endDate,
