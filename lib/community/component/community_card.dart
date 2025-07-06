@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:test_quest/community/model/test_post.dart';
 
 class CommunityCard extends StatelessWidget {
   final String? thumbnailUrl;
@@ -20,8 +19,6 @@ class CommunityCard extends StatelessWidget {
     required this.views,
     required this.status,
   });
-
-  
 
   @override
   Widget build(BuildContext context) {
