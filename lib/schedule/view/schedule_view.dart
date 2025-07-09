@@ -127,7 +127,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                 title: Value(titleController.text),
                                 startDate: Value(startDate!),
                                 endDate: Value(endDate!),
-                                body: const Value("test"),
+                                description: const Value("test"),
                               );
 
                               Navigator.of(context).pop();

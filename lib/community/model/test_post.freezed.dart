@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -17,10 +16,11 @@ T _$identity<T>(T value) => value;
 mixin _$TestPost {
   String get id;
   String get title;
+  String get auth;
   String get description;
   TestPlatform get platform;
   TestType get type;
-  String? get boardImage;
+  String? get thumbnailUrl;
   String? get linkUrl;
   DateTime get startDate;
   DateTime get endDate;
@@ -43,13 +43,14 @@ mixin _$TestPost {
             other is TestPost &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
+            (identical(other.auth, auth) || other.auth == auth) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.platform, platform) ||
                 other.platform == platform) &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.boardImage, boardImage) ||
-                other.boardImage == boardImage) &&
+            (identical(other.thumbnailUrl, thumbnailUrl) ||
+                other.thumbnailUrl == thumbnailUrl) &&
             (identical(other.linkUrl, linkUrl) || other.linkUrl == linkUrl) &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
@@ -60,12 +61,12 @@ mixin _$TestPost {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, description, platform,
-      type, boardImage, linkUrl, startDate, endDate, createdAt);
+  int get hashCode => Object.hash(runtimeType, id, title, auth, description,
+      platform, type, thumbnailUrl, linkUrl, startDate, endDate, createdAt);
 
   @override
   String toString() {
-    return 'TestPost(id: $id, title: $title, description: $description, platform: $platform, type: $type, boardImage: $boardImage, linkUrl: $linkUrl, startDate: $startDate, endDate: $endDate, createdAt: $createdAt)';
+    return 'TestPost(id: $id, title: $title, auth: $auth, description: $description, platform: $platform, type: $type, thumbnailUrl: $thumbnailUrl, linkUrl: $linkUrl, startDate: $startDate, endDate: $endDate, createdAt: $createdAt)';
   }
 }
 
@@ -77,10 +78,11 @@ abstract mixin class $TestPostCopyWith<$Res> {
   $Res call(
       {String id,
       String title,
+      String auth,
       String description,
       TestPlatform platform,
       TestType type,
-      String? boardImage,
+      String? thumbnailUrl,
       String? linkUrl,
       DateTime startDate,
       DateTime endDate,
@@ -101,10 +103,11 @@ class _$TestPostCopyWithImpl<$Res> implements $TestPostCopyWith<$Res> {
   $Res call({
     Object? id = null,
     Object? title = null,
+    Object? auth = null,
     Object? description = null,
     Object? platform = null,
     Object? type = null,
-    Object? boardImage = freezed,
+    Object? thumbnailUrl = freezed,
     Object? linkUrl = freezed,
     Object? startDate = null,
     Object? endDate = null,
@@ -119,6 +122,10 @@ class _$TestPostCopyWithImpl<$Res> implements $TestPostCopyWith<$Res> {
           ? _self.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
+      auth: null == auth
+          ? _self.auth
+          : auth // ignore: cast_nullable_to_non_nullable
+              as String,
       description: null == description
           ? _self.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -131,9 +138,9 @@ class _$TestPostCopyWithImpl<$Res> implements $TestPostCopyWith<$Res> {
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
               as TestType,
-      boardImage: freezed == boardImage
-          ? _self.boardImage
-          : boardImage // ignore: cast_nullable_to_non_nullable
+      thumbnailUrl: freezed == thumbnailUrl
+          ? _self.thumbnailUrl
+          : thumbnailUrl // ignore: cast_nullable_to_non_nullable
               as String?,
       linkUrl: freezed == linkUrl
           ? _self.linkUrl
@@ -155,16 +162,243 @@ class _$TestPostCopyWithImpl<$Res> implements $TestPostCopyWith<$Res> {
   }
 }
 
+/// Adds pattern-matching-related methods to [TestPost].
+extension TestPostPatterns on TestPost {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_TestPost value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _TestPost() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_TestPost value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _TestPost():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_TestPost value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _TestPost() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            String id,
+            String title,
+            String auth,
+            String description,
+            TestPlatform platform,
+            TestType type,
+            String? thumbnailUrl,
+            String? linkUrl,
+            DateTime startDate,
+            DateTime endDate,
+            DateTime createdAt)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _TestPost() when $default != null:
+        return $default(
+            _that.id,
+            _that.title,
+            _that.auth,
+            _that.description,
+            _that.platform,
+            _that.type,
+            _that.thumbnailUrl,
+            _that.linkUrl,
+            _that.startDate,
+            _that.endDate,
+            _that.createdAt);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            String id,
+            String title,
+            String auth,
+            String description,
+            TestPlatform platform,
+            TestType type,
+            String? thumbnailUrl,
+            String? linkUrl,
+            DateTime startDate,
+            DateTime endDate,
+            DateTime createdAt)
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _TestPost():
+        return $default(
+            _that.id,
+            _that.title,
+            _that.auth,
+            _that.description,
+            _that.platform,
+            _that.type,
+            _that.thumbnailUrl,
+            _that.linkUrl,
+            _that.startDate,
+            _that.endDate,
+            _that.createdAt);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            String id,
+            String title,
+            String auth,
+            String description,
+            TestPlatform platform,
+            TestType type,
+            String? thumbnailUrl,
+            String? linkUrl,
+            DateTime startDate,
+            DateTime endDate,
+            DateTime createdAt)?
+        $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _TestPost() when $default != null:
+        return $default(
+            _that.id,
+            _that.title,
+            _that.auth,
+            _that.description,
+            _that.platform,
+            _that.type,
+            _that.thumbnailUrl,
+            _that.linkUrl,
+            _that.startDate,
+            _that.endDate,
+            _that.createdAt);
+      case _:
+        return null;
+    }
+  }
+}
+
 /// @nodoc
 @JsonSerializable()
 class _TestPost implements TestPost {
   _TestPost(
       {required this.id,
       required this.title,
+      required this.auth,
       required this.description,
       required this.platform,
       required this.type,
-      this.boardImage,
+      this.thumbnailUrl,
       this.linkUrl,
       required this.startDate,
       required this.endDate,
@@ -177,13 +411,15 @@ class _TestPost implements TestPost {
   @override
   final String title;
   @override
+  final String auth;
+  @override
   final String description;
   @override
   final TestPlatform platform;
   @override
   final TestType type;
   @override
-  final String? boardImage;
+  final String? thumbnailUrl;
   @override
   final String? linkUrl;
   @override
@@ -215,13 +451,14 @@ class _TestPost implements TestPost {
             other is _TestPost &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
+            (identical(other.auth, auth) || other.auth == auth) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.platform, platform) ||
                 other.platform == platform) &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.boardImage, boardImage) ||
-                other.boardImage == boardImage) &&
+            (identical(other.thumbnailUrl, thumbnailUrl) ||
+                other.thumbnailUrl == thumbnailUrl) &&
             (identical(other.linkUrl, linkUrl) || other.linkUrl == linkUrl) &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
@@ -232,12 +469,12 @@ class _TestPost implements TestPost {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, description, platform,
-      type, boardImage, linkUrl, startDate, endDate, createdAt);
+  int get hashCode => Object.hash(runtimeType, id, title, auth, description,
+      platform, type, thumbnailUrl, linkUrl, startDate, endDate, createdAt);
 
   @override
   String toString() {
-    return 'TestPost(id: $id, title: $title, description: $description, platform: $platform, type: $type, boardImage: $boardImage, linkUrl: $linkUrl, startDate: $startDate, endDate: $endDate, createdAt: $createdAt)';
+    return 'TestPost(id: $id, title: $title, auth: $auth, description: $description, platform: $platform, type: $type, thumbnailUrl: $thumbnailUrl, linkUrl: $linkUrl, startDate: $startDate, endDate: $endDate, createdAt: $createdAt)';
   }
 }
 
@@ -251,10 +488,11 @@ abstract mixin class _$TestPostCopyWith<$Res>
   $Res call(
       {String id,
       String title,
+      String auth,
       String description,
       TestPlatform platform,
       TestType type,
-      String? boardImage,
+      String? thumbnailUrl,
       String? linkUrl,
       DateTime startDate,
       DateTime endDate,
@@ -275,10 +513,11 @@ class __$TestPostCopyWithImpl<$Res> implements _$TestPostCopyWith<$Res> {
   $Res call({
     Object? id = null,
     Object? title = null,
+    Object? auth = null,
     Object? description = null,
     Object? platform = null,
     Object? type = null,
-    Object? boardImage = freezed,
+    Object? thumbnailUrl = freezed,
     Object? linkUrl = freezed,
     Object? startDate = null,
     Object? endDate = null,
@@ -293,6 +532,10 @@ class __$TestPostCopyWithImpl<$Res> implements _$TestPostCopyWith<$Res> {
           ? _self.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
+      auth: null == auth
+          ? _self.auth
+          : auth // ignore: cast_nullable_to_non_nullable
+              as String,
       description: null == description
           ? _self.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -305,9 +548,9 @@ class __$TestPostCopyWithImpl<$Res> implements _$TestPostCopyWith<$Res> {
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
               as TestType,
-      boardImage: freezed == boardImage
-          ? _self.boardImage
-          : boardImage // ignore: cast_nullable_to_non_nullable
+      thumbnailUrl: freezed == thumbnailUrl
+          ? _self.thumbnailUrl
+          : thumbnailUrl // ignore: cast_nullable_to_non_nullable
               as String?,
       linkUrl: freezed == linkUrl
           ? _self.linkUrl

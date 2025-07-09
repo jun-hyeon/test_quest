@@ -51,6 +51,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
       body: SafeArea(
+        top: true,
         bottom: true,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),

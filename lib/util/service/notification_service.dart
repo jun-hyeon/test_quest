@@ -67,7 +67,7 @@ class NotificationService {
       id,
       title,
       body,
-      const NotificationDetails(),
+      notificationDetails(),
     );
   }
 

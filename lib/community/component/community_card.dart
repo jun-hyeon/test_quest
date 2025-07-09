@@ -8,6 +8,7 @@ class CommunityCard extends StatelessWidget {
   final String endDate;
   final int views;
   final String status;
+  final VoidCallback? onPressed;
 
   const CommunityCard({
     super.key,
@@ -18,6 +19,7 @@ class CommunityCard extends StatelessWidget {
     required this.endDate,
     required this.views,
     required this.status,
+    required this.onPressed,
   });
 
   @override
@@ -67,7 +69,7 @@ class CommunityCard extends StatelessWidget {
                       const Spacer(),
                       IconButton(
                         icon: const Icon(Icons.bookmark_add),
-                        onPressed: () {},
+                        onPressed: onPressed,
                       )
                     ],
                   ),

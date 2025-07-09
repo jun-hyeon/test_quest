@@ -29,9 +29,9 @@ class _ProfileStepFormState extends ConsumerState<SignupProfileScreen> {
   Future<bool> checkPhotoCameraPermission() async {
     final permission = ref.read(permissionProvider);
     final photoGranted = await permission.requestPhotoPermission();
-    final cameraGranted = await permission.requestCameraPermission();
+    // final cameraGranted = await permission.requestCameraPermission();
 
-    if (!photoGranted.isGranted || !cameraGranted.isGranted) {
+    if (!photoGranted.isGranted) {
       return false;
     }
     return true;
@@ -119,6 +119,7 @@ class _ProfileStepFormState extends ConsumerState<SignupProfileScreen> {
             onPressed: () async {
               final granted = await checkPhotoCameraPermission();
               if (!granted) {
+                
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(

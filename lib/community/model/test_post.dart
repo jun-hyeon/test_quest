@@ -30,10 +30,11 @@ abstract class TestPost with _$TestPost {
   factory TestPost({
     required String id,
     required String title,
+    required String auth,
     required String description,
     required TestPlatform platform,
     required TestType type,
-    String? boardImage,
+    String? thumbnailUrl,
     String? linkUrl,
     required DateTime startDate,
     required DateTime endDate,
