@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'test_post_request.dart';
+part of 'test_post_create.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -8,7 +8,6 @@ part of 'test_post_request.dart';
 
 _TestPostRequest _$TestPostRequestFromJson(Map<String, dynamic> json) =>
     _TestPostRequest(
-      userId: json['userId'] as String,
       author: json['author'] as String,
       title: json['title'] as String,
       description: json['description'] as String,
@@ -22,7 +21,6 @@ _TestPostRequest _$TestPostRequestFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$TestPostRequestToJson(_TestPostRequest instance) =>
     <String, dynamic>{
-      'userId': instance.userId,
       'author': instance.author,
       'title': instance.title,
       'description': instance.description,

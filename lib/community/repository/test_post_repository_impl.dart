@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_quest/community/model/test_post.dart';
 import 'package:test_quest/community/repository/test_post_repository.dart';
-import 'package:test_quest/util/provider/dio_provider.dart';
+import 'package:test_quest/util/network/provider/dio_provider.dart';
 
 final testPostRepositoryProvider = Provider<TestPostRepository>((ref) {
   final dio = ref.read(dioProvider);

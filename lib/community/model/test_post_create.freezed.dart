@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'test_post_request.dart';
+part of 'test_post_create.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -11,10 +11,12 @@ part of 'test_post_request.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+TestPostCreate _$TestPostCreateFromJson(Map<String, dynamic> json) {
+  return _TestPostRequest.fromJson(json);
+}
 
 /// @nodoc
-mixin _$TestPostRequest {
-  String get userId;
+mixin _$TestPostCreate {
   String get author;
   String get title;
   String get description;
@@ -25,23 +27,22 @@ mixin _$TestPostRequest {
   String get startDate;
   String get endDate;
 
-  /// Create a copy of TestPostRequest
+  /// Create a copy of TestPostCreate
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  $TestPostRequestCopyWith<TestPostRequest> get copyWith =>
-      _$TestPostRequestCopyWithImpl<TestPostRequest>(
-          this as TestPostRequest, _$identity);
+  $TestPostCreateCopyWith<TestPostCreate> get copyWith =>
+      _$TestPostCreateCopyWithImpl<TestPostCreate>(
+          this as TestPostCreate, _$identity);
 
-  /// Serializes this TestPostRequest to a JSON map.
+  /// Serializes this TestPostCreate to a JSON map.
   Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is TestPostRequest &&
-            (identical(other.userId, userId) || other.userId == userId) &&
+            other is TestPostCreate &&
             (identical(other.author, author) || other.author == author) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
@@ -59,24 +60,23 @@ mixin _$TestPostRequest {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, userId, author, title,
-      description, platform, type, linkUrl, boardImage, startDate, endDate);
+  int get hashCode => Object.hash(runtimeType, author, title, description,
+      platform, type, linkUrl, boardImage, startDate, endDate);
 
   @override
   String toString() {
-    return 'TestPostRequest(userId: $userId, author: $author, title: $title, description: $description, platform: $platform, type: $type, linkUrl: $linkUrl, boardImage: $boardImage, startDate: $startDate, endDate: $endDate)';
+    return 'TestPostCreate(author: $author, title: $title, description: $description, platform: $platform, type: $type, linkUrl: $linkUrl, boardImage: $boardImage, startDate: $startDate, endDate: $endDate)';
   }
 }
 
 /// @nodoc
-abstract mixin class $TestPostRequestCopyWith<$Res> {
-  factory $TestPostRequestCopyWith(
-          TestPostRequest value, $Res Function(TestPostRequest) _then) =
-      _$TestPostRequestCopyWithImpl;
+abstract mixin class $TestPostCreateCopyWith<$Res> {
+  factory $TestPostCreateCopyWith(
+          TestPostCreate value, $Res Function(TestPostCreate) _then) =
+      _$TestPostCreateCopyWithImpl;
   @useResult
   $Res call(
-      {String userId,
-      String author,
+      {String author,
       String title,
       String description,
       TestPlatform platform,
@@ -88,19 +88,18 @@ abstract mixin class $TestPostRequestCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$TestPostRequestCopyWithImpl<$Res>
-    implements $TestPostRequestCopyWith<$Res> {
-  _$TestPostRequestCopyWithImpl(this._self, this._then);
+class _$TestPostCreateCopyWithImpl<$Res>
+    implements $TestPostCreateCopyWith<$Res> {
+  _$TestPostCreateCopyWithImpl(this._self, this._then);
 
-  final TestPostRequest _self;
-  final $Res Function(TestPostRequest) _then;
+  final TestPostCreate _self;
+  final $Res Function(TestPostCreate) _then;
 
-  /// Create a copy of TestPostRequest
+  /// Create a copy of TestPostCreate
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = null,
     Object? author = null,
     Object? title = null,
     Object? description = null,
@@ -112,10 +111,6 @@ class _$TestPostRequestCopyWithImpl<$Res>
     Object? endDate = null,
   }) {
     return _then(_self.copyWith(
-      userId: null == userId
-          ? _self.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
       author: null == author
           ? _self.author
           : author // ignore: cast_nullable_to_non_nullable
@@ -156,8 +151,8 @@ class _$TestPostRequestCopyWithImpl<$Res>
   }
 }
 
-/// Adds pattern-matching-related methods to [TestPostRequest].
-extension TestPostRequestPatterns on TestPostRequest {
+/// Adds pattern-matching-related methods to [TestPostCreate].
+extension TestPostCreatePatterns on TestPostCreate {
   /// A variant of `map` that fallback to returning `orElse`.
   ///
   /// It is equivalent to doing:
@@ -250,7 +245,6 @@ extension TestPostRequestPatterns on TestPostRequest {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
-            String userId,
             String author,
             String title,
             String description,
@@ -267,7 +261,6 @@ extension TestPostRequestPatterns on TestPostRequest {
     switch (_that) {
       case _TestPostRequest() when $default != null:
         return $default(
-            _that.userId,
             _that.author,
             _that.title,
             _that.description,
@@ -298,7 +291,6 @@ extension TestPostRequestPatterns on TestPostRequest {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
-            String userId,
             String author,
             String title,
             String description,
@@ -314,7 +306,6 @@ extension TestPostRequestPatterns on TestPostRequest {
     switch (_that) {
       case _TestPostRequest():
         return $default(
-            _that.userId,
             _that.author,
             _that.title,
             _that.description,
@@ -344,7 +335,6 @@ extension TestPostRequestPatterns on TestPostRequest {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
-            String userId,
             String author,
             String title,
             String description,
@@ -360,7 +350,6 @@ extension TestPostRequestPatterns on TestPostRequest {
     switch (_that) {
       case _TestPostRequest() when $default != null:
         return $default(
-            _that.userId,
             _that.author,
             _that.title,
             _that.description,
@@ -378,10 +367,9 @@ extension TestPostRequestPatterns on TestPostRequest {
 
 /// @nodoc
 @JsonSerializable()
-class _TestPostRequest implements TestPostRequest {
+class _TestPostRequest implements TestPostCreate {
   _TestPostRequest(
-      {required this.userId,
-      required this.author,
+      {required this.author,
       required this.title,
       required this.description,
       required this.platform,
@@ -393,8 +381,6 @@ class _TestPostRequest implements TestPostRequest {
   factory _TestPostRequest.fromJson(Map<String, dynamic> json) =>
       _$TestPostRequestFromJson(json);
 
-  @override
-  final String userId;
   @override
   final String author;
   @override
@@ -414,7 +400,7 @@ class _TestPostRequest implements TestPostRequest {
   @override
   final String endDate;
 
-  /// Create a copy of TestPostRequest
+  /// Create a copy of TestPostCreate
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -434,7 +420,6 @@ class _TestPostRequest implements TestPostRequest {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _TestPostRequest &&
-            (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.author, author) || other.author == author) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
@@ -452,26 +437,25 @@ class _TestPostRequest implements TestPostRequest {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, userId, author, title,
-      description, platform, type, linkUrl, boardImage, startDate, endDate);
+  int get hashCode => Object.hash(runtimeType, author, title, description,
+      platform, type, linkUrl, boardImage, startDate, endDate);
 
   @override
   String toString() {
-    return 'TestPostRequest(userId: $userId, author: $author, title: $title, description: $description, platform: $platform, type: $type, linkUrl: $linkUrl, boardImage: $boardImage, startDate: $startDate, endDate: $endDate)';
+    return 'TestPostCreate(author: $author, title: $title, description: $description, platform: $platform, type: $type, linkUrl: $linkUrl, boardImage: $boardImage, startDate: $startDate, endDate: $endDate)';
   }
 }
 
 /// @nodoc
 abstract mixin class _$TestPostRequestCopyWith<$Res>
-    implements $TestPostRequestCopyWith<$Res> {
+    implements $TestPostCreateCopyWith<$Res> {
   factory _$TestPostRequestCopyWith(
           _TestPostRequest value, $Res Function(_TestPostRequest) _then) =
       __$TestPostRequestCopyWithImpl;
   @override
   @useResult
   $Res call(
-      {String userId,
-      String author,
+      {String author,
       String title,
       String description,
       TestPlatform platform,
@@ -490,12 +474,11 @@ class __$TestPostRequestCopyWithImpl<$Res>
   final _TestPostRequest _self;
   final $Res Function(_TestPostRequest) _then;
 
-  /// Create a copy of TestPostRequest
+  /// Create a copy of TestPostCreate
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? userId = null,
     Object? author = null,
     Object? title = null,
     Object? description = null,
@@ -507,10 +490,6 @@ class __$TestPostRequestCopyWithImpl<$Res>
     Object? endDate = null,
   }) {
     return _then(_TestPostRequest(
-      userId: null == userId
-          ? _self.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
       author: null == author
           ? _self.author
           : author // ignore: cast_nullable_to_non_nullable

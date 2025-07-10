@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:test_quest/common/component/custom_button.dart';
 import 'package:test_quest/common/component/custom_textfield.dart';
+import 'package:test_quest/common/const.dart';
 import 'package:test_quest/community/model/test_post.dart';
 import 'package:test_quest/util/service/image_picker_service.dart';
 
@@ -27,6 +28,9 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
 
   XFile? _selectedImage;
 
+  DateTime? startDate;
+  DateTime? endDate;
+
   bool _isSubmitting = false;
 
   @override
@@ -34,6 +38,18 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
     _titleController.dispose();
     _contentController.dispose();
     super.dispose();
+  }
+
+  void onDatePick(ValueSetter<DateTime> onPicked) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
+    );
+    if (picked != null) {
+      setState(() => onPicked(picked));
+    }
   }
 
   Future<void> _submit() async {
@@ -90,6 +106,30 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
                           value == null || value.trim().isEmpty
                               ? '제목을 입력하세요'
                               : null,
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _DatePickerButton(
+                            text: '시작일',
+                            startDate: startDate,
+                            onDatePick: () {
+                              onDatePick((picked) => startDate = picked);
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 12), // Adjusted spacing here
+                        Expanded(
+                          child: _DatePickerButton(
+                            text: '마감일',
+                            startDate: endDate,
+                            onDatePick: () {
+                              onDatePick((picked) => endDate = picked);
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField2<TestPlatform>(
@@ -183,9 +223,8 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
                         textAlign: TextAlign.start,
                         controller: _contentController,
                         decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: '내용을 입력해주세요'
-                        ),
+                            border: OutlineInputBorder(),
+                            hintText: '내용을 입력해주세요'),
                         maxLines: null,
                         expands: true,
                         keyboardType: TextInputType.multiline,
@@ -217,6 +256,35 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DatePickerButton extends StatelessWidget {
+  const _DatePickerButton({
+    required this.startDate,
+    required this.onDatePick,
+    required this.text,
+  });
+
+  final DateTime? startDate;
+  final VoidCallback? onDatePick;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onDatePick,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          border: Border.all(color: Theme.of(context).primaryColor),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Text(
+          startDate != null ? formatToYMD(startDate!) : '$text 선택',
         ),
       ),
     );
