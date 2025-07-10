@@ -17,6 +17,10 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
+  void onDelete(int id) {
+    ref.read(bookmarkedEventProvider.notifier).deleteEvent(id);
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -236,11 +240,15 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                     }
 
                     return ListView.builder(
-                      itemCount: filteredEvents.length,
-                      itemBuilder: (context, index) {
-                        return CalendarEventCard(event: filteredEvents[index]);
-                      },
-                    );
+                        itemCount: filteredEvents.length,
+                        itemBuilder: (context, index) => CalendarEventCard(
+                              event: filteredEvents[index],
+                              onTap: (){},
+                              onDelete: () {
+                                final int id = filteredEvents[index].id;
+                                onDelete(id);
+                              },
+                            ));
                   },
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
