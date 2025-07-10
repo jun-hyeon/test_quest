@@ -60,13 +60,13 @@ class AuthProvider extends Notifier<AuthState> {
     try {
       final result =
           await _authRepository.login(email: _email, password: _password);
-      log('Login result: $result');
-      final tokenBundle = result.data;
+      
+      final tokenBundle = result;
 
-      if (tokenBundle == null) {
-        state = Unauthenticated(errorMessage: '이메일 또는 비밀번호가 잘못되었습니다.');
-        return;
-      }
+      // if (tokenBundle == null) {
+      //   state = Unauthenticated(errorMessage: '이메일 또는 비밀번호가 잘못되었습니다.');
+      //   return;
+      // }
 
       final accessToken = tokenBundle.access.token;
       final refreshToken = tokenBundle.refresh.token;

@@ -16,3 +16,13 @@ Map<String, dynamic> _$TokenInfoToJson(_TokenInfo instance) =>
       'token': instance.token,
       'expiresIn': instance.expiresIn,
     };
+
+_AccessResponse _$AccessResponseFromJson(Map<String, dynamic> json) =>
+    _AccessResponse(
+      access: TokenInfo.fromJson(json['access'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$AccessResponseToJson(_AccessResponse instance) =>
+    <String, dynamic>{
+      'access': instance.access,
+    };

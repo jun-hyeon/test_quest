@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:test_quest/util/network/dio_interceptor.dart';
 
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio(
@@ -18,7 +19,7 @@ final dioProvider = Provider<Dio>((ref) {
   );
 
   // Add interceptors if needed
-  // dio.interceptors.add(LoggingInterceptor());
+  dio.interceptors.add(DefaultInterceptor(ref));
 
   return dio;
 });
