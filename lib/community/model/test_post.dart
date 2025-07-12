@@ -11,6 +11,8 @@ enum TestPlatform {
   mobile,
   @JsonValue('Console')
   console,
+  @JsonValue('unknown')
+  unknown,
 }
 
 @JsonEnum()
@@ -23,6 +25,8 @@ enum TestType {
   alpha,
   @JsonValue('Beta')
   beta,
+  @JsonValue('unknown')
+  unknown,
 }
 
 @freezed
@@ -30,15 +34,19 @@ abstract class TestPost with _$TestPost {
   factory TestPost({
     required String id,
     required String title,
-    required String auth,
+    required String author,
+    required String nickname,
     required String description,
+    @JsonKey(unknownEnumValue: TestPlatform.unknown)
     required TestPlatform platform,
-    required TestType type,
+    @JsonKey(unknownEnumValue: TestType.unknown) required TestType type,
+    required int views,
     String? thumbnailUrl,
-    String? linkUrl,
-    required DateTime startDate,
-    required DateTime endDate,
-    required DateTime createdAt,
+    required String linkUrl,
+    @JsonKey(name: 'startDate') required DateTime startDate,
+    @JsonKey(name: 'endDate') required DateTime endDate,
+    @JsonKey(name: 'createAt') required DateTime createdAt,
+    required String recruitStatus,
   }) = _TestPost;
 
   factory TestPost.fromJson(Map<String, dynamic> json) =>

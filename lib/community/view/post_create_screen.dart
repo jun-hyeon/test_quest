@@ -42,6 +42,7 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
 
   void onDatePick(ValueSetter<DateTime> onPicked) async {
     final picked = await showDatePicker(
+      locale: const Locale('ko', 'KR'),
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2020),

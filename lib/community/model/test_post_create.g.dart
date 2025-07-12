@@ -36,6 +36,7 @@ const _$TestPlatformEnumMap = {
   TestPlatform.pc: 'PC',
   TestPlatform.mobile: 'Mobile',
   TestPlatform.console: 'Console',
+  TestPlatform.unknown: 'unknown',
 };
 
 const _$TestTypeEnumMap = {
@@ -43,4 +44,5 @@ const _$TestTypeEnumMap = {
   TestType.obt: 'OBT',
   TestType.alpha: 'Alpha',
   TestType.beta: 'Beta',
+  TestType.unknown: 'unknown',
 };

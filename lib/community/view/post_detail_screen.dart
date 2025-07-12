@@ -19,6 +19,8 @@ class PostDetailScreen extends StatelessWidget {
         return '모바일';
       case TestPlatform.console:
         return '콘솔';
+      case TestPlatform.unknown:
+        return 'unknown';
     }
   }
 
@@ -32,6 +34,8 @@ class PostDetailScreen extends StatelessWidget {
         return 'CBT';
       case TestType.obt:
         return 'OBT';
+      case TestType.unknown:
+        return 'unknown';
     }
   }
 
@@ -102,13 +106,12 @@ class PostDetailScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             const SizedBox(height: 24),
-            if (post.linkUrl != null)
-              FilledButton(
-                onPressed: () {
-                  // 링크 열기 등 구현 필요
-                },
-                child: const Text('관련 링크 열기'),
-              ),
+            FilledButton(
+              onPressed: () {
+                // 링크 열기 등 구현 필요
+              },
+              child: const Text('관련 링크 열기'),
+            ),
           ],
         ),
       ),
