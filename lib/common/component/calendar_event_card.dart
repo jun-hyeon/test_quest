@@ -6,11 +6,13 @@ import 'package:test_quest/util/db/app_database.dart';
 class CalendarEventCard extends StatelessWidget {
   final CalendarEvent event;
   final VoidCallback? onTap;
+  final VoidCallback? onDelete;
 
   const CalendarEventCard({
     super.key,
     required this.event,
     this.onTap,
+    this.onDelete,
   });
 
   @override
@@ -36,7 +38,11 @@ class CalendarEventCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(Icons.flag, color: borderColor, size: 20),
+                  Icon(
+                    Icons.flag,
+                    color: borderColor,
+                    size: 20,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -46,6 +52,13 @@ class CalendarEventCard extends StatelessWidget {
                           ),
                     ),
                   ),
+                  IconButton(
+                    onPressed: onDelete,
+                    icon: Icon(
+                      Icons.close,
+                      color: borderColor,
+                    ),
+                  )
                 ],
               ),
               const SizedBox(height: 8),
