@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_quest/common/const.dart';
+import 'package:test_quest/user/provider/auth_provider.dart';
 import 'package:test_quest/user/repository/auth_repository_impl.dart';
 import 'package:test_quest/util/network/provider/dio_provider.dart';
 import 'package:test_quest/util/service/storage_service.dart';
@@ -46,13 +47,15 @@ class DefaultInterceptor extends Interceptor {
 
         final dio = ref.read(dioProvider);
         final response = await dio.fetch(requestOptions);
-        return handler.resolve(response); // Retry original request
+        return handler.resolve(response);
       } catch (_) {
-        return handler.next(err); // Pass the error to the next handler
+        return handler.next(err);
       }
+    } else {
+      ref.read(authProvider.notifier).logout();
     }
 
-    handler.next(err); // Pass all other errors through
+    handler.next(err);
   }
 
   @override
