@@ -35,7 +35,6 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<UserInfo> getMyInfo() async {
     try {
-      dio.options.headers['Bearer'] = await storage.read(key: ACCESS_TOKEN_KEY);
       final response = await dio.get('/user/getinfo');
       final responseData = ResponseModel<UserInfo>.fromJson(
           response.data,
@@ -62,8 +61,14 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     try {
-      dio.options.headers['Bearer'] = refreshToken;
-      final response = await dio.post('/auth/refresh');
+      final response = await dio.post(
+        '/auth/refresh',
+        options: Options(extra: {
+          'authRequired': false,
+        }, headers: {
+          'Authorization': 'Bearer $refreshToken'
+        }),
+      );
       final data = ResponseModel.fromJson(response.data,
           (json) => AccessResponse.fromJson(json as Map<String, dynamic>));
       if (data.data == null) {

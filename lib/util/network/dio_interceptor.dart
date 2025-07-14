@@ -26,18 +26,20 @@ class DefaultInterceptor extends Interceptor {
         options.headers['Authorization'] = 'Bearer $accessToken';
       }
     }
+    log('[onRequest] ${options.path}, ${options.data}');
     handler.next(options);
   }
 
   @override
   Future<void> onError(
       DioException err, ErrorInterceptorHandler handler) async {
+    log('[DioInterceptor onError]${err.response}, code: ${err.response?.statusCode}');
     if (err.response?.statusCode == 401) {
       final authRepository = ref.read(authRepositoryProvider);
 
       try {
         final refreshResult = await authRepository.refresh();
-
+        log('[onError start refresh] accessToken: ${refreshResult.access.token}');
         final storage = ref.read(storageProvider);
         final accessToken = refreshResult.access.token;
         await storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);

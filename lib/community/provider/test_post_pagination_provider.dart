@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_quest/community/model/test_post_pagination.dart';
 import 'package:test_quest/community/provider/pagination_state.dart';
@@ -23,6 +24,9 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
   int _pageSize = 6;
   String _sortOrder = 'latest';
   String _keyword = '';
+
+  int _retryCount = 0;
+  final int _maxRetries = 3;
 
   @override
   PaginationState build() {
@@ -58,9 +62,16 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
         hasNext: _hasNext,
         isFetching: false,
       );
+      _retryCount = 0;
     } catch (error, stackTrace) {
       log('Pagination error during init: $error\n$stackTrace');
-      state = PaginationError(error, stackTrace);
+      if (_retryCount < _maxRetries) {
+        _retryCount++;
+        await Future.delayed(const Duration(seconds: 2));
+        _init();
+      } else {
+        state = PaginationError(error, stackTrace);
+      }
     }
   }
 
@@ -91,9 +102,42 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
         hasNext: _hasNext,
         isFetching: false,
       );
-    } catch (error, stackTrace) {
-      log('Pagination error during fetchMore: $error\n$stackTrace');
-      state = PaginationError(error, stackTrace);
+    } on DioException catch (error, stackTrace) {
+      log('Pagination DioException during fetchMore: ${error.response?.statusCode}');
+
+      if (error.response?.statusCode == 401) {
+        log('[fetchMore] 401 detected, retrying after token refresh...');
+        try {
+          final result = await _fetchPosts(
+            lastId: _lastId,
+            lastCreateAt: _lastCreateAt,
+            pageSize: _pageSize,
+            sortOrder: _sortOrder,
+            keyword: _keyword,
+          );
+
+          _posts.addAll(result.gameBoards);
+          _hasNext = result.hasNext;
+
+          if (_posts.isNotEmpty) {
+            _lastId = _posts.last.id;
+            _lastCreateAt = _posts.last.createdAt;
+            log('[LastItemInfo] $_lastId, $_lastCreateAt');
+          }
+
+          state = PaginationData(
+            posts: List.unmodifiable(_posts),
+            hasNext: _hasNext,
+            isFetching: false,
+          );
+        } catch (e, st) {
+          log('Pagination fetchMore retry failed: $e\n$st');
+          state = PaginationError(e, st);
+        }
+      } else {
+        log('Pagination error during fetchMore: $error\n$stackTrace');
+        state = PaginationError(error, stackTrace);
+      }
     } finally {
       _isFetching = false;
     }

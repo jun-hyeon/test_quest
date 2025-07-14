@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_quest/user/model/user_info.dart';
@@ -27,6 +28,7 @@ class UserNotifier extends Notifier<UserInfo?> {
     if (jsonStr != null) {
       final json = jsonDecode(jsonStr) as Map<String, dynamic>;
       state = UserInfo.fromJson(json);
+      log('[UserProvider]$state');
     } else {
       state = null;
       throw '유저 정보를 불러 올 수 없습니다.';

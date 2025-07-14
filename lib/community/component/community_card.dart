@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:test_quest/common/const.dart';
 
 class CommunityCard extends StatelessWidget {
   final String? thumbnailUrl;
   final String title;
   final String author;
-  final String startDate;
-  final String endDate;
+  final DateTime startDate;
+  final DateTime endDate;
   final int views;
   final String status;
   final VoidCallback? onPressed;
@@ -24,8 +25,9 @@ class CommunityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final endDateTime = DateTime.parse(endDate);
-    final status = DateTime.now().isBefore(endDateTime) ? '모집중' : '모집마감';
+    final isBeforeDeadline = DateTime.now().isBefore(
+      endDate.add(const Duration(days: 1)),
+    );
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: Padding(
@@ -77,7 +79,8 @@ class CommunityCard extends StatelessWidget {
                   ),
                   Text('작성자: $author'),
                   const SizedBox(height: 4),
-                  Text('기간: $startDate - $endDate'),
+                  Text(
+                      '기간: ${formatToYMD(startDate)} - ${formatToYMD(endDate)}'),
                   const SizedBox(height: 4),
                   Row(
                     children: [
@@ -90,15 +93,15 @@ class CommunityCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
-                          color: status == '모집중'
+                          color: isBeforeDeadline
                               ? Colors.green[100]
                               : Colors.grey[300],
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          status == '모집중' ? '모집 중' : '모집 마감',
+                          isBeforeDeadline ? '모집 중' : '모집 완료',
                           style: TextStyle(
-                            color: status == '모집중'
+                            color: isBeforeDeadline
                                 ? Colors.green[800]
                                 : Colors.grey[600],
                             fontWeight: FontWeight.w600,

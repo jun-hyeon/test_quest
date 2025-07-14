@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_quest/common/component/card_tile.dart';
 import 'package:test_quest/mypage/widget/circle_network_image.dart';
+import 'package:test_quest/user/model/user_info.dart';
 import 'package:test_quest/user/provider/auth_provider.dart';
+import 'package:test_quest/user/provider/user_provider.dart';
 
 class MyPageScreen extends ConsumerStatefulWidget {
   const MyPageScreen({super.key});
@@ -26,9 +28,20 @@ class _MyPageScreenState extends ConsumerState<MyPageScreen> {
   // }
 
   @override
+  void initState() {
+    ref.read(userProvider.notifier).loadUser();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    const imageUrl =
-        'https://fastly.picsum.photos/id/864/200/200.jpg?hmac=enPW23d2MpTvv2RfL7CtuO_cKSvCg4DGCYtNPc4-48M';
+    final state = ref.watch(userProvider);
+
+    if (state is! UserInfo) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('마이페이지'),
@@ -42,24 +55,25 @@ class _MyPageScreenState extends ConsumerState<MyPageScreen> {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CircleNetworkImage(imageUrl: imageUrl),
-                    SizedBox(width: 16),
+                    CircleNetworkImage(imageUrl: state.profileImg ?? "",),
+                    const SizedBox(width: 16),
                     Flexible(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Text("TestUser123",
-                              style: TextStyle(
+                          Text(state.nickname,
+                              style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                               textAlign: TextAlign.start),
-                          SizedBox(height: 4),
-                          Text("게임 테스터입니다!",
-                              style: TextStyle(fontSize: 16),
-                              textAlign: TextAlign.start),
+                          const SizedBox(height: 4),
+                          // Text("게임 테스터입니다!",
+                          //     style: TextStyle(fontSize: 16),
+                          //     textAlign: TextAlign.start,
+                          // ),
                         ],
                       ),
                     ),

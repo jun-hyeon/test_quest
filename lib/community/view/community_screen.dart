@@ -143,8 +143,8 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
                                 thumbnailUrl: e.thumbnailUrl,
                                 title: e.title,
                                 author: e.author,
-                                startDate: formatToYMD(e.startDate),
-                                endDate: formatToYMD(e.endDate),
+                                startDate: e.startDate,
+                                endDate: e.endDate,
                                 views: e.views,
                                 status: '모집중',
                                 onPressed: () {

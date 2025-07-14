@@ -82,8 +82,9 @@ class TestPostRepositoryImpl implements TestPostRepository {
 
       return data.data!;
     } on DioException catch (e) {
-      log('${e.message}');
-      throw '페이지를 불러올 수 없습니다.';
+      log('[DioException message]${e.message}');
+      log('[fetchPosts DioException response] ${e.response}');
+      rethrow;
     }
   }
 

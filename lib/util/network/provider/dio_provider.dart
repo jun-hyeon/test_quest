@@ -6,15 +6,15 @@ import 'package:test_quest/util/network/dio_interceptor.dart';
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio(
     BaseOptions(
-      baseUrl: dotenv.env['BASE_URL'] ?? '',
+      baseUrl: dotenv.env['TEST_URL'] ?? '',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
       responseType: ResponseType.json,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
-      sendTimeout: const Duration(seconds: 10),
+      connectTimeout: const Duration(seconds: 20),
+      receiveTimeout: const Duration(seconds: 20),
+      sendTimeout: const Duration(seconds: 20),
     ),
   );
 

@@ -53,8 +53,9 @@ class PostCreateNotifier extends Notifier<PostCreateState> {
   }) async {
     state = PostCreateState.loading();
     try {
-      await ref.read(userProvider.notifier).loadUser();
-      final user = ref.read(userProvider);
+      final userNotifier = ref.read(userProvider.notifier);
+      userNotifier.loadUser();
+      final user = ref.watch(userProvider);
 
       if (user == null) throw '유저를 찾을 수 없습니다.';
 
