@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_quest/common/const.dart';
 import 'package:test_quest/user/provider/auth_state.dart';
+import 'package:test_quest/user/provider/user_provider.dart';
 import 'package:test_quest/user/repository/auth_repository.dart';
 import 'package:test_quest/user/repository/auth_repository_impl.dart';
 import 'package:test_quest/util/service/storage_service.dart';
@@ -13,15 +14,14 @@ final authProvider = NotifierProvider<AuthProvider, AuthState>(
 );
 
 class AuthProvider extends Notifier<AuthState> {
-  late final AuthRepository _authRepository;
+  late final AuthRepository _authRepository = ref.read(authRepositoryProvider);
+  late final UserNotifier _userProvider = ref.read(userProvider.notifier);
 
   String _email = '';
   String _password = '';
 
   @override
   AuthState build() {
-    _authRepository = ref.read(authRepositoryProvider);
-
     return Unauthenticated();
   }
 
@@ -60,7 +60,7 @@ class AuthProvider extends Notifier<AuthState> {
     try {
       final result =
           await _authRepository.login(email: _email, password: _password);
-      
+
       final tokenBundle = result;
 
       // if (tokenBundle == null) {
@@ -73,6 +73,10 @@ class AuthProvider extends Notifier<AuthState> {
       final storage = ref.read(storageProvider);
       await storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
       await storage.write(key: REFRESH_TOKEN_KEY, value: refreshToken);
+
+      final userInfo = await _authRepository.getMyInfo();
+      await _userProvider.setUser(userInfo);
+
       state = Authenticated();
     } catch (e) {
       state = Unauthenticated(errorMessage: e.toString());
@@ -86,6 +90,7 @@ class AuthProvider extends Notifier<AuthState> {
       final storage = ref.read(storageProvider);
       await storage.delete(key: ACCESS_TOKEN_KEY);
       await storage.delete(key: REFRESH_TOKEN_KEY);
+      await _userProvider.deleteUser();
       state = Unauthenticated();
     } catch (e) {
       log('[auth_provider] Logout failed: $e');
