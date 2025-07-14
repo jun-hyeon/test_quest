@@ -16,6 +16,7 @@ abstract class TestPostCreate with _$TestPostCreate {
     String? boardImage,
     required String startDate,
     required String endDate,
+    required String recruitStatus,
   }) = _TestPostRequest;
 
   factory TestPostCreate.fromJson(Map<String, dynamic> json) =>

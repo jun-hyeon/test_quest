@@ -48,7 +48,6 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
 
   void onBookmarkPressed(TestPost event) {
     final companion = CalendarEventsCompanion(
-      id: Value(int.parse(event.id)),
       auth: Value(event.author),
       title: Value(event.title),
       description: Value(event.description),

@@ -17,6 +17,7 @@ _TestPostRequest _$TestPostRequestFromJson(Map<String, dynamic> json) =>
       boardImage: json['boardImage'] as String?,
       startDate: json['startDate'] as String,
       endDate: json['endDate'] as String,
+      recruitStatus: json['recruitStatus'] as String,
     );
 
 Map<String, dynamic> _$TestPostRequestToJson(_TestPostRequest instance) =>
@@ -30,19 +31,20 @@ Map<String, dynamic> _$TestPostRequestToJson(_TestPostRequest instance) =>
       'boardImage': instance.boardImage,
       'startDate': instance.startDate,
       'endDate': instance.endDate,
+      'recruitStatus': instance.recruitStatus,
     };
 
 const _$TestPlatformEnumMap = {
-  TestPlatform.pc: 'PC',
-  TestPlatform.mobile: 'Mobile',
-  TestPlatform.console: 'Console',
+  TestPlatform.pc: 'pc',
+  TestPlatform.mobile: 'mobile',
+  TestPlatform.console: 'console',
   TestPlatform.unknown: 'unknown',
 };
 
 const _$TestTypeEnumMap = {
-  TestType.cbt: 'CBT',
-  TestType.obt: 'OBT',
-  TestType.alpha: 'Alpha',
-  TestType.beta: 'Beta',
+  TestType.cbt: 'cbt',
+  TestType.obt: 'obt',
+  TestType.alpha: 'alpha',
+  TestType.beta: 'beta',
   TestType.unknown: 'unknown',
 };

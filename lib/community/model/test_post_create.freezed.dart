@@ -26,6 +26,7 @@ mixin _$TestPostCreate {
   String? get boardImage;
   String get startDate;
   String get endDate;
+  String get recruitStatus;
 
   /// Create a copy of TestPostCreate
   /// with the given fields replaced by the non-null parameter values.
@@ -55,17 +56,19 @@ mixin _$TestPostCreate {
                 other.boardImage == boardImage) &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
-            (identical(other.endDate, endDate) || other.endDate == endDate));
+            (identical(other.endDate, endDate) || other.endDate == endDate) &&
+            (identical(other.recruitStatus, recruitStatus) ||
+                other.recruitStatus == recruitStatus));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, author, title, description,
-      platform, type, linkUrl, boardImage, startDate, endDate);
+      platform, type, linkUrl, boardImage, startDate, endDate, recruitStatus);
 
   @override
   String toString() {
-    return 'TestPostCreate(author: $author, title: $title, description: $description, platform: $platform, type: $type, linkUrl: $linkUrl, boardImage: $boardImage, startDate: $startDate, endDate: $endDate)';
+    return 'TestPostCreate(author: $author, title: $title, description: $description, platform: $platform, type: $type, linkUrl: $linkUrl, boardImage: $boardImage, startDate: $startDate, endDate: $endDate, recruitStatus: $recruitStatus)';
   }
 }
 
@@ -84,7 +87,8 @@ abstract mixin class $TestPostCreateCopyWith<$Res> {
       String linkUrl,
       String? boardImage,
       String startDate,
-      String endDate});
+      String endDate,
+      String recruitStatus});
 }
 
 /// @nodoc
@@ -109,6 +113,7 @@ class _$TestPostCreateCopyWithImpl<$Res>
     Object? boardImage = freezed,
     Object? startDate = null,
     Object? endDate = null,
+    Object? recruitStatus = null,
   }) {
     return _then(_self.copyWith(
       author: null == author
@@ -146,6 +151,10 @@ class _$TestPostCreateCopyWithImpl<$Res>
       endDate: null == endDate
           ? _self.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      recruitStatus: null == recruitStatus
+          ? _self.recruitStatus
+          : recruitStatus // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -253,7 +262,8 @@ extension TestPostCreatePatterns on TestPostCreate {
             String linkUrl,
             String? boardImage,
             String startDate,
-            String endDate)?
+            String endDate,
+            String recruitStatus)?
         $default, {
     required TResult orElse(),
   }) {
@@ -269,7 +279,8 @@ extension TestPostCreatePatterns on TestPostCreate {
             _that.linkUrl,
             _that.boardImage,
             _that.startDate,
-            _that.endDate);
+            _that.endDate,
+            _that.recruitStatus);
       case _:
         return orElse();
     }
@@ -299,7 +310,8 @@ extension TestPostCreatePatterns on TestPostCreate {
             String linkUrl,
             String? boardImage,
             String startDate,
-            String endDate)
+            String endDate,
+            String recruitStatus)
         $default,
   ) {
     final _that = this;
@@ -314,7 +326,8 @@ extension TestPostCreatePatterns on TestPostCreate {
             _that.linkUrl,
             _that.boardImage,
             _that.startDate,
-            _that.endDate);
+            _that.endDate,
+            _that.recruitStatus);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -343,7 +356,8 @@ extension TestPostCreatePatterns on TestPostCreate {
             String linkUrl,
             String? boardImage,
             String startDate,
-            String endDate)?
+            String endDate,
+            String recruitStatus)?
         $default,
   ) {
     final _that = this;
@@ -358,7 +372,8 @@ extension TestPostCreatePatterns on TestPostCreate {
             _that.linkUrl,
             _that.boardImage,
             _that.startDate,
-            _that.endDate);
+            _that.endDate,
+            _that.recruitStatus);
       case _:
         return null;
     }
@@ -377,7 +392,8 @@ class _TestPostRequest implements TestPostCreate {
       required this.linkUrl,
       this.boardImage,
       required this.startDate,
-      required this.endDate});
+      required this.endDate,
+      required this.recruitStatus});
   factory _TestPostRequest.fromJson(Map<String, dynamic> json) =>
       _$TestPostRequestFromJson(json);
 
@@ -399,6 +415,8 @@ class _TestPostRequest implements TestPostCreate {
   final String startDate;
   @override
   final String endDate;
+  @override
+  final String recruitStatus;
 
   /// Create a copy of TestPostCreate
   /// with the given fields replaced by the non-null parameter values.
@@ -432,17 +450,19 @@ class _TestPostRequest implements TestPostCreate {
                 other.boardImage == boardImage) &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
-            (identical(other.endDate, endDate) || other.endDate == endDate));
+            (identical(other.endDate, endDate) || other.endDate == endDate) &&
+            (identical(other.recruitStatus, recruitStatus) ||
+                other.recruitStatus == recruitStatus));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, author, title, description,
-      platform, type, linkUrl, boardImage, startDate, endDate);
+      platform, type, linkUrl, boardImage, startDate, endDate, recruitStatus);
 
   @override
   String toString() {
-    return 'TestPostCreate(author: $author, title: $title, description: $description, platform: $platform, type: $type, linkUrl: $linkUrl, boardImage: $boardImage, startDate: $startDate, endDate: $endDate)';
+    return 'TestPostCreate(author: $author, title: $title, description: $description, platform: $platform, type: $type, linkUrl: $linkUrl, boardImage: $boardImage, startDate: $startDate, endDate: $endDate, recruitStatus: $recruitStatus)';
   }
 }
 
@@ -463,7 +483,8 @@ abstract mixin class _$TestPostRequestCopyWith<$Res>
       String linkUrl,
       String? boardImage,
       String startDate,
-      String endDate});
+      String endDate,
+      String recruitStatus});
 }
 
 /// @nodoc
@@ -488,6 +509,7 @@ class __$TestPostRequestCopyWithImpl<$Res>
     Object? boardImage = freezed,
     Object? startDate = null,
     Object? endDate = null,
+    Object? recruitStatus = null,
   }) {
     return _then(_TestPostRequest(
       author: null == author
@@ -525,6 +547,10 @@ class __$TestPostRequestCopyWithImpl<$Res>
       endDate: null == endDate
           ? _self.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      recruitStatus: null == recruitStatus
+          ? _self.recruitStatus
+          : recruitStatus // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }

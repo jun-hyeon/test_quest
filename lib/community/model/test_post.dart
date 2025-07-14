@@ -5,11 +5,11 @@ part 'test_post.g.dart';
 
 @JsonEnum()
 enum TestPlatform {
-  @JsonValue('PC')
+  @JsonValue('pc')
   pc,
-  @JsonValue('Mobile')
+  @JsonValue('mobile')
   mobile,
-  @JsonValue('Console')
+  @JsonValue('console')
   console,
   @JsonValue('unknown')
   unknown,
@@ -17,13 +17,13 @@ enum TestPlatform {
 
 @JsonEnum()
 enum TestType {
-  @JsonValue('CBT')
+  @JsonValue('cbt')
   cbt,
-  @JsonValue('OBT')
+  @JsonValue('obt')
   obt,
-  @JsonValue('Alpha')
+  @JsonValue('alpha')
   alpha,
-  @JsonValue('Beta')
+  @JsonValue('beta')
   beta,
   @JsonValue('unknown')
   unknown,

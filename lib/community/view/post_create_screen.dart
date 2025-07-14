@@ -8,6 +8,7 @@ import 'package:test_quest/common/component/custom_button.dart';
 import 'package:test_quest/common/component/custom_textfield.dart';
 import 'package:test_quest/common/const.dart';
 import 'package:test_quest/community/model/test_post.dart';
+import 'package:test_quest/community/provider/post_create_provider.dart';
 import 'package:test_quest/util/service/image_picker_service.dart';
 
 class PostCreateScreen extends ConsumerStatefulWidget {
@@ -31,7 +32,17 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
   DateTime? startDate;
   DateTime? endDate;
 
-  bool _isSubmitting = false;
+  @override
+  void initState() {
+    super.initState();
+    ref.listenManual(postCreateProvider, (previous, next) {
+      if (next is PostCreateSuccess) {
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -56,17 +67,23 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _isSubmitting = true);
+    if (_selectedPlatform == null ||
+        _selectedType == null ||
+        startDate == null ||
+        endDate == null) {
+      return;
+    }
 
-    // final success = await ref
-    //     .read(postFormProvider.notifier)
-    //     .createPost(title: _titleController.text.trim(), content: _contentController.text.trim());
-
-    setState(() => _isSubmitting = false);
-
-    // if (success && context.mounted) {
-    //   Navigator.of(context).pop(true); // return true to indicate success
-    // }
+    ref.read(postCreateProvider.notifier).createPost(
+          title: _titleController.text.trim(),
+          description: _contentController.text.trim(),
+          platform: _selectedPlatform!,
+          type: _selectedType!,
+          linkUrl: _linkController.text.trim(),
+          startDate: startDate!,
+          endDate: endDate!,
+          boardImage: _selectedImage,
+        );
   }
 
   void pickImage() async {
@@ -82,6 +99,8 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(postCreateProvider);
+    final isLoading = state is PostCreateLoading;
     final primaryColor = Theme.of(context).primaryColor;
 
     return GestureDetector(
@@ -92,172 +111,168 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
           title: const Text('글 작성'),
         ),
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    CustomTextfield(
-                      obscure: false,
-                      controller: _titleController,
-                      hintText: '제목',
-                      validator: (value) =>
-                          value == null || value.trim().isEmpty
-                              ? '제목을 입력하세요'
-                              : null,
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _DatePickerButton(
-                            text: '시작일',
-                            startDate: startDate,
-                            onDatePick: () {
-                              onDatePick((picked) => startDate = picked);
-                            },
-                          ),
+            child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  CustomTextfield(
+                    obscure: false,
+                    controller: _titleController,
+                    hintText: '제목',
+                    validator: (value) => value == null || value.trim().isEmpty
+                        ? '제목을 입력하세요'
+                        : null,
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _DatePickerButton(
+                          text: '시작일',
+                          startDate: startDate,
+                          onDatePick: () {
+                            onDatePick((picked) => startDate = picked);
+                          },
                         ),
-                        const SizedBox(width: 12), // Adjusted spacing here
-                        Expanded(
-                          child: _DatePickerButton(
-                            text: '마감일',
-                            startDate: endDate,
-                            onDatePick: () {
-                              onDatePick((picked) => endDate = picked);
-                            },
-                          ),
+                      ),
+                      const SizedBox(width: 12), // Adjusted spacing here
+                      Expanded(
+                        child: _DatePickerButton(
+                          text: '마감일',
+                          startDate: endDate,
+                          onDatePick: () {
+                            onDatePick((picked) => endDate = picked);
+                          },
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField2<TestPlatform>(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) {
-                          if (_selectedPlatform == null) {
-                            return '플랫폼을 선택해주세요';
-                          }
-                          return null;
-                        },
-                        hint: const Text('플랫폼을 선택해주세요'),
-                        items: TestPlatform.values.map((platform) {
-                          return DropdownMenuItem(
-                            alignment: Alignment.center,
-                            value: platform,
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Text(platform.name)),
-                          );
-                        }).toList(),
-                        onChanged: (item) {
-                          setState(() {
-                            _selectedPlatform = item;
-                          });
-                        }),
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField2<TestType>(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) {
-                          if (_selectedType == null) {
-                            return '테스트 타입을 선택해주세요';
-                          }
-                          return null;
-                        },
-                        hint: const Text('테스트 타입을 선택해주세요'),
-                        items: TestType.values.map((type) {
-                          return DropdownMenuItem(
-                            alignment: Alignment.center,
-                            value: type,
-                            child: Text(type.name),
-                          );
-                        }).toList(),
-                        onChanged: (item) {
-                          setState(() {
-                            _selectedType = item;
-                          });
-                        }),
-                    const SizedBox(height: 16),
-                    GestureDetector(
-                      onTap: pickImage,
-                      child: _selectedImage != null
-                          ? Image.file(
-                              fit: BoxFit.fill,
-                              File(_selectedImage!.path),
-                              width: double.infinity,
-                              height: 200,
-                            )
-                          : Container(
-                              height: 200,
-                              width: double.infinity,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  DropdownButtonFormField2<TestPlatform>(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (_selectedPlatform == null) {
+                          return '플랫폼을 선택해주세요';
+                        }
+                        return null;
+                      },
+                      hint: const Text('플랫폼을 선택해주세요'),
+                      items: TestPlatform.values.map((platform) {
+                        return DropdownMenuItem(
+                          alignment: Alignment.center,
+                          value: platform,
+                          child: Container(
                               decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: primaryColor,
-                                ),
-                                borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: Text(platform.name)),
+                        );
+                      }).toList(),
+                      onChanged: (item) {
+                        setState(() {
+                          _selectedPlatform = item;
+                        });
+                      }),
+                  const SizedBox(height: 16),
+                  DropdownButtonFormField2<TestType>(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (_selectedType == null) {
+                          return '테스트 타입을 선택해주세요';
+                        }
+                        return null;
+                      },
+                      hint: const Text('테스트 타입을 선택해주세요'),
+                      items: TestType.values.map((type) {
+                        return DropdownMenuItem(
+                          alignment: Alignment.center,
+                          value: type,
+                          child: Text(type.name),
+                        );
+                      }).toList(),
+                      onChanged: (item) {
+                        setState(() {
+                          _selectedType = item;
+                        });
+                      }),
+                  const SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: pickImage,
+                    child: _selectedImage != null
+                        ? Image.file(
+                            fit: BoxFit.fill,
+                            File(_selectedImage!.path),
+                            width: double.infinity,
+                            height: 200,
+                          )
+                        : Container(
+                            height: 200,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: primaryColor,
                               ),
-                              child: Center(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.add_a_photo_outlined,
-                                      size: 48,
-                                      color: primaryColor,
-                                    ),
-                                    const SizedBox(
-                                      height: 8,
-                                    ),
-                                    const Text('사진을 추가하려면 탭하세요'),
-                                  ],
-                                ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.add_a_photo_outlined,
+                                    size: 48,
+                                    color: primaryColor,
+                                  ),
+                                  const SizedBox(
+                                    height: 8,
+                                  ),
+                                  const Text('사진을 추가하려면 탭하세요'),
+                                ],
                               ),
                             ),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: 300,
-                      child: TextFormField(
-                        textAlignVertical: TextAlignVertical.top,
-                        textAlign: TextAlign.start,
-                        controller: _contentController,
-                        decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: '내용을 입력해주세요'),
-                        maxLines: null,
-                        expands: true,
-                        keyboardType: TextInputType.multiline,
-                        validator: (value) =>
-                            value == null || value.trim().isEmpty
-                                ? '내용을 입력하세요'
-                                : null,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    CustomTextfield(
-                      obscure: false,
-                      controller: _linkController,
-                      hintText: '링크',
+                          ),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 300,
+                    child: TextFormField(
+                      textAlignVertical: TextAlignVertical.top,
+                      textAlign: TextAlign.start,
+                      controller: _contentController,
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(), hintText: '내용을 입력해주세요'),
+                      maxLines: null,
+                      expands: true,
+                      keyboardType: TextInputType.multiline,
                       validator: (value) =>
                           value == null || value.trim().isEmpty
-                              ? '링크를 입력해주세요'
+                              ? '내용을 입력하세요'
                               : null,
                     ),
-                    const SizedBox(height: 16),
-                    CustomButton(
-                      onPressed: _isSubmitting ? null : _submit,
-                      child: _isSubmitting
-                          ? const CircularProgressIndicator()
-                          : const Text('등록하기'),
-                    )
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 16),
+                  CustomTextfield(
+                    obscure: false,
+                    controller: _linkController,
+                    hintText: '링크',
+                    validator: (value) => value == null || value.trim().isEmpty
+                        ? '링크를 입력해주세요'
+                        : null,
+                  ),
+                  const SizedBox(height: 16),
+                  CustomButton(
+                    onPressed: isLoading ? null : _submit,
+                    child: isLoading
+                        ? const CircularProgressIndicator()
+                        : const Text('등록하기'),
+                  )
+                ],
               ),
             ),
           ),
-        ),
+        )),
       ),
     );
   }

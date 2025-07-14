@@ -1,4 +1,5 @@
 import 'package:test_quest/community/model/test_post.dart';
+import 'package:test_quest/community/model/test_post_create.dart';
 import 'package:test_quest/community/model/test_post_pagination.dart';
 
 abstract class TestPostRepository {
@@ -10,7 +11,7 @@ abstract class TestPostRepository {
     String sortOrder = 'latest',
   });
   Future<TestPost> getPost(String id);
-  Future<void> createPost(TestPost post);
+  Future<void> createPost(TestPostCreate post);
   Future<void> updatePost(String id, TestPost post);
   Future<void> deletePost(String id);
 }

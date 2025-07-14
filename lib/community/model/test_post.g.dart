@@ -43,16 +43,16 @@ Map<String, dynamic> _$TestPostToJson(_TestPost instance) => <String, dynamic>{
     };
 
 const _$TestPlatformEnumMap = {
-  TestPlatform.pc: 'PC',
-  TestPlatform.mobile: 'Mobile',
-  TestPlatform.console: 'Console',
+  TestPlatform.pc: 'pc',
+  TestPlatform.mobile: 'mobile',
+  TestPlatform.console: 'console',
   TestPlatform.unknown: 'unknown',
 };
 
 const _$TestTypeEnumMap = {
-  TestType.cbt: 'CBT',
-  TestType.obt: 'OBT',
-  TestType.alpha: 'Alpha',
-  TestType.beta: 'Beta',
+  TestType.cbt: 'cbt',
+  TestType.obt: 'obt',
+  TestType.alpha: 'alpha',
+  TestType.beta: 'beta',
   TestType.unknown: 'unknown',
 };

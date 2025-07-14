@@ -24,6 +24,8 @@ class CommunityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final endDateTime = DateTime.parse(endDate);
+    final status = DateTime.now().isBefore(endDateTime) ? '모집중' : '모집마감';
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: Padding(
@@ -94,7 +96,7 @@ class CommunityCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          status == '모집중' ? '모집 중' : '모집 완료',
+                          status == '모집중' ? '모집 중' : '모집 마감',
                           style: TextStyle(
                             color: status == '모집중'
                                 ? Colors.green[800]

@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_quest/community/model/test_post.dart';
+import 'package:test_quest/community/model/test_post_create.dart';
 import 'package:test_quest/community/model/test_post_pagination.dart';
 import 'package:test_quest/community/repository/test_post_repository.dart';
+import 'package:test_quest/util/extensions/enum_extension.dart';
 import 'package:test_quest/util/model/response_model.dart';
 import 'package:test_quest/util/network/provider/dio_provider.dart';
 
@@ -19,9 +21,30 @@ class TestPostRepositoryImpl implements TestPostRepository {
   TestPostRepositoryImpl(this.dio);
 
   @override
-  Future<void> createPost(TestPost post) {
-    // TODO: implement createPost
-    throw UnimplementedError();
+  Future<void> createPost(TestPostCreate post) async {
+    try {
+      final formData = FormData.fromMap({
+        'author': post.author,
+        'title': post.title,
+        'description': post.description,
+        'platform': post.platform.toPostString(),
+        'type': post.type.toPostString(),
+        'linkUrl': post.linkUrl,
+        'startDate': post.startDate,
+        'endDate': post.endDate,
+        'recruitStatus': post.recruitStatus,
+        if (post.boardImage != null && post.boardImage!.isNotEmpty)
+          'boardImage': await MultipartFile.fromFile(
+            post.boardImage!,
+            filename: '${post.boardImage!.split('/').last}.jpg',
+          ),
+      });
+      log('[TestPostRepository] ${formData.toString()}');
+      await dio.post('/gameboard/create', data: formData);
+    } on DioException catch (e) {
+      log('Failed to create post: ${e.message}');
+      throw Exception('게시글 작성에 실패했습니다.');
+    }
   }
 
   @override
