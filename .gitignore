@@ -332,4 +332,7 @@ xcuserdata
 #app images
 assets/images/
 
+# Cursor IDE
+.cursor/
+
 # End of https://www.toptal.com/developers/gitignore/api/dotenv,visualstudiocode,macos,flutter,dart,xcode,cocoapods,android,kotlin,java,swift,swiftpackagemanager
