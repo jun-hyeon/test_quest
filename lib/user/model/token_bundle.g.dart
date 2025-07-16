@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'token_bundle.dart';
+part of '../../auth/model/token_bundle.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

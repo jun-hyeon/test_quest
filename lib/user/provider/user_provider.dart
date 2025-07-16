@@ -1,17 +1,17 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_quest/user/model/user_info.dart';
-import 'package:test_quest/util/service/storage_service.dart';
-
-const _userInfoKey = 'userInfo';
+import 'package:test_quest/user/repository/user_repository.dart';
+import 'package:test_quest/user/repository/user_repository_impl.dart';
 
 /// 사용자 정보 에러 타입
 enum UserError {
   notFound('저장된 사용자 정보가 없습니다'),
   parseError('사용자 정보 파싱에 실패했습니다'),
-  storageError('저장소 접근에 실패했습니다');
+  storageError('저장소 접근에 실패했습니다'),
+  networkError('네트워크 오류가 발생했습니다'),
+  updateError('사용자 정보 업데이트에 실패했습니다');
 
   const UserError(this.message);
   final String message;
@@ -19,12 +19,12 @@ enum UserError {
 
 /// 사용자 정보 AsyncNotifier
 class UserNotifier extends AsyncNotifier<UserInfo?> {
-  late final StorageService _storage;
+  late final UserRepository _userRepository;
 
   @override
   Future<UserInfo?> build() async {
     // 의존성 주입 - build에서 한 번만 초기화
-    _storage = ref.read(storageProvider);
+    _userRepository = ref.read(userRepositoryProvider);
 
     // 초기화 시 자동으로 사용자 정보 로드
     return await _loadUserFromStorage();
@@ -36,14 +36,12 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
     state = AsyncValue.data(user);
 
     try {
-      await _storage.write(
-        key: _userInfoKey,
-        value: jsonEncode(user.toJson()),
-      );
+      await _userRepository.setUser(user);
       log(
         '사용자 정보 저장 성공: ${user.nickname}',
         name: 'UserNotifier.setUser',
       );
+      state = AsyncValue.data(user);
     } catch (e, stackTrace) {
       log(
         '사용자 정보 저장 실패',
@@ -67,7 +65,7 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
   /// 사용자 정보 삭제
   Future<void> deleteUser() async {
     try {
-      await _storage.delete(key: _userInfoKey);
+      await _userRepository.deleteUser();
 
       state = const AsyncValue.data(null);
       log(
@@ -94,30 +92,106 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
     }
 
     final updatedUser = updater(currentUser);
-    await setUser(updatedUser);
+
+    // 낙관적 업데이트
+    state = AsyncValue.data(updatedUser);
+
+    try {
+      await _userRepository.updateUser(updatedUser);
+
+      // 서버 업데이트 성공 후 최신 정보로 동기화
+      final latestUser = await _userRepository.getMyInfo();
+      await _userRepository.setUser(latestUser); // 로컬에도 저장
+      state = AsyncValue.data(latestUser);
+
+      log(
+        '사용자 정보 업데이트 및 동기화 성공: ${latestUser.nickname}',
+        name: 'UserNotifier.updateUser',
+      );
+    } catch (e, stackTrace) {
+      log(
+        '사용자 정보 업데이트 실패',
+        name: 'UserNotifier.updateUser',
+        error: e,
+        stackTrace: stackTrace,
+      );
+
+      // 실패 시 이전 상태로 롤백
+      state = AsyncValue.data(currentUser);
+      rethrow;
+    }
+  }
+
+  /// 서버에서 최신 사용자 정보 가져오기
+  Future<void> fetchUserFromServer() async {
+    state = const AsyncValue.loading();
+
+    try {
+      final user = await _userRepository.getMyInfo();
+      await _userRepository.setUser(user); // 로컬에도 저장
+      state = AsyncValue.data(user);
+
+      log(
+        '서버에서 사용자 정보 가져오기 성공: ${user.nickname}',
+        name: 'UserNotifier.fetchUserFromServer',
+      );
+    } catch (e, stackTrace) {
+      log(
+        '서버에서 사용자 정보 가져오기 실패',
+        name: 'UserNotifier.fetchUserFromServer',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      state = AsyncValue.error(e, stackTrace);
+      rethrow;
+    }
+  }
+
+  /// 서버에서 사용자 정보 새로고침
+  Future<void> refreshFromServer() async {
+    await fetchUserFromServer();
+  }
+
+  /// 계정 삭제 (서버)
+  Future<void> deleteAccount() async {
+    try {
+      await _userRepository.deleteAccount();
+      state = const AsyncValue.data(null);
+
+      log(
+        '계정 삭제 완료',
+        name: 'UserNotifier.deleteAccount',
+      );
+    } catch (e, stackTrace) {
+      log(
+        '계정 삭제 실패',
+        name: 'UserNotifier.deleteAccount',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      state = AsyncValue.error(e, stackTrace);
+      rethrow;
+    }
   }
 
   /// 저장소에서 사용자 정보 로드
   Future<UserInfo?> _loadUserFromStorage() async {
     try {
-      final jsonStr = await _storage.read(key: _userInfoKey);
+      final user = await _userRepository.getUser();
 
-      if (jsonStr == null) {
+      if (user != null) {
         log(
-          '저장된 사용자 정보 없음',
+          '사용자 정보 로드 성공: ${user.nickname}',
           name: 'UserNotifier._loadUserFromStorage',
         );
-        return null;
+      } else {
+        log(
+          '로컬에 저장된 사용자 정보 없음',
+          name: 'UserNotifier._loadUserFromStorage',
+        );
       }
 
-      final json = jsonDecode(jsonStr) as Map<String, dynamic>;
-      final user = UserInfo.fromJson(json);
-
-      log(
-        '사용자 정보 로드 성공: ${user.nickname}',
-        name: 'UserNotifier._loadUserFromStorage',
-      );
-      return user;
+      return user; // null일 수도 있음
     } catch (e, stackTrace) {
       log(
         '사용자 정보 로드 실패',
@@ -125,7 +199,7 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
         error: e,
         stackTrace: stackTrace,
       );
-      throw UserError.storageError;
+      return null; // 에러 발생 시 null 반환
     }
   }
 }
