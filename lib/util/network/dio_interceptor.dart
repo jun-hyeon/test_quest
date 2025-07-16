@@ -4,227 +4,44 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:test_quest/auth/model/token_info.dart';
+import 'package:test_quest/auth/provider/auth_provider.dart';
 import 'package:test_quest/common/const.dart';
-import 'package:test_quest/user/model/token_info.dart';
-import 'package:test_quest/user/provider/auth_provider.dart';
 import 'package:test_quest/util/service/storage_service.dart';
 
 class DefaultInterceptor extends Interceptor {
   final Ref ref;
-  Completer<AccessResponse>? _refreshCompleter;
-  bool _isRefreshing = false;
-
   DefaultInterceptor(this.ref);
 
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    final authRequired = options.extra['authRequired'] ?? true;
-
-    if (authRequired) {
-      final storage = ref.read(storageProvider);
-      final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
-
-      if (accessToken != null) {
-        options.headers['Authorization'] = 'Bearer $accessToken';
-      }
-    }
-    log('[onRequest] ${options.method} ${options.path}');
+    await _addAuthTokenIfNeeded(options);
+    log('[Request] ${options.method} ${options.path}');
     handler.next(options);
   }
 
   @override
   Future<void> onError(
       DioException err, ErrorInterceptorHandler handler) async {
-    log('[DioInterceptor onError] ${err.response?.statusCode} - ${err.requestOptions.path}');
+    log('[Error] ${err.response?.statusCode} - ${err.requestOptions.path}');
 
-    // 401 에러 처리 (토큰 만료)
-    if (err.response?.statusCode == 401) {
-      log('[401] 토큰 만료, 갱신 시도');
-
-      // 이미 refresh 중인 경우 대기
-      if (_isRefreshing && _refreshCompleter != null) {
-        log('[401] 이미 갱신 중, 대기');
-        try {
-          final refreshResult = await _refreshCompleter!.future;
-          await _retryRequest(err, refreshResult, handler);
-          return;
-        } catch (e) {
-          log('[401] 갱신 대기 중 실패: $e');
-          _resetRefreshState();
-          _handleAuthError(handler, err);
-          return;
-        }
-      }
-
-      // 첫 번째 401 에러인 경우에만 refresh 시도
-      if (err.requestOptions.extra['retry'] != true) {
-        log('[401] 첫 번째 401 에러, 토큰 갱신 시작');
-        err.requestOptions.extra['retry'] = true;
-
-        _isRefreshing = true;
-        _refreshCompleter = Completer<AccessResponse>();
-
-        try {
-          // 인터셉터 내부에서 직접 토큰 갱신
-          final refreshResult = await _refreshToken();
-          log('[401] 토큰 갱신 성공');
-          _refreshCompleter!.complete(refreshResult);
-          await _retryRequest(err, refreshResult, handler);
-          // 성공 후 상태 초기화
-          _resetRefreshState();
-        } catch (e) {
-          log('[401] 토큰 갱신 실패: $e');
-          _refreshCompleter?.completeError(e);
-          _resetRefreshState();
-          _handleAuthError(handler, err);
-        }
-        return;
-      } else {
-        log('[401] 재시도 후에도 401, 로그아웃 처리');
-        _handleAuthError(handler, err);
-        return;
-      }
-    }
-
-    // 403 에러 처리 (권한 없음)
-    if (err.response?.statusCode == 403) {
-      log('[403 Forbidden] 권한이 없습니다. 로그아웃 후 로그인 화면으로 이동');
-      _handleAuthError(handler, err);
+    // 자동 재시도를 건너뛸 요청들
+    if (_shouldSkipAutoRetry(err.requestOptions)) {
+      log('[Skip] 자동 재시도 건너뛰기: ${_getSkipReason(err.requestOptions)}');
+      handler.next(err);
       return;
     }
 
-    // 다른 에러들에 대한 처리
-    _handleOtherErrors(err, handler);
-  }
-
-  /// 토큰 갱신 로직을 인터셉터 내부에 구현
-  Future<AccessResponse> _refreshToken() async {
-    log('[refresh] 토큰 갱신 시작');
-    final storage = ref.read(storageProvider);
-    final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
-
-    if (refreshToken == null) {
-      log('[refresh] 리프레시 토큰이 없음');
-      throw Exception('리프레시 토큰이 없습니다.');
+    // 401 에러 - 토큰 만료 처리
+    if (_isTokenExpired(err) && !_isAlreadyRetried(err.requestOptions)) {
+      final retrySuccess = await _handleTokenRefresh(err, handler);
+      if (retrySuccess) return;
     }
 
-    log('[refresh] 리프레시 토큰으로 갱신 요청');
-
-    // 순환 의존성 방지를 위해 새로운 Dio 인스턴스 생성
-    final refreshDio = Dio(BaseOptions(
-      baseUrl: dotenv.env['BASE_URL'] ?? '',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
-    ));
-
-    try {
-      final response = await refreshDio.post(
-        '/auth/refresh',
-        options: Options(
-          headers: {'Authorization': 'Bearer $refreshToken'},
-        ),
-      );
-
-      log('[refresh] 응답 받음: ${response.statusCode}');
-      final data = response.data;
-
-      if (data['code'] != "200" || data['data'] == null) {
-        log('[refresh] 응답 에러: ${data['message']}');
-        throw Exception(data['message'] ?? '토큰 갱신에 실패했습니다.');
-      }
-
-      final accessResponse = AccessResponse.fromJson(data['data']);
-
-      // 새 토큰 저장
-      await storage.write(
-          key: ACCESS_TOKEN_KEY, value: accessResponse.access.token);
-
-      log('[refresh] 토큰 갱신 성공: ${accessResponse.access.token.substring(0, 20)}...');
-      return accessResponse;
-    } catch (e) {
-      log('[refresh] DioException: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> _retryRequest(DioException err, AccessResponse refreshResult,
-      ErrorInterceptorHandler handler) async {
-    try {
-      log('[retry] 요청 재시도: ${err.requestOptions.path}');
-      log('[retry] 사용할 토큰: ${refreshResult.access.token.substring(0, 20)}...');
-
-      // 새로운 RequestOptions 생성 (기존 옵션 복사)
-      final requestOptions = RequestOptions(
-        path: err.requestOptions.path,
-        method: err.requestOptions.method,
-        baseUrl: err.requestOptions.baseUrl,
-        queryParameters: err.requestOptions.queryParameters,
-        data: err.requestOptions.data,
-        headers: {
-          ...err.requestOptions.headers,
-          'Authorization': 'Bearer ${refreshResult.access.token}',
-        },
-        extra: err.requestOptions.extra,
-        responseType: err.requestOptions.responseType,
-        contentType: err.requestOptions.contentType,
-      );
-
-      // 새로운 Dio 인스턴스로 재시도
-      final retryDio = Dio(BaseOptions(
-        baseUrl: dotenv.env['BASE_URL'] ?? '',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        connectTimeout: const Duration(seconds: 10),
-        receiveTimeout: const Duration(seconds: 10),
-      ));
-
-      final response = await retryDio.fetch(requestOptions);
-      log('[retry] 재시도 성공: ${response.statusCode}');
-      handler.resolve(response);
-    } catch (e) {
-      log('[retry] 재시도 실패: $e');
-      // 재시도 실패 시 원본 에러가 아닌 새로운 에러를 반환
-      if (e is DioException) {
-        handler.reject(e);
-      } else {
-        handler.reject(err);
-      }
-    }
-  }
-
-  /// 토큰 갱신 상태 초기화
-  void _resetRefreshState() {
-    _isRefreshing = false;
-    _refreshCompleter = null;
-    log('[refresh] 상태 초기화 완료');
-  }
-
-  void _handleAuthError(ErrorInterceptorHandler handler, DioException err) {
-    log('[auth error] 인증 에러 발생, 로그아웃 처리');
-    _resetRefreshState(); // 에러 시에도 상태 초기화
-
-    // Auth Provider를 통해 로그아웃 (자동으로 로그인 화면 이동)
-    Future.microtask(() async {
-      await ref.read(authProvider.notifier).logout();
-      log('[auth error] 로그아웃 완료, Router Provider가 리다이렉션 처리');
-    });
-
-    handler.reject(err);
-  }
-
-  void _handleOtherErrors(DioException err, ErrorInterceptorHandler handler) {
-    // 네트워크 에러, 타임아웃 등에 대한 처리
-    if (err.type == DioExceptionType.connectionTimeout ||
-        err.type == DioExceptionType.receiveTimeout ||
-        err.type == DioExceptionType.sendTimeout) {
-      log('[network timeout] ${err.requestOptions.path}');
+    // 인증 오류 - 강제 로그아웃
+    if (_shouldForceLogout(err)) {
+      _performLogout();
     }
 
     handler.next(err);
@@ -232,7 +49,164 @@ class DefaultInterceptor extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    log('[DIO RESPONSE] ${response.statusCode} - ${response.requestOptions.path}');
+    log('[Response] ${response.statusCode} - ${response.requestOptions.path}');
     handler.next(response);
+  }
+
+  // ==================== Request 관련 ====================
+
+  /// 필요시 인증 토큰 추가
+  Future<void> _addAuthTokenIfNeeded(RequestOptions options) async {
+    final authRequired = options.extra['authRequired'] ?? true;
+    if (!authRequired) return;
+
+    final storage = ref.read(storageProvider);
+    final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
+    if (accessToken != null) {
+      options.headers['Authorization'] = 'Bearer $accessToken';
+    }
+  }
+
+  // ==================== Error 판단 로직 ====================
+
+  /// 자동 재시도를 건너뛸지 판단
+  bool _shouldSkipAutoRetry(RequestOptions options) {
+    return options.extra['disableRetry'] == true || options.data is FormData;
+  }
+
+  /// 재시도 건너뛰는 이유 반환
+  String _getSkipReason(RequestOptions options) {
+    if (options.extra['disableRetry'] == true) return 'disableRetry 플래그';
+    if (options.data is FormData) return 'FormData 요청';
+    return '알 수 없음';
+  }
+
+  /// 토큰 만료 에러인지 확인
+  bool _isTokenExpired(DioException err) {
+    return err.response?.statusCode == 401;
+  }
+
+  /// 이미 재시도한 요청인지 확인
+  bool _isAlreadyRetried(RequestOptions options) {
+    return options.extra['retried'] == true;
+  }
+
+  /// 강제 로그아웃이 필요한지 판단
+  bool _shouldForceLogout(DioException err) {
+    return err.response?.statusCode == 403 ||
+        (_isTokenExpired(err) && _isAlreadyRetried(err.requestOptions));
+  }
+
+  // ==================== Token Refresh 로직 ====================
+
+  /// 토큰 갱신 및 재시도 처리
+  Future<bool> _handleTokenRefresh(
+      DioException err, ErrorInterceptorHandler handler) async {
+    log('[Token] 토큰 갱신 시도');
+
+    final refreshSuccess = await _refreshAccessToken();
+    if (!refreshSuccess) {
+      log('[Token] 토큰 갱신 실패');
+      return false;
+    }
+
+    await _retryRequestWithNewToken(err, handler);
+    return true;
+  }
+
+  /// Access Token 갱신
+  Future<bool> _refreshAccessToken() async {
+    try {
+      final storage = ref.read(storageProvider);
+      final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
+
+      if (refreshToken == null) {
+        log('[Token] 리프레시 토큰 없음');
+        return false;
+      }
+
+      final response = await _createRefreshDio().post(
+        '/auth/refresh',
+        options: Options(headers: {'Authorization': 'Bearer $refreshToken'}),
+      );
+
+      return await _saveNewTokenFromResponse(response, storage);
+    } catch (e) {
+      log('[Token] 갱신 중 에러: $e');
+      return false;
+    }
+  }
+
+  /// 응답에서 새 토큰 저장
+  Future<bool> _saveNewTokenFromResponse(
+      Response response, StorageService storage) async {
+    final data = response.data;
+    if (data['code'] != "200" || data['data'] == null) {
+      log('[Token] 잘못된 응답: ${data['message']}');
+      return false;
+    }
+
+    final accessResponse = AccessResponse.fromJson(data['data']);
+    await storage.write(
+        key: ACCESS_TOKEN_KEY, value: accessResponse.access.token);
+
+    log('[Token] 토큰 갱신 성공');
+    return true;
+  }
+
+  /// 새 토큰으로 요청 재시도
+  Future<void> _retryRequestWithNewToken(
+      DioException err, ErrorInterceptorHandler handler) async {
+    try {
+      log('[Retry] 새 토큰으로 재시도: ${err.requestOptions.path}');
+
+      final newToken =
+          await ref.read(storageProvider).read(key: ACCESS_TOKEN_KEY);
+      final retryOptions = _createRetryOptions(err.requestOptions, newToken!);
+
+      final response = await _createRetryDio().fetch(retryOptions);
+      log('[Retry] 재시도 성공');
+      handler.resolve(response);
+    } catch (e) {
+      log('[Retry] 재시도 실패: $e');
+      handler.next(err);
+    }
+  }
+
+  /// 재시도용 RequestOptions 생성
+  RequestOptions _createRetryOptions(RequestOptions original, String newToken) {
+    return original.copyWith(
+      extra: {...original.extra, 'retried': true},
+    )..headers['Authorization'] = 'Bearer $newToken';
+  }
+
+  // ==================== Logout 처리 ====================
+
+  /// 강제 로그아웃 실행
+  void _performLogout() {
+    log('[Auth] 인증 오류로 강제 로그아웃');
+    Future.microtask(() => ref.read(authProvider.notifier).logout());
+  }
+
+  // ==================== Dio 인스턴스 생성 ====================
+
+  /// 토큰 갱신용 Dio 인스턴스
+  Dio _createRefreshDio() {
+    return Dio(BaseOptions(
+      baseUrl: dotenv.env['BASE_URL'] ?? '',
+      headers: {'Content-Type': 'application/json'},
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+    ));
+  }
+
+  /// 재시도용 Dio 인스턴스
+  Dio _createRetryDio() {
+    return Dio(BaseOptions(
+      baseUrl: dotenv.env['BASE_URL'] ?? '',
+      headers: {'Content-Type': 'application/json'},
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+    ));
   }
 }
