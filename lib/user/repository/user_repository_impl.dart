@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_quest/auth/repository/auth_repository.dart';
 import 'package:test_quest/auth/repository/auth_repository_impl.dart';
+import 'package:test_quest/common/const.dart';
 import 'package:test_quest/user/model/user_info.dart';
 import 'package:test_quest/user/repository/user_repository.dart';
 import 'package:test_quest/util/model/response_model.dart';
@@ -164,7 +165,16 @@ class UserRepositoryImpl extends UserRepository {
   /// 토큰 갱신 후 재시도
   Future<void> _refreshTokenAndRetry(UserInfo user) async {
     try {
-      authRepository.refresh();
+      // AuthRepository를 통해 토큰 갱신 (자동으로 스토리지에 저장됨)
+      await authRepository.refresh();
+      log('=== 토큰 갱신 완료 ===');
+
+      // 🎯 새로 저장된 토큰 읽기
+      final newAccessToken = await storage.read(key: ACCESS_TOKEN_KEY);
+
+      if (newAccessToken == null) {
+        throw Exception('토큰 갱신 후 토큰을 찾을 수 없습니다.');
+      }
 
       // 새로운 FormData로 재시도
       final newFormData = await _createFormData(user);
@@ -176,16 +186,17 @@ class UserRepositoryImpl extends UserRepository {
         options: Options(
           headers: {
             'Content-Type': 'multipart/form-data',
+            'Authorization': 'Bearer $newAccessToken', // 🎯 새 토큰 직접 설정
           },
           extra: {
-            'disableRetry': true, // 두 번째 시도에서도 retry 비활성화
+            'disableRetry': true,
           },
         ),
       );
 
       await _handleUpdateResponse(response, user);
     } catch (e) {
-      log('=== 토큰 갱신 후 재시도도 실패 ===');
+      log('=== 토큰 갱신 후 재시도도 실패: $e ===');
       throw Exception('프로필 업데이트에 실패했습니다: 토큰 갱신 후에도 실패');
     }
   }
