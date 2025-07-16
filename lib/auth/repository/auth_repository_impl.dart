@@ -7,7 +7,6 @@ import 'package:test_quest/auth/model/token_bundle.dart';
 import 'package:test_quest/auth/model/token_info.dart';
 import 'package:test_quest/auth/repository/auth_repository.dart';
 import 'package:test_quest/common/const.dart';
-import 'package:test_quest/user/model/user_info.dart';
 import 'package:test_quest/util/extensions/signup_form_extension.dart';
 import 'package:test_quest/util/model/response_model.dart';
 import 'package:test_quest/util/network/provider/dio_provider.dart';
@@ -32,9 +31,6 @@ class AuthRepositoryImpl implements AuthRepository {
     throw UnimplementedError();
   }
 
-  
-  
-
   @override
   Future<AccessResponse> refresh() async {
     final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
@@ -52,13 +48,25 @@ class AuthRepositoryImpl implements AuthRepository {
           'Authorization': 'Bearer $refreshToken'
         }),
       );
+
       final data = ResponseModel.fromJson(response.data,
           (json) => AccessResponse.fromJson(json as Map<String, dynamic>));
+
       if (data.data == null) {
         throw '재발급 실패!';
       }
-      return data.data!;
+
+      final accessResponse = data.data!;
+
+      // 🎯 새로운 Access Token을 스토리지에 저장
+      await storage.write(
+          key: ACCESS_TOKEN_KEY, value: accessResponse.access.token);
+
+      log('[auth_repository] 토큰 갱신 및 저장 완료: ${accessResponse.access.token.substring(0, 20)}...');
+
+      return accessResponse;
     } on DioException catch (e) {
+      log('[auth_repository] 토큰 갱신 실패: ${e.message}');
       throw '${e.message}';
     }
   }
