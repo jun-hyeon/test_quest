@@ -6,7 +6,7 @@ import 'package:test_quest/util/network/dio_interceptor.dart';
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio(
     BaseOptions(
-      baseUrl: dotenv.env['TEST_URL'] ?? '',
+      baseUrl: dotenv.env['BASE_URL'] ?? '',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
