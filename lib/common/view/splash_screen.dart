@@ -17,6 +17,8 @@ class SplashScreen extends ConsumerStatefulWidget {
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
   bool _showSubtitle = false;
+  bool _isNavigating = false; // 중복 네비게이션 방지
+
   @override
   void initState() {
     super.initState();
@@ -24,20 +26,32 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   Future<void> _initApp() async {
+    print('[SplashScreen] 스플래시 화면 시작');
     await Future.delayed(const Duration(milliseconds: 3000));
+
+    print('[SplashScreen] 인증 상태 확인 시작');
+
+    // Auth State 변화를 listen
     ref.listenManual<AuthState>(
       authProvider,
       (previous, next) {
-        if (!mounted) return;
+        print('[SplashScreen] Auth State 변화: $previous → $next');
+        if (!mounted || _isNavigating) return;
+
+        _isNavigating = true;
         if (next is Authenticated) {
-          context.go("/root");
+          print('[SplashScreen] 인증됨 → 메인 화면으로 이동');
+          context.go('/root');
         } else if (next is Unauthenticated) {
-          context.go("/login");
+          print('[SplashScreen] 인증안됨 → 로그인 화면으로 이동');
+          context.go('/login');
         }
       },
     );
 
-    ref.read(authProvider.notifier).checkLoginStatus();
+    // 인증 상태 확인
+    await ref.read(authProvider.notifier).checkLoginStatus();
+    print('[SplashScreen] 인증 상태 확인 완료');
   }
 
   @override

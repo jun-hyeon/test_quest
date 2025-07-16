@@ -8,5 +8,8 @@
         "riverpod",
         "Schyler",
         "testquest"
+    ],
+    "cursor.rules": [
+        ".cursor/rules/flutter-rule.mdc"
     ]
 }

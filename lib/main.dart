@@ -32,13 +32,16 @@ class _MyAppState extends ConsumerState<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // Router Provider 사용 - Auth State에 따른 자동 리다이렉션
+    final routerConfig = ref.watch(routerProvider);
+    
     return MaterialApp.router(
       title: 'Test Quest',
       debugShowCheckedModeBanner: false,
       themeMode: ref.watch(themeModeProvider),
       theme: lightTheme,
       darkTheme: darkTheme,
-      routerConfig: router,
+      routerConfig: routerConfig,
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

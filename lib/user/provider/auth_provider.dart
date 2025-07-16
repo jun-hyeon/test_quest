@@ -9,19 +9,23 @@ import 'package:test_quest/user/repository/auth_repository_impl.dart';
 import 'package:test_quest/util/service/storage_service.dart';
 import 'package:test_quest/util/validator.dart';
 
-final authProvider = NotifierProvider<AuthProvider, AuthState>(
-  AuthProvider.new,
+final authProvider = NotifierProvider<AuthNotifier, AuthState>(
+  AuthNotifier.new,
 );
 
-class AuthProvider extends Notifier<AuthState> {
-  late final AuthRepository _authRepository = ref.read(authRepositoryProvider);
-  late final UserNotifier _userProvider = ref.read(userProvider.notifier);
+class AuthNotifier extends Notifier<AuthState> {
+  late final AuthRepository _authRepository;
+  late final StorageService _storage;
 
   String _email = '';
   String _password = '';
 
   @override
   AuthState build() {
+    // 의존성 주입 - build에서 안전하게 초기화
+    _authRepository = ref.read(authRepositoryProvider);
+    _storage = ref.read(storageProvider);
+
     return Unauthenticated();
   }
 
@@ -70,44 +74,54 @@ class AuthProvider extends Notifier<AuthState> {
 
       final accessToken = tokenBundle.access.token;
       final refreshToken = tokenBundle.refresh.token;
-      final storage = ref.read(storageProvider);
-      await storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
-      await storage.write(key: REFRESH_TOKEN_KEY, value: refreshToken);
+      await _storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
+      await _storage.write(key: REFRESH_TOKEN_KEY, value: refreshToken);
 
       final userInfo = await _authRepository.getMyInfo();
-      await _userProvider.setUser(userInfo);
+      await ref.read(userNotifierProvider.notifier).setUser(userInfo);
 
       state = Authenticated();
     } catch (e) {
       state = Unauthenticated(errorMessage: e.toString());
-      log('[auth_provider] Login failed: $e', error: e);
+      log('로그인 실패', name: 'AuthNotifier.login', error: e);
     }
   }
 
   Future<void> logout() async {
     try {
+      log('로그아웃 시작', name: 'AuthNotifier.logout');
       // await _authRepository.logout();
-      final storage = ref.read(storageProvider);
-      await storage.delete(key: ACCESS_TOKEN_KEY);
-      await storage.delete(key: REFRESH_TOKEN_KEY);
-      await _userProvider.deleteUser();
+      await _storage.delete(key: ACCESS_TOKEN_KEY);
+      await _storage.delete(key: REFRESH_TOKEN_KEY);
+      await ref.read(userNotifierProvider.notifier).deleteUser();
       state = Unauthenticated();
+      log('로그아웃 완료 - Router Provider가 자동으로 로그인 화면으로 리다이렉션',
+          name: 'AuthNotifier.logout');
     } catch (e) {
-      log('[auth_provider] Logout failed: $e');
+      log('로그아웃 실패', name: 'AuthNotifier.logout', error: e);
       state = Unauthenticated(errorMessage: e.toString());
     }
   }
 
   Future<void> checkLoginStatus() async {
-    final storage = ref.read(storageProvider);
-    final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
-    final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
+    log('로그인 상태 확인 시작', name: 'AuthNotifier.checkLoginStatus');
+    final accessToken = await _storage.read(key: ACCESS_TOKEN_KEY);
+    final refreshToken = await _storage.read(key: REFRESH_TOKEN_KEY);
+
+    log('토큰 확인 - Access: ${accessToken != null ? "존재" : "없음"}, Refresh: ${refreshToken != null ? "존재" : "없음"}',
+        name: 'AuthNotifier.checkLoginStatus');
 
     if (accessToken != null && refreshToken != null) {
+      log('토큰 존재 → Authenticated 상태로 변경',
+          name: 'AuthNotifier.checkLoginStatus');
       state = Authenticated();
     } else {
+      log('토큰 없음 → Unauthenticated 상태로 변경',
+          name: 'AuthNotifier.checkLoginStatus');
       state = Unauthenticated();
     }
+
+    log('최종 상태: $state', name: 'AuthNotifier.checkLoginStatus');
   }
 
   String? _validateEmail(String email) => Validator.validateEmail(email);
