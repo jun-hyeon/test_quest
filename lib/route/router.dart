@@ -3,17 +3,17 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:test_quest/auth/provider/auth_provider.dart';
+import 'package:test_quest/auth/provider/auth_state.dart';
 import 'package:test_quest/common/view/root_tab.dart';
 import 'package:test_quest/common/view/splash_screen.dart';
 import 'package:test_quest/community/model/test_post.dart';
 import 'package:test_quest/community/view/post_create_screen.dart';
 import 'package:test_quest/community/view/post_detail_screen.dart';
 import 'package:test_quest/settings/view/settings_view.dart';
-import 'package:test_quest/user/provider/auth_provider.dart';
-import 'package:test_quest/user/provider/auth_state.dart';
-import 'package:test_quest/user/view/login_screen.dart';
-import 'package:test_quest/user/view/profile_signup_screen.dart';
-import 'package:test_quest/user/view/sign_up_screen.dart';
+import 'package:test_quest/auth/view/login_screen.dart';
+import 'package:test_quest/auth/view/profile_signup_screen.dart';
+import 'package:test_quest/auth/view/sign_up_screen.dart';
 
 /// Auth State 변화를 감지하는 Router Notifier
 class RouterNotifier extends ChangeNotifier {
