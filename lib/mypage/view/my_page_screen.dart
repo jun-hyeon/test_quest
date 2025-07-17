@@ -1,20 +1,12 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:test_quest/auth/provider/auth_provider.dart';
 import 'package:test_quest/common/component/card_tile.dart';
-import 'package:test_quest/common/component/custom_button.dart';
-import 'package:test_quest/common/component/custom_textfield.dart';
-import 'package:test_quest/common/component/profile_picker.dart';
 import 'package:test_quest/mypage/widget/circle_network_image.dart';
+import 'package:test_quest/mypage/widget/profile_edit_bottom_sheet.dart';
 import 'package:test_quest/user/model/user_info.dart';
 import 'package:test_quest/user/provider/user_provider.dart';
-import 'package:test_quest/util/service/image_picker_service.dart';
-import 'package:test_quest/util/service/permission_service.dart';
 
 class MyPageScreen extends ConsumerWidget {
   const MyPageScreen({super.key});
@@ -72,9 +64,7 @@ class MyPageScreen extends ConsumerWidget {
                 CardTile(
                   icon: Icons.person_outline_outlined,
                   title: '프로필 편집',
-                  onTap: () {
-                    _showProfileEditBottomSheet(context, ref, user);
-                  },
+                  onTap: () => _showProfileEditBottomSheet(context, user),
                   style: const TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 10),
@@ -137,8 +127,7 @@ class MyPageScreen extends ConsumerWidget {
     );
   }
 
-  void _showProfileEditBottomSheet(
-      BuildContext context, WidgetRef ref, UserInfo user) {
+  void _showProfileEditBottomSheet(BuildContext context, UserInfo user) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -148,187 +137,8 @@ class MyPageScreen extends ConsumerWidget {
         maxChildSize: 0.9, // 최대 높이
         expand: false,
         builder: (context, scrollController) => ProfileEditBottomSheet(
-          context: context,
-          ref: ref,
           user: user,
           scrollController: scrollController,
-        ),
-      ),
-    );
-  }
-}
-
-class ProfileEditBottomSheet extends ConsumerStatefulWidget {
-  const ProfileEditBottomSheet({
-    super.key,
-    required this.context,
-    required this.ref,
-    required this.user,
-    this.scrollController,
-  });
-
-  final BuildContext context;
-  final WidgetRef ref;
-  final UserInfo user;
-  final ScrollController? scrollController;
-
-  @override
-  ConsumerState<ProfileEditBottomSheet> createState() =>
-      _ProfileEditBottomSheetState();
-}
-
-class _ProfileEditBottomSheetState
-    extends ConsumerState<ProfileEditBottomSheet> {
-  XFile? selectedImage;
-  late final TextEditingController nicknameController;
-  bool _isLoading = false; // 로딩 상태 추가
-
-  @override
-  void initState() {
-    super.initState();
-    // 초기값으로 현재 닉네임 설정
-    nicknameController = TextEditingController(text: widget.user.nickname);
-  }
-
-  @override
-  void dispose() {
-    nicknameController.dispose();
-    super.dispose();
-  }
-
-  void _pickImage() async {
-    final status = await ref.read(permissionProvider).requestPhotoPermission();
-    if (!mounted) return;
-    if (!status.isGranted) {
-      // 조건 수정 (!status.isGranted)
-      showDialog(
-        context: context,
-        builder: (context) => const AlertDialog(
-          title: Text('권한이 거절되었습니다.'),
-        ),
-      );
-      return;
-    }
-    await ImagePickerService.pickAndSet(
-      source: ImageSource.gallery,
-      onImagePicked: (image) {
-        setState(() {
-          selectedImage = image;
-        });
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 16.0,
-        right: 16.0,
-        top: 16.0,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 16.0,
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IntrinsicHeight(
-              child: Stack(
-                children: [
-                  Center(
-                    child: Text(
-                      '프로필 편집',
-                      style: Theme.of(context).textTheme.titleLarge,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      onPressed: () {
-                        context.pop();
-                      },
-                      icon: const Icon(
-                        Icons.close_outlined,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            InkWell(
-              child: ProfilePicker(selectedImage: selectedImage),
-              onTap: () {
-                _pickImage();
-              },
-            ),
-            const SizedBox(height: 16),
-            CustomTextfield(
-              controller: nicknameController,
-              obscure: false,
-              hintText: '닉네임을 입력하세요',
-            ),
-            const SizedBox(height: 32),
-            CustomButton(
-              onPressed: _isLoading
-                  ? null
-                  : () async {
-                      // 로딩 중이면 비활성화
-                      setState(() {
-                        _isLoading = true;
-                      });
-
-                      try {
-                        await ref
-                            .read(userNotifierProvider.notifier)
-                            .updateUser(
-                              (user) => user.copyWith(
-                                nickname: nicknameController.text.trim(),
-                                profileImg: selectedImage != null
-                                    ? File(selectedImage!.path).path
-                                    : user.profileImg, // 기존 이미지 유지
-                              ),
-                            );
-
-                        if (mounted) {
-                          context.pop();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('프로필이 성공적으로 업데이트되었습니다.'),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
-                        }
-                      } catch (e) {
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('업데이트 실패: $e'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
-                      } finally {
-                        if (mounted) {
-                          setState(() {
-                            _isLoading = false;
-                          });
-                        }
-                      }
-                    },
-              child: _isLoading
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
-                  : const Text('저장'),
-            ),
-          ],
         ),
       ),
     );
