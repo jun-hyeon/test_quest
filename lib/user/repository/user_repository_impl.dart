@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_quest/auth/repository/auth_repository.dart';
 import 'package:test_quest/auth/repository/auth_repository_impl.dart';
-import 'package:test_quest/common/const.dart';
 import 'package:test_quest/user/model/user_info.dart';
 import 'package:test_quest/user/repository/user_repository.dart';
 import 'package:test_quest/util/model/response_model.dart';
@@ -36,6 +35,7 @@ class UserRepositoryImpl extends UserRepository {
   @override
   Future<void> deleteUser() async {
     try {
+      
       await storage.delete(key: _userInfoKey);
       log(
         '사용자 정보 삭제 완료',
@@ -113,91 +113,21 @@ class UserRepositoryImpl extends UserRepository {
   @override
   Future<void> updateUser(UserInfo user) async {
     try {
-      await _updateUserWithRetry(user);
-    } catch (e, stackTrace) {
-      log(
-        '[user_repository_impl.dart] 프로필 업데이트 실패: $e, error: ${e.toString()}',
-        name: 'UserRepositoryImpl.updateUser',
-      );
-      rethrow;
-    }
-  }
+      // 간단하게 한 번만 시도
+      final formData = await _createFormData(user);
 
-  /// 토큰 갱신을 포함한 프로필 업데이트
-  Future<void> _updateUserWithRetry(UserInfo user) async {
-    // FormData를 매번 새로 생성
-    FormData formData = await _createFormData(user);
-
-    // 요청 내용 상세 로깅
-    log('=== 프로필 업데이트 요청 시작 ===');
-    log('닉네임: ${user.nickname}');
-    log('프로필 이미지: ${user.profileImg}');
-    log('FormData fields: ${formData.fields.map((f) => '${f.key}: ${f.value}').join(', ')}');
-    log('FormData files: ${formData.files.map((f) => '${f.key}: ${f.value.filename}').join(', ')}');
-
-    try {
-      // 첫 번째 시도 (retry 비활성화)
       final response = await dio.post(
         '/user/update',
         data: formData,
         options: Options(
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          extra: {
-            'disableRetry': true, // FormData 재사용 문제 방지
-          },
-        ),
-      );
-
-      await _handleUpdateResponse(response, user);
-    } on DioException catch (e) {
-      // 401 에러인 경우 토큰 갱신 후 재시도
-      if (e.response?.statusCode == 401) {
-        log('=== 토큰 만료, 수동 갱신 후 재시도 ===');
-        await _refreshTokenAndRetry(user);
-      } else {
-        throw Exception('프로필 업데이트에 실패했습니다: ${e.response?.statusCode}');
-      }
-    }
-  }
-
-  /// 토큰 갱신 후 재시도
-  Future<void> _refreshTokenAndRetry(UserInfo user) async {
-    try {
-      // AuthRepository를 통해 토큰 갱신 (자동으로 스토리지에 저장됨)
-      await authRepository.refresh();
-      log('=== 토큰 갱신 완료 ===');
-
-      // 🎯 새로 저장된 토큰 읽기
-      final newAccessToken = await storage.read(key: ACCESS_TOKEN_KEY);
-
-      if (newAccessToken == null) {
-        throw Exception('토큰 갱신 후 토큰을 찾을 수 없습니다.');
-      }
-
-      // 새로운 FormData로 재시도
-      final newFormData = await _createFormData(user);
-      log('=== 토큰 갱신 후 재시도 ===');
-
-      final response = await dio.post(
-        '/user/update',
-        data: newFormData,
-        options: Options(
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': 'Bearer $newAccessToken', // 🎯 새 토큰 직접 설정
-          },
-          extra: {
-            'disableRetry': true,
-          },
+          headers: {'Content-Type': 'multipart/form-data'},
         ),
       );
 
       await _handleUpdateResponse(response, user);
     } catch (e) {
-      log('=== 토큰 갱신 후 재시도도 실패: $e ===');
-      throw Exception('프로필 업데이트에 실패했습니다: 토큰 갱신 후에도 실패');
+      log('프로필 업데이트 실패: $e');
+      rethrow;
     }
   }
 

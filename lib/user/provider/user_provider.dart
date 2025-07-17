@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:test_quest/auth/repository/auth_repository.dart';
+import 'package:test_quest/auth/repository/auth_repository_impl.dart';
 import 'package:test_quest/user/model/user_info.dart';
 import 'package:test_quest/user/repository/user_repository.dart';
 import 'package:test_quest/user/repository/user_repository_impl.dart';
@@ -20,11 +22,13 @@ enum UserError {
 /// 사용자 정보 AsyncNotifier
 class UserNotifier extends AsyncNotifier<UserInfo?> {
   late final UserRepository _userRepository;
+  late final AuthRepository _authRepository;
 
   @override
   Future<UserInfo?> build() async {
     // 의존성 주입 - build에서 한 번만 초기화
     _userRepository = ref.read(userRepositoryProvider);
+    _authRepository = ref.read(authRepositoryProvider);
 
     // 초기화 시 자동으로 사용자 정보 로드
     return await _loadUserFromStorage();
@@ -66,6 +70,7 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
   Future<void> deleteUser() async {
     try {
       await _userRepository.deleteUser();
+      await _authRepository.deleteAccount();
 
       state = const AsyncValue.data(null);
       log(
