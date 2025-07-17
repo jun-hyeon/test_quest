@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:test_quest/auth/model/token_info.dart';
 
-part '../../user/model/token_bundle.freezed.dart';
-part '../../user/model/token_bundle.g.dart';
+part 'token_bundle.freezed.dart';
+part 'token_bundle.g.dart';
 
 @freezed
 abstract class TokenBundle with _$TokenBundle {

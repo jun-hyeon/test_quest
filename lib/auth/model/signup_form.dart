@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part '../../user/model/signup_form.freezed.dart';
-part '../../user/model/signup_form.g.dart';
+part 'signup_form.freezed.dart';
+part 'signup_form.g.dart';
 
 @freezed
 abstract class SignupForm with _$SignupForm {

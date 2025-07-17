@@ -26,9 +26,10 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this.dio, this.storage);
 
   @override
-  Future<Result<void>> deleteAccount() {
-    // TODO: implement deleteAccount
-    throw UnimplementedError();
+  Future<ResponseModel<void>> deleteAccount() async {
+    final response = await dio.post('/user/delete');
+    final responseData = ResponseModel<void>.fromJson(response.data, (_) {});
+    return responseData;
   }
 
   @override
