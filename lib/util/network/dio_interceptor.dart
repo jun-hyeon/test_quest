@@ -71,7 +71,7 @@ class DefaultInterceptor extends Interceptor {
 
   /// 자동 재시도를 건너뛸지 판단
   bool _shouldSkipAutoRetry(RequestOptions options) {
-    return options.extra['disableRetry'] == true || options.data is FormData;
+    return options.extra['disableRetry'] == true;
   }
 
   /// 재시도 건너뛰는 이유 반환
@@ -106,7 +106,8 @@ class DefaultInterceptor extends Interceptor {
 
     final refreshSuccess = await _refreshAccessToken();
     if (!refreshSuccess) {
-      log('[Token] 토큰 갱신 실패');
+      log('[Token] 토큰 갱신 실패 - 강제 로그아웃 처리');
+      _performLogout(); // 🎯 토큰 갱신 실패시 로그아웃
       return false;
     }
 
@@ -131,8 +132,17 @@ class DefaultInterceptor extends Interceptor {
       );
 
       return await _saveNewTokenFromResponse(response, storage);
-    } catch (e) {
+    } on DioException catch (e) {
+      // 🎯 401/403 에러는 리프레시 토큰 만료를 의미
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
+        log('[Token] 리프레시 토큰 만료: ${e.response?.data}');
+        return false; // 상위에서 로그아웃 처리
+      }
+
       log('[Token] 갱신 중 에러: $e');
+      return false;
+    } catch (e) {
+      log('[Token] 갱신 중 예상치 못한 에러: $e');
       return false;
     }
   }

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:test_quest/user/model/signup_form.dart';
+import 'package:test_quest/auth/model/signup_form.dart';
 
 extension SignupFormExtension on SignupForm {
   Future<FormData> toFormData() async {
@@ -9,7 +9,6 @@ extension SignupFormExtension on SignupForm {
       'nickname': nickname,
       'name': name,
     };
-
     if (profileImage != null && profileImage!.isNotEmpty) {
       formDataMap['profileImage'] = await MultipartFile.fromFile(
         profileImage!,
