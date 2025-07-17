@@ -335,4 +335,10 @@ assets/images/
 # Cursor IDE
 .cursor/
 
+# Firebase 설정 파일들
+firebase_options.dart
+firebase.json
+google-services.json
+GoogleService-Info.plist
+
 # End of https://www.toptal.com/developers/gitignore/api/dotenv,visualstudiocode,macos,flutter,dart,xcode,cocoapods,android,kotlin,java,swift,swiftpackagemanager
