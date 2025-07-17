@@ -1,12 +1,13 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:test_quest/user/provider/auth_provider.dart';
-import 'package:test_quest/user/provider/auth_state.dart';
+import 'package:test_quest/auth/provider/auth_provider.dart';
+import 'package:test_quest/auth/provider/auth_state.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -26,24 +27,24 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   Future<void> _initApp() async {
-    print('[SplashScreen] 스플래시 화면 시작');
+    log('[SplashScreen] 스플래시 화면 시작');
     await Future.delayed(const Duration(milliseconds: 3000));
 
-    print('[SplashScreen] 인증 상태 확인 시작');
+    log('[SplashScreen] 인증 상태 확인 시작');
 
     // Auth State 변화를 listen
     ref.listenManual<AuthState>(
       authProvider,
       (previous, next) {
-        print('[SplashScreen] Auth State 변화: $previous → $next');
+        log('[SplashScreen] Auth State 변화: $previous → $next');
         if (!mounted || _isNavigating) return;
 
         _isNavigating = true;
         if (next is Authenticated) {
-          print('[SplashScreen] 인증됨 → 메인 화면으로 이동');
+          log('[SplashScreen] 인증됨 → 메인 화면으로 이동');
           context.go('/root');
         } else if (next is Unauthenticated) {
-          print('[SplashScreen] 인증안됨 → 로그인 화면으로 이동');
+          log('[SplashScreen] 인증안됨 → 로그인 화면으로 이동');
           context.go('/login');
         }
       },
@@ -51,7 +52,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     // 인증 상태 확인
     await ref.read(authProvider.notifier).checkLoginStatus();
-    print('[SplashScreen] 인증 상태 확인 완료');
+    log('[SplashScreen] 인증 상태 확인 완료');
   }
 
   @override
