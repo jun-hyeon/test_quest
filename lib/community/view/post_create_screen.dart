@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:test_quest/common/component/custom_button.dart';
 import 'package:test_quest/common/component/custom_textfield.dart';
+import 'package:test_quest/common/component/testquest_snackbar.dart';
 import 'package:test_quest/common/const.dart';
 import 'package:test_quest/community/model/test_post.dart';
-import 'package:test_quest/community/provider/post_create_provider.dart';
+import 'package:test_quest/community/provider/post_provider.dart';
 import 'package:test_quest/util/service/image_picker_service.dart';
 
 class PostCreateScreen extends ConsumerStatefulWidget {
@@ -35,10 +37,23 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
   @override
   void initState() {
     super.initState();
-    ref.listenManual(postCreateProvider, (previous, next) {
-      if (next is PostCreateSuccess) {
+    ref.listenManual(postProvider, (previous, next) {
+      if (next is PostSuccess) {
         if (mounted) {
-          Navigator.of(context).pop();
+          TestQuestSnackbar.show(
+            context,
+            '글이 성공적으로 등록되었습니다!',
+            isError: false,
+          );
+          context.pop();
+        }
+      } else if (next is PostError) {
+        if (mounted) {
+          TestQuestSnackbar.show(
+            context,
+            '업로드에 실패했습니다. 다시 시도해주세요.',
+            isError: true,
+          );
         }
       }
     });
@@ -74,7 +89,7 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
       return;
     }
 
-    ref.read(postCreateProvider.notifier).createPost(
+    ref.read(postProvider.notifier).createPost(
           title: _titleController.text.trim(),
           description: _contentController.text.trim(),
           platform: _selectedPlatform!,
@@ -99,8 +114,8 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(postCreateProvider);
-    final isLoading = state is PostCreateLoading;
+    final state = ref.watch(postProvider);
+    final isLoading = state is PostLoading;
     final primaryColor = Theme.of(context).primaryColor;
 
     return GestureDetector(
@@ -138,7 +153,7 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
                           },
                         ),
                       ),
-                      const SizedBox(width: 12), // Adjusted spacing here
+                      const SizedBox(width: 12),
                       Expanded(
                         child: _DatePickerButton(
                           text: '마감일',

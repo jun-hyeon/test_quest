@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:test_quest/auth/provider/auth_provider.dart';
+import 'package:test_quest/auth/provider/auth_state.dart';
 import 'package:test_quest/community/model/test_post_pagination.dart';
 import 'package:test_quest/community/provider/pagination_state.dart';
 import 'package:test_quest/community/repository/test_post_repository_impl.dart';
@@ -30,8 +32,30 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
 
   @override
   PaginationState build() {
+    // 🎯 인증 상태 변화 감지
+    ref.listen<AuthState>(authProvider, (previous, next) {
+      if (next is Unauthenticated) {
+        // 로그아웃 시 상태 초기화
+        log('[Pagination] 로그아웃 감지, 상태 초기화');
+        _resetState();
+      } else if (next is Authenticated && previous is! Authenticated) {
+        // 로그인 시 다시 초기화
+        log('[Pagination] 로그인 감지, 데이터 다시 로드');
+        Future.microtask(() => _init());
+      }
+    });
+
     _init();
     return const PaginationLoading();
+  }
+
+  void _resetState() {
+    _posts.clear();
+    _hasNext = true;
+    _lastId = null;
+    _lastCreateAt = null;
+    _retryCount = 0;
+    state = const PaginationLoading();
   }
 
   Future<void> _init() async {

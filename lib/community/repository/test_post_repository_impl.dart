@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_quest/community/model/test_post.dart';
 import 'package:test_quest/community/model/test_post_create.dart';
 import 'package:test_quest/community/model/test_post_pagination.dart';
+import 'package:test_quest/community/model/test_post_update.dart';
 import 'package:test_quest/community/repository/test_post_repository.dart';
 import 'package:test_quest/util/extensions/enum_extension.dart';
 import 'package:test_quest/util/model/response_model.dart';
@@ -48,9 +49,18 @@ class TestPostRepositoryImpl implements TestPostRepository {
   }
 
   @override
-  Future<void> deletePost(String id) {
-    // TODO: implement deletePost
-    throw UnimplementedError();
+  Future<void> deletePost(String id) async {
+    try {
+      log('[TestPostRepository] Delete post: $id');
+      final response = await dio.post(
+        '/gameboard/delete',
+        queryParameters: {'boardId': id},
+      );
+      log('[TestPostRepository] Delete response: ${response.data}');
+    } on DioException catch (e) {
+      log('[TestPostRepository] Delete post error: ${e.message}');
+      throw Exception('게시글 삭제에 실패했습니다.');
+    }
   }
 
   @override
@@ -95,8 +105,25 @@ class TestPostRepositoryImpl implements TestPostRepository {
   }
 
   @override
-  Future<void> updatePost(String id, TestPost post) {
-    // TODO: implement updatePost
-    throw UnimplementedError();
+  Future<void> updatePost(String id, TestPostUpdate post) async {
+    try {
+      final formData = FormData.fromMap({
+        'id': post.id,
+        'title': post.title,
+        'description': post.description,
+        if (post.boardImage != null && post.boardImage!.isNotEmpty)
+          'boardImage': await MultipartFile.fromFile(
+            post.boardImage!,
+            filename: '${post.boardImage!.split('/').last}.jpg',
+          ),
+      });
+
+      log('[TestPostRepository] Update formData: ${formData.toString()}');
+      final response = await dio.post('/gameboard/update', data: formData);
+      log('[TestPostRepository] Update response: ${response.data}');
+    } on DioException catch (e) {
+      log('Failed to update post: ${e.message}');
+      throw Exception('게시글 수정에 실패했습니다.');
+    }
   }
 }
