@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:test_quest/auth/provider/signup_provider.dart';
+import 'package:test_quest/auth/provider/signup_state.dart';
 import 'package:test_quest/common/component/custom_button.dart';
 import 'package:test_quest/common/component/custom_textfield.dart';
 import 'package:test_quest/common/component/profile_picker.dart';
 import 'package:test_quest/common/component/testquest_snackbar.dart';
-import 'package:test_quest/auth/provider/signup_provider.dart';
-import 'package:test_quest/auth/provider/signup_state.dart';
 import 'package:test_quest/util/service/permission_service.dart';
 
 class SignupProfileScreen extends ConsumerStatefulWidget {
@@ -108,76 +108,77 @@ class _ProfileStepFormState extends ConsumerState<SignupProfileScreen> {
   }
 
   Widget _buildProfileFields(BuildContext context, SignupProvider notifier) {
-    return Form(
-      key: formKey,
-      child: Column(
-        children: [
-          const SizedBox(height: 16),
-          ProfilePicker(selectedImage: selectedImage),
-          const SizedBox(height: 16),
-          TextButton(
-            onPressed: () async {
-              final granted = await checkPhotoCameraPermission();
-              if (!mounted) return;
-              if (!granted) {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('권한 필요'),
-                    content:
-                        const Text('프로필 이미지를 선택하려면 권한이 필요합니다.\n설정에서 허용해주세요.'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('취소'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          openAppSettings();
-                          context.pop();
-                        },
-                        child: const Text('설정으로 이동'),
-                      ),
-                    ],
-                  ),
+    return SingleChildScrollView(
+      child: Form(
+        key: formKey,
+        child: Column(
+          children: [
+            const SizedBox(height: 16),
+            ProfilePicker(selectedImage: selectedImage),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () async {
+                final granted = await checkPhotoCameraPermission();
+                if (!mounted) return;
+                if (!granted) {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('권한 필요'),
+                      content:
+                          const Text('프로필 이미지를 선택하려면 권한이 필요합니다.\n설정에서 허용해주세요.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('취소'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            openAppSettings();
+                            context.pop();
+                          },
+                          child: const Text('설정으로 이동'),
+                        ),
+                      ],
+                    ),
+                  );
+                  return;
+                }
+                await pickImage();
+              },
+              child: const Text('프로필 이미지 선택'),
+            ),
+            const SizedBox(height: 16),
+            CustomTextfield(
+              controller: nicknameController,
+              obscure: false,
+              labelText: '닉네임',
+              prefixIcon: Icons.tag_faces,
+              validator: notifier.validateNickname,
+            ),
+            const SizedBox(height: 16),
+            CustomTextfield(
+              controller: nameController,
+              obscure: false,
+              labelText: '이름',
+              prefixIcon: Icons.person,
+              validator: notifier.validateName,
+            ),
+            const SizedBox(height: 24),
+            CustomButton(
+              child: const Text('회원가입 완료'),
+              onPressed: () {
+                if (formKey.currentState?.validate() != true) return;
+                notifier.setProfile(
+                  nickname: nicknameController.text,
+                  name: nameController.text,
+                  image: selectedImage,
                 );
-                return;
-              }
-              await pickImage();
-            },
-            child: const Text('프로필 이미지 선택'),
-          ),
-          const SizedBox(height: 16),
-          CustomTextfield(
-            controller: nicknameController,
-            obscure: false,
-            labelText: '닉네임',
-            prefixIcon: Icons.tag_faces,
-            validator: notifier.validateNickname,
-          ),
-          const SizedBox(height: 16),
-          CustomTextfield(
-            controller: nameController,
-            obscure: false,
-            labelText: '이름',
-            prefixIcon: Icons.person,
-            validator: notifier.validateName,
-          ),
-          const SizedBox(height: 24),
-          const Spacer(),
-          CustomButton(
-            child: const Text('회원가입 완료'),
-            onPressed: () {
-              if (formKey.currentState?.validate() != true) return;
-              notifier.setProfile(
-                nickname: nicknameController.text,
-                name: nameController.text,
-                image: selectedImage,
-              );
-              notifier.signup();
-            },
-          ),
-        ],
+                notifier.signup();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
