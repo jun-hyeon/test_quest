@@ -10,9 +10,11 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
 
     <!--SDK 33(Android 13)-->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <!--SDK 34 (Android 14)-->
     <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED"/>
@@ -21,7 +23,9 @@
     <application
         android:label="test_quest"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon"
+        android:enableOnBackInvokedCallback="true">
+        
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -61,6 +65,12 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data
+            android:name="firebase_messaging_auto_init_enabled"
+            android:value="false" />
+        <meta-data
+            android:name="firebase_analytics_collection_enabled"
+            android:value="false" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
