@@ -9,7 +9,6 @@ import 'package:test_quest/auth/view/login_screen.dart';
 import 'package:test_quest/auth/view/profile_signup_screen.dart';
 import 'package:test_quest/auth/view/sign_up_screen.dart';
 import 'package:test_quest/common/view/root_tab.dart';
-import 'package:test_quest/common/view/splash_screen.dart';
 import 'package:test_quest/community/model/test_post.dart';
 import 'package:test_quest/community/view/post_create_screen.dart';
 import 'package:test_quest/community/view/post_detail_screen.dart';
@@ -47,21 +46,20 @@ final routerProvider = Provider<GoRouter>((ref) {
   final routerNotifier = RouterNotifier(ref);
 
   return GoRouter(
-    initialLocation: '/splash',
+    initialLocation: '/login', // '/splash'에서 '/login'으로 변경
     refreshListenable: routerNotifier, // Auth State 변화 감지
     redirect: (context, state) {
       final authState = ref.read(authProvider);
       final isGoingToLogin = state.matchedLocation == '/login';
       final isGoingToSignup = state.matchedLocation.startsWith('/signup');
-      final isGoingToSplash = state.matchedLocation == '/splash';
-
+      
       log(
         'Redirect 체크 - 경로: ${state.matchedLocation}, 인증: $authState',
         name: 'Router.redirect',
       );
 
-      // 스플래시, 로그인, 회원가입은 항상 허용 (스플래시에서 직접 네비게이션 처리)
-      if (isGoingToSplash || isGoingToLogin || isGoingToSignup) {
+      // 로그인, 회원가입은 항상 허용
+      if (isGoingToLogin || isGoingToSignup) {
         return null;
       }
 
@@ -74,12 +72,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         return '/login';
       }
 
+      // 인증된 상태에서 로그인 페이지 접근 시 메인 화면으로
+      if (isGoingToLogin) {
+        return '/root';
+      }
+
       // 그 외의 경우는 그대로 진행
       return null;
     },
     routes: [
-      GoRoute(
-          path: '/splash', builder: (context, state) => const SplashScreen()),
+      // SplashScreen 라우트 제거
       GoRoute(path: "/login", builder: (context, state) => const LoginScreen()),
       GoRoute(
         path: '/signup',
