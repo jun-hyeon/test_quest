@@ -77,7 +77,6 @@ class DefaultInterceptor extends Interceptor {
   /// 재시도 건너뛰는 이유 반환
   String _getSkipReason(RequestOptions options) {
     if (options.extra['disableRetry'] == true) return 'disableRetry 플래그';
-    if (options.data is FormData) return 'FormData 요청';
     return '알 수 없음';
   }
 
@@ -107,7 +106,7 @@ class DefaultInterceptor extends Interceptor {
     final refreshSuccess = await _refreshAccessToken();
     if (!refreshSuccess) {
       log('[Token] 토큰 갱신 실패 - 강제 로그아웃 처리');
-      _performLogout(); // 🎯 토큰 갱신 실패시 로그아웃
+      _performLogout();
       return false;
     }
 
@@ -133,10 +132,9 @@ class DefaultInterceptor extends Interceptor {
 
       return await _saveNewTokenFromResponse(response, storage);
     } on DioException catch (e) {
-      // 🎯 401/403 에러는 리프레시 토큰 만료를 의미
       if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
         log('[Token] 리프레시 토큰 만료: ${e.response?.data}');
-        return false; // 상위에서 로그아웃 처리
+        return false;
       }
 
       log('[Token] 갱신 중 에러: $e');
@@ -174,6 +172,12 @@ class DefaultInterceptor extends Interceptor {
           await ref.read(storageProvider).read(key: ACCESS_TOKEN_KEY);
       final retryOptions = _createRetryOptions(err.requestOptions, newToken!);
 
+      // FormData인 경우 새로운 FormData 생성
+      if (retryOptions.data is FormData) {
+        log('[Retry] FormData 재생성');
+        retryOptions.data = await _cloneFormData(retryOptions.data as FormData);
+      }
+
       final response = await _createRetryDio().fetch(retryOptions);
       log('[Retry] 재시도 성공');
       handler.resolve(response);
@@ -181,6 +185,22 @@ class DefaultInterceptor extends Interceptor {
       log('[Retry] 재시도 실패: $e');
       handler.next(err);
     }
+  }
+
+  /// FormData 복제
+  Future<FormData> _cloneFormData(FormData original) async {
+    final newFormData = FormData();
+
+    // 필드 복사
+    newFormData.fields.addAll(original.fields);
+
+    // 파일 복사
+    for (final file in original.files) {
+      newFormData.files.add(MapEntry(file.key, file.value.clone()));
+    }
+
+    log('[Retry] FormData 복제 완료');
+    return newFormData;
   }
 
   /// 재시도용 RequestOptions 생성
