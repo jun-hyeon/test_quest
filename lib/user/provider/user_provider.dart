@@ -66,11 +66,11 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
     state = await AsyncValue.guard(() => _loadUserFromStorage());
   }
 
-  /// 사용자 정보 삭제
+  /// 사용자 정보 삭제 (로컬만)
   Future<void> deleteUser() async {
     try {
+      // 로컬 사용자 정보만 삭제 (서버 API 호출하지 않음)
       await _userRepository.deleteUser();
-      await _authRepository.deleteAccount();
 
       state = const AsyncValue.data(null);
       log(
@@ -84,8 +84,40 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
         error: e,
         stackTrace: stackTrace,
       );
-      state = AsyncValue.error(e, stackTrace);
-      rethrow;
+      // 실패해도 상태는 null로 변경
+      state = const AsyncValue.data(null);
+    }
+  }
+
+  /// 계정 삭제 (서버 + 로컬)
+  Future<void> deleteAccount() async {
+    try {
+      // 서버에 계정 삭제 요청
+      await _authRepository.deleteAccount();
+
+      // 로컬 사용자 정보 삭제
+      await _userRepository.deleteUser();
+
+      state = const AsyncValue.data(null);
+      log(
+        '계정 삭제 완료',
+        name: 'UserNotifier.deleteAccount',
+      );
+    } catch (e, stackTrace) {
+      log(
+        '계정 삭제 실패',
+        name: 'UserNotifier.deleteAccount',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      // 실패해도 로컬은 정리
+      try {
+        await _userRepository.deleteUser();
+        state = const AsyncValue.data(null);
+      } catch (localError) {
+        log('로컬 정리 실패: $localError');
+        state = const AsyncValue.data(null);
+      }
     }
   }
 
@@ -155,28 +187,6 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
   /// 서버에서 사용자 정보 새로고침
   Future<void> refreshFromServer() async {
     await fetchUserFromServer();
-  }
-
-  /// 계정 삭제 (서버)
-  Future<void> deleteAccount() async {
-    try {
-      await _userRepository.deleteAccount();
-      state = const AsyncValue.data(null);
-
-      log(
-        '계정 삭제 완료',
-        name: 'UserNotifier.deleteAccount',
-      );
-    } catch (e, stackTrace) {
-      log(
-        '계정 삭제 실패',
-        name: 'UserNotifier.deleteAccount',
-        error: e,
-        stackTrace: stackTrace,
-      );
-      state = AsyncValue.error(e, stackTrace);
-      rethrow;
-    }
   }
 
   /// 저장소에서 사용자 정보 로드

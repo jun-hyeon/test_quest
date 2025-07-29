@@ -143,7 +143,7 @@ class UserRepositoryImpl extends UserRepository {
     );
 
     if (responseData.code != '200') {
-      throw Exception(responseData.message ?? '프로필 업데이트에 실패했습니다.');
+      throw Exception(responseData.message);
     }
 
     // 서버 업데이트 성공 시 로컬 스토리지에도 저장
