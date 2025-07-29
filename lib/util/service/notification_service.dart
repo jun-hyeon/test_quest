@@ -95,4 +95,51 @@ class NotificationService {
   Future<void> cancelNotification(int id) async {
     await notificationsPlugin.cancel(id);
   }
+
+  NotificationDetails _getFCMNotificationDetails() {
+    return const NotificationDetails(
+      android: AndroidNotificationDetails(
+        'fcm_channel',
+        'FCM 알림',
+        channelDescription: 'FCM을 통한 푸시 알림',
+        importance: Importance.max,
+        priority: Priority.high,
+        showWhen: true,
+        enableVibration: true,
+        playSound: true,
+        icon: '@mipmap/ic_launcher',
+      ),
+      iOS: DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      ),
+    );
+  }
+
+  Future<void> showFCMNotification({
+    int id = 0,
+    String? title,
+    String? body,
+    String? payload,
+  }) async {
+    return notificationsPlugin.show(
+      id,
+      title,
+      body,
+      _getFCMNotificationDetails(),
+      payload: payload,
+    );
+  }
+
+  Future<void> showPostCreatedNotification({
+    required String title,
+    required String author,
+  }) async {
+    await showNotification(
+      id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+      title: '✅ 글 작성 완료!',
+      body: '$title\n작성자: $author\n\nFirebase Console에서 수동으로 알림을 보낼 수 있습니다.',
+    );
+  }
 }
