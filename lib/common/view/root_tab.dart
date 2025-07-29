@@ -16,7 +16,6 @@ class _RootTabState extends State<RootTab> {
   final List<Widget> _screens = [
     const ScheduleScreen(),
     const CommunityScreen(),
-    const Center(child: Text("보관함")),
     const MyPageScreen()
   ];
 
@@ -48,10 +47,6 @@ class _RootTabState extends State<RootTab> {
           BottomNavigationBarItem(
             icon: Icon(Icons.forum),
             label: '커뮤니티',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark_border),
-            label: '보관함',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
