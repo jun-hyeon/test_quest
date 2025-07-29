@@ -35,9 +35,13 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
     // 🎯 인증 상태 변화 감지
     ref.listen<AuthState>(authProvider, (previous, next) {
       if (next is Unauthenticated) {
-        // 로그아웃 시 상태 초기화
+        // 로그아웃 시 상태 초기화 및 에러 상태로 설정
         log('[Pagination] 로그아웃 감지, 상태 초기화');
         _resetState();
+        state = PaginationError(
+          Exception('로그인이 필요합니다.'),
+          StackTrace.current,
+        );
       } else if (next is Authenticated && previous is! Authenticated) {
         // 로그인 시 다시 초기화
         log('[Pagination] 로그인 감지, 데이터 다시 로드');
@@ -45,7 +49,18 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
       }
     });
 
-    _init();
+    // 인증 상태 확인 후 초기화
+    final authState = ref.read(authProvider);
+    if (authState is Authenticated) {
+      _init();
+    } else {
+      // 인증되지 않은 상태면 에러 상태로 설정
+      state = PaginationError(
+        Exception('로그인이 필요합니다.'),
+        StackTrace.current,
+      );
+    }
+
     return const PaginationLoading();
   }
 
@@ -55,10 +70,20 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
     _lastId = null;
     _lastCreateAt = null;
     _retryCount = 0;
-    state = const PaginationLoading();
   }
 
   Future<void> _init() async {
+    // 인증 상태 재확인
+    final authState = ref.read(authProvider);
+    if (authState is! Authenticated) {
+      log('[Pagination] 인증되지 않은 상태, 초기화 중단');
+      state = PaginationError(
+        Exception('로그인이 필요합니다.'),
+        StackTrace.current,
+      );
+      return;
+    }
+
     state = const PaginationLoading();
     _posts.clear();
     _hasNext = true;
@@ -89,6 +114,18 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
       _retryCount = 0;
     } catch (error, stackTrace) {
       log('Pagination error during init: $error\n$stackTrace');
+
+      // 인증 상태 재확인
+      final currentAuthState = ref.read(authProvider);
+      if (currentAuthState is Unauthenticated) {
+        log('[Pagination] 인증되지 않은 상태, 에러 상태로 설정');
+        state = PaginationError(
+          Exception('로그인이 필요합니다.'),
+          StackTrace.current,
+        );
+        return;
+      }
+
       if (_retryCount < _maxRetries) {
         _retryCount++;
         await Future.delayed(const Duration(seconds: 2));
@@ -101,6 +138,14 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
 
   Future<void> fetchMore() async {
     if (!_hasNext || _isFetching) return;
+
+    // 인증 상태 확인
+    final authState = ref.read(authProvider);
+    if (authState is! Authenticated) {
+      log('[Pagination] 인증되지 않은 상태, fetchMore 중단');
+      return;
+    }
+
     _isFetching = true;
 
     try {
@@ -128,6 +173,17 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
       );
     } on DioException catch (error, stackTrace) {
       log('Pagination DioException during fetchMore: ${error.response?.statusCode}');
+
+      // 인증 상태 재확인
+      final currentAuthState = ref.read(authProvider);
+      if (currentAuthState is Unauthenticated) {
+        log('[Pagination] 인증되지 않은 상태, fetchMore 중단');
+        state = PaginationError(
+          Exception('로그인이 필요합니다.'),
+          StackTrace.current,
+        );
+        return;
+      }
 
       if (error.response?.statusCode == 401) {
         log('[fetchMore] 401 detected, retrying after token refresh...');
@@ -168,6 +224,17 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
   }
 
   Future<void> refresh() async {
+    // 인증 상태 확인
+    final authState = ref.read(authProvider);
+    if (authState is! Authenticated) {
+      log('[Pagination] 인증되지 않은 상태, refresh 중단');
+      state = PaginationError(
+        Exception('로그인이 필요합니다.'),
+        StackTrace.current,
+      );
+      return;
+    }
+
     final current = state;
     if (current is PaginationData) {
       state = PaginationRefreshing(current.posts);

@@ -23,7 +23,7 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
   @override
   void initState() {
     super.initState();
-
+    
     _scrollController.addListener(scrollListener);
   }
 

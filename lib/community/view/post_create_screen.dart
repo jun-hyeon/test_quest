@@ -71,7 +71,7 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
       locale: const Locale('ko', 'KR'),
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2030),
     );
     if (picked != null) {
