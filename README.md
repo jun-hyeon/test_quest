@@ -8,14 +8,15 @@
 
 | 다크 테마 | 라이트 테마 |
 |-----------|--------------|
-| <img src="assets/screenshots/test_quest_splash_screen_dark_theme.gif" width="300"/> |  <img src="assets/screenshots/test_quest_splash_screen_light_theme.gif" width="300"/> |
+| <img src="assets/screenshots/test_quest_splash_screen.png" width="300"/> |  <img src="assets/screenshots/test_quest_splash_screen.png" width="300"/> |
 | <img src="assets/screenshots/test_quest_login_dark_theme.png" width="300"/> | <img src="assets/screenshots/test_quest_login_light_theme.png" width="300"/> |
 | <img src="assets/screenshots/test_quest_signup_dark_theme.png" width="300"/> |  <img src="assets/screenshots/test_quest_signup_light_theme.png" width="300"/>|
 | <img src="assets/screenshots/test_quest_signup_2_dark_theme.png" width="300"/> |  <img src="assets/screenshots/test_quest_signup_2_light_theme.png" width="300"/>|
 | <img src="assets/screenshots/test_quest_calendar_dark_theme.png" width="300"/> | <img src="assets/screenshots/test_quest_calendar_light_theme.png" width="300"/> |
-| <img src="assets/screenshots/test_quest_community_dark_theme.png" width="300"/> | <img src="assets/screenshots/test_quest_community_light_theme.png" width="300"/> |
-| <img src="assets/screenshots/test_quest_my_page_dark_theme.png" width="300"/> | <img src="assets/screenshots/test_quest_my_page_light_theme.png" width="300"/> |
-| <img src="assets/screenshots/test_quest_settings_dark_theme.png" width="300"/> |  <img src="assets/screenshots/test_quest_settings_light_theme.png" width="300"/> |
+| <img src="assets/screenshots/test_quest_calendar_upload_dark.gif".png" width="300"/> | <img src="assets/screenshots/test_quest_calendar_upload_light.gif" width="300"/> |
+| <img src="assets/screenshots/test_quest_community_dark.gif" width="300"/> | <img src="assets/screenshots/test_quest_community_light.gif" width="300"/> |
+| <img src="assets/screenshots/test_quest_mypage_dark.png" width="300"/> | <img src="assets/screenshots/test_quest_mypage_light.png" width="300"/> |
+| <img src="assets/screenshots/test_quest_settings_dark.png" width="300"/> |  <img src="assets/screenshots/test_quest_settings_light.png" width="300"/> |
 
 
 ## 🚀 주요 기능
