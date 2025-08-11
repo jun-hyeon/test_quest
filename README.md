@@ -1,4 +1,4 @@
-# 🧪 TestQuest (개발 중..)
+# 🧪 TestQuest 
 
 **TestQuest**는 게임의 CBT, OBT, 알파 테스트 정보를 한눈에 확인하고 공유할 수 있는 커뮤니티 기반 Flutter 앱입니다.
 
@@ -9,42 +9,66 @@
 <details>
 <summary>🌙 다크 테마 (클릭하여 펼치기)</summary>
 
-| 화면 | 스크린샷 |
-|------|---------|
-| 스플래시 | <img src="assets/screenshots/test_quest_splash_screen_dark_theme.gif" width="300"/> |
-| 로그인 | <img src="assets/screenshots/test_quest_login_dark_theme.png" width="300"/> |
-| 회원가입 1 | <img src="assets/screenshots/test_quest_signup_dark_theme.png" width="300"/> |
-| 회원가입 2 | <img src="assets/screenshots/test_quest_signup_2_dark_theme.png" width="300"/> |
-| 캘린더 | <img src="assets/screenshots/test_quest_calendar_dark_theme.png" width="300"/> |
-| 캘린더 업로드 | <img src="assets/screenshots/test_quest_calendar_upload_dark.gif" width="300"/> |
-| 커뮤니티 | <img src="assets/screenshots/test_quest_community_dark.gif" width="300"/> |
-| 마이페이지 | <img src="assets/screenshots/test_quest_mypage_dark.png" width="300"/> |
-| 설정 | <img src="assets/screenshots/test_quest_settings_dark.png" width="300"/> |
-| 프로필 수정 | <img src="assets/screenshots/test_quest_profile_edit_dark.png" width="300"/> |
-| 일정 관리 | <img src="assets/screenshots/test_quest_schedule_dark.gif" width="300"/> |
-| 글쓰기 | <img src="assets/screenshots/test_quest_write_dark.gif" width="300"/> |
-| 글쓰기 2 | <img src="assets/screenshots/test_quest_write_2_dark.gif" width="300"/> |
+| 스플래시 | 로그인 |
+|---------|--------|
+| <img src="assets/screenshots/test_quest_splash_screen_dark_theme.gif" width="300"/> | <img src="assets/screenshots/test_quest_login_dark_theme.png" width="300"/> |
+
+| 회원가입 1 | 회원가입 2 |
+|-----------|-----------|
+| <img src="assets/screenshots/test_quest_signup_dark_theme.png" width="300"/> | <img src="assets/screenshots/test_quest_signup_2_dark_theme.png" width="300"/> |
+
+| 캘린더 | 캘린더 업로드 |
+|--------|-------------|
+| <img src="assets/screenshots/test_quest_calendar_dark_theme.png" width="300"/> | <img src="assets/screenshots/test_quest_calendar_upload_dark.gif" width="300"/> |
+
+| 커뮤니티 | 마이페이지 |
+|---------|-----------|
+| <img src="assets/screenshots/test_quest_community_dark.gif" width="300"/> | <img src="assets/screenshots/test_quest_mypage_dark.png" width="300"/> |
+
+| 설정 | 프로필 수정 |
+|------|-----------|
+| <img src="assets/screenshots/test_quest_settings_dark.png" width="300"/> | <img src="assets/screenshots/test_quest_profile_edit_dark.png" width="300"/> |
+
+| 일정 관리 | 글쓰기 |
+|---------|-------|
+| <img src="assets/screenshots/test_quest_schedule_dark.gif" width="300"/> | <img src="assets/screenshots/test_quest_write_dark.gif" width="300"/> |
+
+| 글쓰기 2 | 글 상세보기 |
+|---------|-----------|
+| <img src="assets/screenshots/test_quest_write_2_dark.gif" width="300"/> | <img src="assets/screenshots/test_quest_detail_dark.png" width="300"/> |
 
 </details>
 
 <details>
 <summary>☀️ 라이트 테마 (클릭하여 펼치기)</summary>
 
-| 화면 | 스크린샷 |
-|------|---------|
-| 스플래시 | <img src="assets/screenshots/test_quest_splash_screen_light_theme.gif" width="300"/> |
-| 로그인 | <img src="assets/screenshots/test_quest_login_light_theme.png" width="300"/> |
-| 회원가입 1 | <img src="assets/screenshots/test_quest_signup_light_theme.png" width="300"/> |
-| 회원가입 2 | <img src="assets/screenshots/test_quest_signup_2_light_theme.png" width="300"/> |
-| 캘린더 | <img src="assets/screenshots/test_quest_calendar_light_theme.png" width="300"/> |
-| 캘린더 업로드 | <img src="assets/screenshots/test_quest_calendar_upload_light.gif" width="300"/> |
-| 커뮤니티 | <img src="assets/screenshots/test_quest_community_light.gif" width="300"/> |
-| 마이페이지 | <img src="assets/screenshots/test_quest_mypage_light.png" width="300"/> |
-| 설정 | <img src="assets/screenshots/test_quest_settings_light.png" width="300"/> |
-| 프로필 수정 | <img src="assets/screenshots/test_quest_profile_edit_light.png" width="300"/> |
-| 일정 관리 | <img src="assets/screenshots/test_quest_schedule_light.gif" width="300"/> |
-| 글쓰기 | <img src="assets/screenshots/test_quest_write_light.gif" width="300"/> |
-| 글쓰기 2 | <img src="assets/screenshots/test_quest_write_2_light.gif" width="300"/> |
+| 스플래시 | 로그인 |
+|---------|--------|
+| <img src="assets/screenshots/test_quest_splash_screen_light_theme.gif" width="300"/> | <img src="assets/screenshots/test_quest_login_light_theme.png" width="300"/> |
+
+| 회원가입 1 | 회원가입 2 |
+|-----------|-----------|
+| <img src="assets/screenshots/test_quest_signup_light_theme.png" width="300"/> | <img src="assets/screenshots/test_quest_signup_2_light_theme.png" width="300"/> |
+
+| 캘린더 | 캘린더 업로드 |
+|--------|-------------|
+| <img src="assets/screenshots/test_quest_calendar_light_theme.png" width="300"/> | <img src="assets/screenshots/test_quest_calendar_upload_light.gif" width="300"/> |
+
+| 커뮤니티 | 마이페이지 |
+|---------|-----------|
+| <img src="assets/screenshots/test_quest_community_light.gif" width="300"/> | <img src="assets/screenshots/test_quest_mypage_light.png" width="300"/> |
+
+| 설정 | 프로필 수정 |
+|------|-----------|
+| <img src="assets/screenshots/test_quest_settings_light.png" width="300"/> | <img src="assets/screenshots/test_quest_profile_edit_light.png" width="300"/> |
+
+| 일정 관리 | 글쓰기 |
+|---------|-------|
+| <img src="assets/screenshots/test_quest_schedule_light.gif" width="300"/> | <img src="assets/screenshots/test_quest_write_light.gif" width="300"/> |
+
+| 글쓰기 2 | 글 상세보기 |
+|---------|-----------|
+| <img src="assets/screenshots/test_quest_write_2_light.gif" width="300"/> | <img src="assets/screenshots/test_quest_detail_light.png" width="300"/> |
 
 </details>
 
