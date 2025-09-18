@@ -6,6 +6,7 @@ import 'package:test_quest/common/component/testquest_snackbar.dart';
 import 'package:test_quest/community/model/test_post.dart';
 import 'package:test_quest/community/provider/post_provider.dart';
 import 'package:test_quest/user/provider/user_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PostDetailScreen extends ConsumerStatefulWidget {
   final TestPost post;
@@ -184,9 +185,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
             ),
             const SizedBox(height: 24),
             FilledButton(
-              onPressed: () {
-                // 링크 열기 등 구현 필요
-              },
+              onPressed: _openRelatedLink,
               child: const Text('관련 링크 열기'),
             ),
           ],
@@ -195,7 +194,26 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     );
   }
 
-  /// 메뉴 액션 처리 (단일 책임 원칙)
+  /// 관련 링크 열기
+  Future<void> _openRelatedLink() async {
+    final Uri url = Uri.parse(_currentPost.linkUrl);
+    try {
+      final bool canLaunch = await canLaunchUrl(url);
+      if (!canLaunch) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('링크를 열 수 없습니다.')),
+        );
+        return;
+      }
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('오류 발생: $e')),
+      );
+    }
+  }
+
+  /// 메뉴 액션 처리
   void _handleMenuAction(BuildContext context, WidgetRef ref, String action) {
     switch (action) {
       case 'edit':
@@ -207,7 +225,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     }
   }
 
-  /// 수정 화면으로 이동 (단일 책임 원칙)
+  /// 수정 화면으로 이동
   void _navigateToEdit(BuildContext context) async {
     final result =
         await context.push<TestPost>('/post_edit', extra: _currentPost);
@@ -220,7 +238,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     }
   }
 
-  /// 삭제 확인 다이얼로그 표시 (단일 책임 원칙)
+  /// 삭제 확인 다이얼로그 표시
   void _showDeleteConfirmation(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
@@ -247,7 +265,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     );
   }
 
-  /// 글 삭제 실행 (단일 책임 원칙)
+  /// 글 삭제 실행
   void _deletePost(BuildContext context, WidgetRef ref) {
     ref.read(postProvider.notifier).deletePost(_currentPost.id);
   }

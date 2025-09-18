@@ -24,6 +24,7 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _titleController;
   late final TextEditingController _contentController;
+  late final TextEditingController _linkController;
 
   XFile? _selectedImage;
 
@@ -32,6 +33,7 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
     super.initState();
     _titleController = TextEditingController(text: widget.post.title);
     _contentController = TextEditingController(text: widget.post.description);
+    _linkController = TextEditingController(text: widget.post.linkUrl);
 
     ref.listenManual(postProvider, (previous, next) {
       if (next is PostSuccess) {
@@ -182,6 +184,16 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
                                 ? '내용을 입력하세요'
                                 : null,
                       ),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomTextfield(
+                      obscure: false,
+                      controller: _linkController,
+                      hintText: '링크',
+                      validator: (value) =>
+                          value == null || value.trim().isEmpty
+                              ? '링크를 입력해주세요'
+                              : null,
                     ),
                     const SizedBox(height: 16),
                     CustomButton(
