@@ -52,7 +52,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       final authState = ref.read(authProvider);
       final isGoingToLogin = state.matchedLocation == '/login';
       final isGoingToSignup = state.matchedLocation.startsWith('/signup');
-      
       log(
         'Redirect 체크 - 경로: ${state.matchedLocation}, 인증: $authState',
         name: 'Router.redirect',
@@ -104,8 +103,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
           path: '/post_detail',
           builder: (context, state) {
-            final post = state.extra as TestPost;
-            return PostDetailScreen(post: post);
+            final postId = state.extra as String;
+            return PostDetailScreen(postId: postId);
           }),
       GoRoute(
         path: '/post_create',
