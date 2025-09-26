@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_quest/community/component/community_card.dart';
-import 'package:test_quest/community/model/test_post.dart';
+import 'package:test_quest/community/model/test_post_list_item.dart';
 import 'package:test_quest/community/provider/pagination_state.dart';
 import 'package:test_quest/community/provider/test_post_pagination_provider.dart';
 import 'package:test_quest/schedule/provider/bookmarked_event_provider.dart';
@@ -46,11 +46,11 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
     super.dispose();
   }
 
-  void onBookmarkPressed(TestPost event) {
+  void onBookmarkPressed(TestPostListItem event) {
     final companion = CalendarEventsCompanion(
-      auth: Value(event.author),
+      auth: Value(event.nickname),
+      postId: Value(event.id),
       title: Value(event.title),
-      description: Value(event.description),
       startDate: Value(event.startDate),
       endDate: Value(event.endDate),
       thumbnailUrl: Value(event.thumbnailUrl),
@@ -88,7 +88,7 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
               snap: false,
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               scrolledUnderElevation: 0,
-              expandedHeight: 60,
+              expandedHeight: 20,
             ),
             // 두 번째 SliverAppBar: 검색창만 포함하고 고정됨
             SliverAppBar(
@@ -97,12 +97,6 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
               automaticallyImplyLeading: false, // 뒤로가기 버튼 숨김
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               scrolledUnderElevation: 0,
-              shape: Border(
-                bottom: BorderSide(
-                  color: Theme.of(context).primaryColor,
-                  width: 0.5,
-                ),
-              ),
               flexibleSpace: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -114,6 +108,7 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
                     onSubmitted: (value) {
                       notifier.setKeyword(value);
                     },
+                    elevation: const WidgetStatePropertyAll(0),
                     shape: WidgetStatePropertyAll(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -122,14 +117,17 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
                     side: WidgetStatePropertyAll(
                       BorderSide(
                         color: Theme.of(context).primaryColor,
-                        width: 2,
+                        width: 1,
                       ),
+                    ),
+                    backgroundColor: WidgetStatePropertyAll(
+                      Theme.of(context).cardColor,
                     ),
                     leading: const Icon(Icons.search),
                   ),
                 ),
               ),
-              toolbarHeight: 70, // 검색창의 높이
+              toolbarHeight: 60, // 검색창의 높이
             ),
             switch (state) {
               PaginationLoading() => const SliverFillRemaining(
@@ -154,12 +152,12 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
                                 final e = posts[index];
                                 return GestureDetector(
                                   onTap: () {
-                                    context.push("/post_detail", extra: e);
+                                    context.push("/post_detail", extra: e.id);
                                   },
                                   child: CommunityCard(
                                     thumbnailUrl: e.thumbnailUrl,
                                     title: e.title,
-                                    author: e.author,
+                                    author: e.nickname,
                                     startDate: e.startDate,
                                     endDate: e.endDate,
                                     views: e.views,

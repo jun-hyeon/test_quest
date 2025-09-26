@@ -61,16 +61,9 @@ class PostNotifier extends Notifier<PostState> {
   }) async {
     state = PostState.loading();
     try {
-      // 현재 사용자 정보 가져오기
-      final currentUser = ref.read(currentUserProvider);
-      if (currentUser == null) {
-        throw Exception('사용자 정보가 없습니다.');
-      }
-      final author = currentUser.nickname;
       final DateFormat dateFormat = DateFormat('yyyy-MM-dd');
 
       final post = TestPostCreate(
-        author: author,
         title: title,
         description: description,
         platform: platform,
@@ -88,14 +81,13 @@ class PostNotifier extends Notifier<PostState> {
       // 글 작성 완료 알림 표시
       await notificationService.showPostCreatedNotification(
         title: title,
-        author: author,
+        
       );
 
       // FCM 알림 전송 (다른 사용자들에게)
       try {
         await fcmService.sendNewPostNotifications(
           title: title,
-          author: author,
           platform: platform.toPostString(),
           type: type.toPostString(),
         );
@@ -109,6 +101,20 @@ class PostNotifier extends Notifier<PostState> {
     } catch (e) {
       log('Post creation failed: $e');
       state = PostState.error(e.toString());
+    }
+  }
+
+  Future<TestPost?> getPost({required String id}) async {
+    state = PostState.loading();
+    try {
+      final post = await repository.getPost(id);
+      log('Post get success: $post');
+      state = PostState.success();
+      return post;
+    } catch (e) {
+      log('Post get failed: $e');
+      state = PostState.error(e.toString());
+      return null;
     }
   }
 

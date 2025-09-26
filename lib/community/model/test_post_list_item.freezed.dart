@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'test_post.dart';
+part of 'test_post_list_item.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,138 +13,109 @@ part of 'test_post.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$TestPost {
+mixin _$TestPostListItem {
   String get id;
   String get title;
-  String get userId;
   String get nickname;
-  String get description;
+  String get thumbnailUrl;
   @JsonKey(unknownEnumValue: TestPlatform.unknown)
   TestPlatform get platform;
   @JsonKey(unknownEnumValue: TestType.unknown)
   TestType get type;
   int get views;
-  String? get thumbnailUrl;
-  String get linkUrl;
   @JsonKey(name: 'startDate')
   DateTime get startDate;
   @JsonKey(name: 'endDate')
   DateTime get endDate;
   @JsonKey(name: 'createAt')
   DateTime get createdAt;
-  String get recruitStatus;
 
-  /// Create a copy of TestPost
+  /// Create a copy of TestPostListItem
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  $TestPostCopyWith<TestPost> get copyWith =>
-      _$TestPostCopyWithImpl<TestPost>(this as TestPost, _$identity);
+  $TestPostListItemCopyWith<TestPostListItem> get copyWith =>
+      _$TestPostListItemCopyWithImpl<TestPostListItem>(
+          this as TestPostListItem, _$identity);
 
-  /// Serializes this TestPost to a JSON map.
+  /// Serializes this TestPostListItem to a JSON map.
   Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is TestPost &&
+            other is TestPostListItem &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
-            (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.nickname, nickname) ||
                 other.nickname == nickname) &&
-            (identical(other.description, description) ||
-                other.description == description) &&
+            (identical(other.thumbnailUrl, thumbnailUrl) ||
+                other.thumbnailUrl == thumbnailUrl) &&
             (identical(other.platform, platform) ||
                 other.platform == platform) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.views, views) || other.views == views) &&
-            (identical(other.thumbnailUrl, thumbnailUrl) ||
-                other.thumbnailUrl == thumbnailUrl) &&
-            (identical(other.linkUrl, linkUrl) || other.linkUrl == linkUrl) &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
             (identical(other.endDate, endDate) || other.endDate == endDate) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.recruitStatus, recruitStatus) ||
-                other.recruitStatus == recruitStatus));
+                other.createdAt == createdAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      title,
-      userId,
-      nickname,
-      description,
-      platform,
-      type,
-      views,
-      thumbnailUrl,
-      linkUrl,
-      startDate,
-      endDate,
-      createdAt,
-      recruitStatus);
+  int get hashCode => Object.hash(runtimeType, id, title, nickname,
+      thumbnailUrl, platform, type, views, startDate, endDate, createdAt);
 
   @override
   String toString() {
-    return 'TestPost(id: $id, title: $title, userId: $userId, nickname: $nickname, description: $description, platform: $platform, type: $type, views: $views, thumbnailUrl: $thumbnailUrl, linkUrl: $linkUrl, startDate: $startDate, endDate: $endDate, createdAt: $createdAt, recruitStatus: $recruitStatus)';
+    return 'TestPostListItem(id: $id, title: $title, nickname: $nickname, thumbnailUrl: $thumbnailUrl, platform: $platform, type: $type, views: $views, startDate: $startDate, endDate: $endDate, createdAt: $createdAt)';
   }
 }
 
 /// @nodoc
-abstract mixin class $TestPostCopyWith<$Res> {
-  factory $TestPostCopyWith(TestPost value, $Res Function(TestPost) _then) =
-      _$TestPostCopyWithImpl;
+abstract mixin class $TestPostListItemCopyWith<$Res> {
+  factory $TestPostListItemCopyWith(
+          TestPostListItem value, $Res Function(TestPostListItem) _then) =
+      _$TestPostListItemCopyWithImpl;
   @useResult
   $Res call(
       {String id,
       String title,
-      String userId,
       String nickname,
-      String description,
+      String thumbnailUrl,
       @JsonKey(unknownEnumValue: TestPlatform.unknown) TestPlatform platform,
       @JsonKey(unknownEnumValue: TestType.unknown) TestType type,
       int views,
-      String? thumbnailUrl,
-      String linkUrl,
       @JsonKey(name: 'startDate') DateTime startDate,
       @JsonKey(name: 'endDate') DateTime endDate,
-      @JsonKey(name: 'createAt') DateTime createdAt,
-      String recruitStatus});
+      @JsonKey(name: 'createAt') DateTime createdAt});
 }
 
 /// @nodoc
-class _$TestPostCopyWithImpl<$Res> implements $TestPostCopyWith<$Res> {
-  _$TestPostCopyWithImpl(this._self, this._then);
+class _$TestPostListItemCopyWithImpl<$Res>
+    implements $TestPostListItemCopyWith<$Res> {
+  _$TestPostListItemCopyWithImpl(this._self, this._then);
 
-  final TestPost _self;
-  final $Res Function(TestPost) _then;
+  final TestPostListItem _self;
+  final $Res Function(TestPostListItem) _then;
 
-  /// Create a copy of TestPost
+  /// Create a copy of TestPostListItem
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? id = null,
     Object? title = null,
-    Object? userId = null,
     Object? nickname = null,
-    Object? description = null,
+    Object? thumbnailUrl = null,
     Object? platform = null,
     Object? type = null,
     Object? views = null,
-    Object? thumbnailUrl = freezed,
-    Object? linkUrl = null,
     Object? startDate = null,
     Object? endDate = null,
     Object? createdAt = null,
-    Object? recruitStatus = null,
   }) {
     return _then(_self.copyWith(
       id: null == id
@@ -155,17 +126,13 @@ class _$TestPostCopyWithImpl<$Res> implements $TestPostCopyWith<$Res> {
           ? _self.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
-      userId: null == userId
-          ? _self.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
       nickname: null == nickname
           ? _self.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
               as String,
-      description: null == description
-          ? _self.description
-          : description // ignore: cast_nullable_to_non_nullable
+      thumbnailUrl: null == thumbnailUrl
+          ? _self.thumbnailUrl
+          : thumbnailUrl // ignore: cast_nullable_to_non_nullable
               as String,
       platform: null == platform
           ? _self.platform
@@ -179,14 +146,6 @@ class _$TestPostCopyWithImpl<$Res> implements $TestPostCopyWith<$Res> {
           ? _self.views
           : views // ignore: cast_nullable_to_non_nullable
               as int,
-      thumbnailUrl: freezed == thumbnailUrl
-          ? _self.thumbnailUrl
-          : thumbnailUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      linkUrl: null == linkUrl
-          ? _self.linkUrl
-          : linkUrl // ignore: cast_nullable_to_non_nullable
-              as String,
       startDate: null == startDate
           ? _self.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
@@ -199,16 +158,12 @@ class _$TestPostCopyWithImpl<$Res> implements $TestPostCopyWith<$Res> {
           ? _self.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      recruitStatus: null == recruitStatus
-          ? _self.recruitStatus
-          : recruitStatus // ignore: cast_nullable_to_non_nullable
-              as String,
     ));
   }
 }
 
-/// Adds pattern-matching-related methods to [TestPost].
-extension TestPostPatterns on TestPost {
+/// Adds pattern-matching-related methods to [TestPostListItem].
+extension TestPostListItemPatterns on TestPostListItem {
   /// A variant of `map` that fallback to returning `orElse`.
   ///
   /// It is equivalent to doing:
@@ -223,12 +178,12 @@ extension TestPostPatterns on TestPost {
 
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>(
-    TResult Function(_TestPost value)? $default, {
+    TResult Function(_TestPostListItem value)? $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
-      case _TestPost() when $default != null:
+      case _TestPostListItem() when $default != null:
         return $default(_that);
       case _:
         return orElse();
@@ -250,11 +205,11 @@ extension TestPostPatterns on TestPost {
 
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
-    TResult Function(_TestPost value) $default,
+    TResult Function(_TestPostListItem value) $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _TestPost():
+      case _TestPostListItem():
         return $default(_that);
       case _:
         throw StateError('Unexpected subclass');
@@ -275,11 +230,11 @@ extension TestPostPatterns on TestPost {
 
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_TestPost value)? $default,
+    TResult? Function(_TestPostListItem value)? $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _TestPost() when $default != null:
+      case _TestPostListItem() when $default != null:
         return $default(_that);
       case _:
         return null;
@@ -303,40 +258,32 @@ extension TestPostPatterns on TestPost {
     TResult Function(
             String id,
             String title,
-            String userId,
             String nickname,
-            String description,
+            String thumbnailUrl,
             @JsonKey(unknownEnumValue: TestPlatform.unknown)
             TestPlatform platform,
             @JsonKey(unknownEnumValue: TestType.unknown) TestType type,
             int views,
-            String? thumbnailUrl,
-            String linkUrl,
             @JsonKey(name: 'startDate') DateTime startDate,
             @JsonKey(name: 'endDate') DateTime endDate,
-            @JsonKey(name: 'createAt') DateTime createdAt,
-            String recruitStatus)?
+            @JsonKey(name: 'createAt') DateTime createdAt)?
         $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
-      case _TestPost() when $default != null:
+      case _TestPostListItem() when $default != null:
         return $default(
             _that.id,
             _that.title,
-            _that.userId,
             _that.nickname,
-            _that.description,
+            _that.thumbnailUrl,
             _that.platform,
             _that.type,
             _that.views,
-            _that.thumbnailUrl,
-            _that.linkUrl,
             _that.startDate,
             _that.endDate,
-            _that.createdAt,
-            _that.recruitStatus);
+            _that.createdAt);
       case _:
         return orElse();
     }
@@ -360,39 +307,31 @@ extension TestPostPatterns on TestPost {
     TResult Function(
             String id,
             String title,
-            String userId,
             String nickname,
-            String description,
+            String thumbnailUrl,
             @JsonKey(unknownEnumValue: TestPlatform.unknown)
             TestPlatform platform,
             @JsonKey(unknownEnumValue: TestType.unknown) TestType type,
             int views,
-            String? thumbnailUrl,
-            String linkUrl,
             @JsonKey(name: 'startDate') DateTime startDate,
             @JsonKey(name: 'endDate') DateTime endDate,
-            @JsonKey(name: 'createAt') DateTime createdAt,
-            String recruitStatus)
+            @JsonKey(name: 'createAt') DateTime createdAt)
         $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _TestPost():
+      case _TestPostListItem():
         return $default(
             _that.id,
             _that.title,
-            _that.userId,
             _that.nickname,
-            _that.description,
+            _that.thumbnailUrl,
             _that.platform,
             _that.type,
             _that.views,
-            _that.thumbnailUrl,
-            _that.linkUrl,
             _that.startDate,
             _that.endDate,
-            _that.createdAt,
-            _that.recruitStatus);
+            _that.createdAt);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -415,39 +354,31 @@ extension TestPostPatterns on TestPost {
     TResult? Function(
             String id,
             String title,
-            String userId,
             String nickname,
-            String description,
+            String thumbnailUrl,
             @JsonKey(unknownEnumValue: TestPlatform.unknown)
             TestPlatform platform,
             @JsonKey(unknownEnumValue: TestType.unknown) TestType type,
             int views,
-            String? thumbnailUrl,
-            String linkUrl,
             @JsonKey(name: 'startDate') DateTime startDate,
             @JsonKey(name: 'endDate') DateTime endDate,
-            @JsonKey(name: 'createAt') DateTime createdAt,
-            String recruitStatus)?
+            @JsonKey(name: 'createAt') DateTime createdAt)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _TestPost() when $default != null:
+      case _TestPostListItem() when $default != null:
         return $default(
             _that.id,
             _that.title,
-            _that.userId,
             _that.nickname,
-            _that.description,
+            _that.thumbnailUrl,
             _that.platform,
             _that.type,
             _that.views,
-            _that.thumbnailUrl,
-            _that.linkUrl,
             _that.startDate,
             _that.endDate,
-            _that.createdAt,
-            _that.recruitStatus);
+            _that.createdAt);
       case _:
         return null;
     }
@@ -456,35 +387,29 @@ extension TestPostPatterns on TestPost {
 
 /// @nodoc
 @JsonSerializable()
-class _TestPost implements TestPost {
-  _TestPost(
+class _TestPostListItem implements TestPostListItem {
+  _TestPostListItem(
       {required this.id,
       required this.title,
-      required this.userId,
       required this.nickname,
-      required this.description,
+      required this.thumbnailUrl,
       @JsonKey(unknownEnumValue: TestPlatform.unknown) required this.platform,
       @JsonKey(unknownEnumValue: TestType.unknown) required this.type,
       required this.views,
-      this.thumbnailUrl,
-      required this.linkUrl,
       @JsonKey(name: 'startDate') required this.startDate,
       @JsonKey(name: 'endDate') required this.endDate,
-      @JsonKey(name: 'createAt') required this.createdAt,
-      required this.recruitStatus});
-  factory _TestPost.fromJson(Map<String, dynamic> json) =>
-      _$TestPostFromJson(json);
+      @JsonKey(name: 'createAt') required this.createdAt});
+  factory _TestPostListItem.fromJson(Map<String, dynamic> json) =>
+      _$TestPostListItemFromJson(json);
 
   @override
   final String id;
   @override
   final String title;
   @override
-  final String userId;
-  @override
   final String nickname;
   @override
-  final String description;
+  final String thumbnailUrl;
   @override
   @JsonKey(unknownEnumValue: TestPlatform.unknown)
   final TestPlatform platform;
@@ -494,10 +419,6 @@ class _TestPost implements TestPost {
   @override
   final int views;
   @override
-  final String? thumbnailUrl;
-  @override
-  final String linkUrl;
-  @override
   @JsonKey(name: 'startDate')
   final DateTime startDate;
   @override
@@ -506,20 +427,18 @@ class _TestPost implements TestPost {
   @override
   @JsonKey(name: 'createAt')
   final DateTime createdAt;
-  @override
-  final String recruitStatus;
 
-  /// Create a copy of TestPost
+  /// Create a copy of TestPostListItem
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$TestPostCopyWith<_TestPost> get copyWith =>
-      __$TestPostCopyWithImpl<_TestPost>(this, _$identity);
+  _$TestPostListItemCopyWith<_TestPostListItem> get copyWith =>
+      __$TestPostListItemCopyWithImpl<_TestPostListItem>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$TestPostToJson(
+    return _$TestPostListItemToJson(
       this,
     );
   }
@@ -528,107 +447,81 @@ class _TestPost implements TestPost {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _TestPost &&
+            other is _TestPostListItem &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
-            (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.nickname, nickname) ||
                 other.nickname == nickname) &&
-            (identical(other.description, description) ||
-                other.description == description) &&
+            (identical(other.thumbnailUrl, thumbnailUrl) ||
+                other.thumbnailUrl == thumbnailUrl) &&
             (identical(other.platform, platform) ||
                 other.platform == platform) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.views, views) || other.views == views) &&
-            (identical(other.thumbnailUrl, thumbnailUrl) ||
-                other.thumbnailUrl == thumbnailUrl) &&
-            (identical(other.linkUrl, linkUrl) || other.linkUrl == linkUrl) &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
             (identical(other.endDate, endDate) || other.endDate == endDate) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.recruitStatus, recruitStatus) ||
-                other.recruitStatus == recruitStatus));
+                other.createdAt == createdAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      title,
-      userId,
-      nickname,
-      description,
-      platform,
-      type,
-      views,
-      thumbnailUrl,
-      linkUrl,
-      startDate,
-      endDate,
-      createdAt,
-      recruitStatus);
+  int get hashCode => Object.hash(runtimeType, id, title, nickname,
+      thumbnailUrl, platform, type, views, startDate, endDate, createdAt);
 
   @override
   String toString() {
-    return 'TestPost(id: $id, title: $title, userId: $userId, nickname: $nickname, description: $description, platform: $platform, type: $type, views: $views, thumbnailUrl: $thumbnailUrl, linkUrl: $linkUrl, startDate: $startDate, endDate: $endDate, createdAt: $createdAt, recruitStatus: $recruitStatus)';
+    return 'TestPostListItem(id: $id, title: $title, nickname: $nickname, thumbnailUrl: $thumbnailUrl, platform: $platform, type: $type, views: $views, startDate: $startDate, endDate: $endDate, createdAt: $createdAt)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$TestPostCopyWith<$Res>
-    implements $TestPostCopyWith<$Res> {
-  factory _$TestPostCopyWith(_TestPost value, $Res Function(_TestPost) _then) =
-      __$TestPostCopyWithImpl;
+abstract mixin class _$TestPostListItemCopyWith<$Res>
+    implements $TestPostListItemCopyWith<$Res> {
+  factory _$TestPostListItemCopyWith(
+          _TestPostListItem value, $Res Function(_TestPostListItem) _then) =
+      __$TestPostListItemCopyWithImpl;
   @override
   @useResult
   $Res call(
       {String id,
       String title,
-      String userId,
       String nickname,
-      String description,
+      String thumbnailUrl,
       @JsonKey(unknownEnumValue: TestPlatform.unknown) TestPlatform platform,
       @JsonKey(unknownEnumValue: TestType.unknown) TestType type,
       int views,
-      String? thumbnailUrl,
-      String linkUrl,
       @JsonKey(name: 'startDate') DateTime startDate,
       @JsonKey(name: 'endDate') DateTime endDate,
-      @JsonKey(name: 'createAt') DateTime createdAt,
-      String recruitStatus});
+      @JsonKey(name: 'createAt') DateTime createdAt});
 }
 
 /// @nodoc
-class __$TestPostCopyWithImpl<$Res> implements _$TestPostCopyWith<$Res> {
-  __$TestPostCopyWithImpl(this._self, this._then);
+class __$TestPostListItemCopyWithImpl<$Res>
+    implements _$TestPostListItemCopyWith<$Res> {
+  __$TestPostListItemCopyWithImpl(this._self, this._then);
 
-  final _TestPost _self;
-  final $Res Function(_TestPost) _then;
+  final _TestPostListItem _self;
+  final $Res Function(_TestPostListItem) _then;
 
-  /// Create a copy of TestPost
+  /// Create a copy of TestPostListItem
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $Res call({
     Object? id = null,
     Object? title = null,
-    Object? userId = null,
     Object? nickname = null,
-    Object? description = null,
+    Object? thumbnailUrl = null,
     Object? platform = null,
     Object? type = null,
     Object? views = null,
-    Object? thumbnailUrl = freezed,
-    Object? linkUrl = null,
     Object? startDate = null,
     Object? endDate = null,
     Object? createdAt = null,
-    Object? recruitStatus = null,
   }) {
-    return _then(_TestPost(
+    return _then(_TestPostListItem(
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -637,17 +530,13 @@ class __$TestPostCopyWithImpl<$Res> implements _$TestPostCopyWith<$Res> {
           ? _self.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
-      userId: null == userId
-          ? _self.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
       nickname: null == nickname
           ? _self.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
               as String,
-      description: null == description
-          ? _self.description
-          : description // ignore: cast_nullable_to_non_nullable
+      thumbnailUrl: null == thumbnailUrl
+          ? _self.thumbnailUrl
+          : thumbnailUrl // ignore: cast_nullable_to_non_nullable
               as String,
       platform: null == platform
           ? _self.platform
@@ -661,14 +550,6 @@ class __$TestPostCopyWithImpl<$Res> implements _$TestPostCopyWith<$Res> {
           ? _self.views
           : views // ignore: cast_nullable_to_non_nullable
               as int,
-      thumbnailUrl: freezed == thumbnailUrl
-          ? _self.thumbnailUrl
-          : thumbnailUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      linkUrl: null == linkUrl
-          ? _self.linkUrl
-          : linkUrl // ignore: cast_nullable_to_non_nullable
-              as String,
       startDate: null == startDate
           ? _self.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
@@ -681,10 +562,6 @@ class __$TestPostCopyWithImpl<$Res> implements _$TestPostCopyWith<$Res> {
           ? _self.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      recruitStatus: null == recruitStatus
-          ? _self.recruitStatus
-          : recruitStatus // ignore: cast_nullable_to_non_nullable
-              as String,
     ));
   }
 }

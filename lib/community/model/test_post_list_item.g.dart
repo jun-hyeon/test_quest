@@ -1,45 +1,39 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'test_post.dart';
+part of 'test_post_list_item.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_TestPost _$TestPostFromJson(Map<String, dynamic> json) => _TestPost(
+_TestPostListItem _$TestPostListItemFromJson(Map<String, dynamic> json) =>
+    _TestPostListItem(
       id: json['id'] as String,
       title: json['title'] as String,
-      userId: json['userId'] as String,
       nickname: json['nickname'] as String,
-      description: json['description'] as String,
+      thumbnailUrl: json['thumbnailUrl'] as String,
       platform: $enumDecode(_$TestPlatformEnumMap, json['platform'],
           unknownValue: TestPlatform.unknown),
       type: $enumDecode(_$TestTypeEnumMap, json['type'],
           unknownValue: TestType.unknown),
       views: (json['views'] as num).toInt(),
-      thumbnailUrl: json['thumbnailUrl'] as String?,
-      linkUrl: json['linkUrl'] as String,
       startDate: DateTime.parse(json['startDate'] as String),
       endDate: DateTime.parse(json['endDate'] as String),
       createdAt: DateTime.parse(json['createAt'] as String),
-      recruitStatus: json['recruitStatus'] as String,
     );
 
-Map<String, dynamic> _$TestPostToJson(_TestPost instance) => <String, dynamic>{
+Map<String, dynamic> _$TestPostListItemToJson(_TestPostListItem instance) =>
+    <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
-      'userId': instance.userId,
       'nickname': instance.nickname,
-      'description': instance.description,
+      'thumbnailUrl': instance.thumbnailUrl,
       'platform': _$TestPlatformEnumMap[instance.platform]!,
       'type': _$TestTypeEnumMap[instance.type]!,
       'views': instance.views,
-      'thumbnailUrl': instance.thumbnailUrl,
-      'linkUrl': instance.linkUrl,
       'startDate': instance.startDate.toIso8601String(),
       'endDate': instance.endDate.toIso8601String(),
       'createAt': instance.createdAt.toIso8601String(),
-      'recruitStatus': instance.recruitStatus,
     };
 
 const _$TestPlatformEnumMap = {

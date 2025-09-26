@@ -4,26 +4,27 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:test_quest/common/component/testquest_snackbar.dart';
 import 'package:test_quest/community/model/test_post.dart';
+import 'package:test_quest/community/provider/post_detail_provider.dart';
 import 'package:test_quest/community/provider/post_provider.dart';
 import 'package:test_quest/user/provider/user_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PostDetailScreen extends ConsumerStatefulWidget {
-  final TestPost post;
+  final String postId;
 
-  const PostDetailScreen({super.key, required this.post});
+  const PostDetailScreen({
+    super.key,
+    required this.postId,
+  });
 
   @override
   ConsumerState<PostDetailScreen> createState() => _PostDetailScreenState();
 }
 
 class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
-  late TestPost _currentPost;
-
   @override
   void initState() {
     super.initState();
-    _currentPost = widget.post;
 
     ref.listenManual(postProvider, (previous, next) {
       if (next is PostSuccess) {
@@ -72,131 +73,164 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = ref.watch(currentUserProvider);
-    final isAuthor = currentUser?.nickname == _currentPost.author;
+    final postDetailAsync = ref.watch(postDetailProvider(widget.postId));
     final deleteState = ref.watch(postProvider);
     final isDeleting = deleteState is PostLoading;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_currentPost.title,
-            style: Theme.of(context).textTheme.titleLarge),
-        actions: [
-          if (isAuthor)
-            PopupMenuButton<String>(
-              onSelected: (value) => _handleMenuAction(context, ref, value),
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: 'edit',
-                  child: Row(
-                    children: [
-                      Icon(Icons.edit),
-                      SizedBox(width: 8),
-                      Text('수정'),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  value: 'delete',
-                  enabled: !isDeleting, // 삭제 중에는 비활성화
-                  child: Row(
-                    children: [
-                      if (isDeleting)
-                        const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      else
-                        const Icon(Icons.delete, color: Colors.red),
-                      const SizedBox(width: 8),
-                      Text(
-                        isDeleting ? '삭제 중...' : '삭제',
-                        style: TextStyle(
-                          color: isDeleting ? Colors.grey : Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-        ],
+        title: const Text('게시글 상세'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            if (_currentPost.thumbnailUrl != null)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  _currentPost.thumbnailUrl!,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Placeholder(
-                      strokeWidth: 1,
-                      fallbackHeight: 200,
-                    );
-                  },
-                ),
+      body: postDetailAsync.when(
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
+        data: (post) => _buildPostDetail(context, post, isDeleting),
+        error: (error, stackTrace) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(error.toString()),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => ref
+                    .read(postDetailProvider(widget.postId).notifier)
+                    .refresh(widget.postId),
+                child: const Text('다시 시도'),
               ),
-            const SizedBox(height: 16),
-            Text(
-              _currentPost.title,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Chip(
-                  label: Text(_platformLabel(_currentPost.platform)),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Chip(
-                  label: Text(_typeLabel(_currentPost.type)),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              '테스트 기간',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            Text(
-              '${_formatDate(_currentPost.startDate)} ~ ${_formatDate(_currentPost.endDate)}',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              '작성일: ${_formatDate(_currentPost.createdAt)}',
-              style: Theme.of(context).textTheme.labelMedium,
-            ),
-            const Divider(height: 32),
-            Text(
-              _currentPost.description,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            const SizedBox(height: 24),
-            FilledButton(
-              onPressed: _openRelatedLink,
-              child: const Text('관련 링크 열기'),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
+  Widget _buildPostDetail(
+      BuildContext context, TestPost post, bool isDeleting) {
+    final currentUser = ref.watch(currentUserProvider);
+    final isAuthor = currentUser?.userId == post.userId ||
+        currentUser?.nickname == post.nickname;
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ListView(
+        children: [
+          if (post.thumbnailUrl != null)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                post.thumbnailUrl!,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Placeholder(
+                    strokeWidth: 1,
+                    fallbackHeight: 200,
+                  );
+                },
+              ),
+            ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  post.title,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ),
+              if (isAuthor)
+                PopupMenuButton<String>(
+                  onSelected: (action) =>
+                      _handleMenuAction(context, action, post),
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: Row(
+                        children: [
+                          Icon(Icons.edit),
+                          SizedBox(width: 8),
+                          Text('수정'),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 'delete',
+                      enabled: !isDeleting,
+                      child: Row(
+                        children: [
+                          if (isDeleting)
+                            const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          else
+                            const Icon(Icons.delete, color: Colors.red),
+                          const SizedBox(width: 8),
+                          Text(
+                            isDeleting ? '삭제 중...' : '삭제',
+                            style: TextStyle(
+                              color: isDeleting ? Colors.grey : Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+          // 나머지 UI 코드는 동일...
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Chip(
+                label: Text(_platformLabel(post.platform)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Chip(
+                label: Text(_typeLabel(post.type)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '테스트 기간',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          Text(
+            '${_formatDate(post.startDate)} ~ ${_formatDate(post.endDate)}',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '작성일: ${_formatDate(post.createdAt)}',
+            style: Theme.of(context).textTheme.labelMedium,
+          ),
+          const Divider(height: 32),
+          Text(
+            post.description,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          const SizedBox(height: 24),
+          FilledButton(
+            onPressed: () => _openRelatedLink(post),
+            child: const Text('관련 링크 열기'),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// 관련 링크 열기
-  Future<void> _openRelatedLink() async {
-    final Uri url = Uri.parse(_currentPost.linkUrl);
+  Future<void> _openRelatedLink(TestPost post) async {
+    final Uri url = Uri.parse(post.linkUrl);
     try {
       final bool canLaunch = await canLaunchUrl(url);
       if (!canLaunch) {
@@ -214,32 +248,31 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   }
 
   /// 메뉴 액션 처리
-  void _handleMenuAction(BuildContext context, WidgetRef ref, String action) {
+  void _handleMenuAction(BuildContext context, String action, TestPost post) {
     switch (action) {
       case 'edit':
-        _navigateToEdit(context);
+        _navigateToEdit(context, post);
         break;
       case 'delete':
-        _showDeleteConfirmation(context, ref);
+        _showDeleteConfirmation(context, post);
         break;
     }
   }
 
   /// 수정 화면으로 이동
-  void _navigateToEdit(BuildContext context) async {
-    final result =
-        await context.push<TestPost>('/post_edit', extra: _currentPost);
+  void _navigateToEdit(BuildContext context, TestPost post) async {
+    final result = await context.push<TestPost>('/post_edit', extra: post);
 
     // 수정된 데이터가 반환되면 화면 업데이트
     if (result != null) {
       setState(() {
-        _currentPost = result;
+        post = result;
       });
     }
   }
 
   /// 삭제 확인 다이얼로그 표시
-  void _showDeleteConfirmation(BuildContext context, WidgetRef ref) {
+  void _showDeleteConfirmation(BuildContext context, TestPost post) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -253,7 +286,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
           FilledButton(
             onPressed: () {
               Navigator.of(context).pop();
-              _deletePost(context, ref);
+              _deletePost(context, post);
             },
             style: FilledButton.styleFrom(
               backgroundColor: Colors.red,
@@ -266,7 +299,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   }
 
   /// 글 삭제 실행
-  void _deletePost(BuildContext context, WidgetRef ref) {
-    ref.read(postProvider.notifier).deletePost(_currentPost.id);
+  void _deletePost(BuildContext context, TestPost post) {
+    ref.read(postProvider.notifier).deletePost(post.id);
   }
 }

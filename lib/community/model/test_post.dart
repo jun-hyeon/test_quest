@@ -34,7 +34,7 @@ abstract class TestPost with _$TestPost {
   factory TestPost({
     required String id,
     required String title,
-    required String author,
+    required String userId,
     required String nickname,
     required String description,
     @JsonKey(unknownEnumValue: TestPlatform.unknown)

@@ -9,7 +9,7 @@ part of 'test_post_pagination.dart';
 _TestPostPagination _$TestPostPaginationFromJson(Map<String, dynamic> json) =>
     _TestPostPagination(
       gameBoards: (json['gameBoards'] as List<dynamic>)
-          .map((e) => TestPost.fromJson(e as Map<String, dynamic>))
+          .map((e) => TestPostListItem.fromJson(e as Map<String, dynamic>))
           .toList(),
       hasNext: json['hasNext'] as bool,
     );

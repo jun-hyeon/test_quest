@@ -25,7 +25,6 @@ class TestPostRepositoryImpl implements TestPostRepository {
   Future<void> createPost(TestPostCreate post) async {
     try {
       final formData = FormData.fromMap({
-        'author': post.author,
         'title': post.title,
         'description': post.description,
         'platform': post.platform.toPostString(),
@@ -41,7 +40,8 @@ class TestPostRepositoryImpl implements TestPostRepository {
           ),
       });
       log('[TestPostRepository] ${formData.toString()}');
-      await dio.post('/gameboard/create', data: formData);
+      final response = await dio.post('/gameboard/create', data: formData);
+      log('[TestPostRepository] Create response: ${response.data}');
     } on DioException catch (e) {
       log('Failed to create post: ${e.message}');
       throw Exception('게시글 작성에 실패했습니다.');
@@ -89,7 +89,7 @@ class TestPostRepositoryImpl implements TestPostRepository {
       if (data.data == null) {
         throw '페이지를 불러올 수 없습니다.';
       }
-
+      log('[TestPostRepository] Fetch posts: ${data.data!}');
       return data.data!;
     } on DioException catch (e) {
       log('[DioException message]${e.message}');
@@ -99,9 +99,25 @@ class TestPostRepositoryImpl implements TestPostRepository {
   }
 
   @override
-  Future<TestPost> getPost(String id) {
-    // TODO: implement getPost
-    throw UnimplementedError();
+  Future<TestPost> getPost(String id) async {
+    try {
+      final response = await dio.get(
+        '/gameboard/$id',
+      );
+
+      final data = ResponseModel<TestPost>.fromJson(response.data,
+          (json) => TestPost.fromJson(json as Map<String, dynamic>));
+      log('[TestPostRepository] Get post: ${data.toString()}');
+      if (data.data == null) {
+        throw '게시글을 불러올 수 없습니다.';
+      }
+
+      return data.data!;
+    } on DioException catch (e) {
+      log('[DioException message]${e.message}');
+      log('[getPost DioException response] ${e.response}');
+      throw Exception('게시글을 불러오는데 실패했습니다.');
+    }
   }
 
   @override

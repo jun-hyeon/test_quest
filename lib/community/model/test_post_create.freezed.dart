@@ -17,7 +17,6 @@ TestPostCreate _$TestPostCreateFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$TestPostCreate {
-  String get author;
   String get title;
   String get description;
   TestPlatform get platform;
@@ -44,7 +43,6 @@ mixin _$TestPostCreate {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is TestPostCreate &&
-            (identical(other.author, author) || other.author == author) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
                 other.description == description) &&
@@ -63,12 +61,12 @@ mixin _$TestPostCreate {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, author, title, description,
-      platform, type, linkUrl, boardImage, startDate, endDate, recruitStatus);
+  int get hashCode => Object.hash(runtimeType, title, description, platform,
+      type, linkUrl, boardImage, startDate, endDate, recruitStatus);
 
   @override
   String toString() {
-    return 'TestPostCreate(author: $author, title: $title, description: $description, platform: $platform, type: $type, linkUrl: $linkUrl, boardImage: $boardImage, startDate: $startDate, endDate: $endDate, recruitStatus: $recruitStatus)';
+    return 'TestPostCreate(title: $title, description: $description, platform: $platform, type: $type, linkUrl: $linkUrl, boardImage: $boardImage, startDate: $startDate, endDate: $endDate, recruitStatus: $recruitStatus)';
   }
 }
 
@@ -79,8 +77,7 @@ abstract mixin class $TestPostCreateCopyWith<$Res> {
       _$TestPostCreateCopyWithImpl;
   @useResult
   $Res call(
-      {String author,
-      String title,
+      {String title,
       String description,
       TestPlatform platform,
       TestType type,
@@ -104,7 +101,6 @@ class _$TestPostCreateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? author = null,
     Object? title = null,
     Object? description = null,
     Object? platform = null,
@@ -116,10 +112,6 @@ class _$TestPostCreateCopyWithImpl<$Res>
     Object? recruitStatus = null,
   }) {
     return _then(_self.copyWith(
-      author: null == author
-          ? _self.author
-          : author // ignore: cast_nullable_to_non_nullable
-              as String,
       title: null == title
           ? _self.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -254,7 +246,6 @@ extension TestPostCreatePatterns on TestPostCreate {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
-            String author,
             String title,
             String description,
             TestPlatform platform,
@@ -271,7 +262,6 @@ extension TestPostCreatePatterns on TestPostCreate {
     switch (_that) {
       case _TestPostRequest() when $default != null:
         return $default(
-            _that.author,
             _that.title,
             _that.description,
             _that.platform,
@@ -302,7 +292,6 @@ extension TestPostCreatePatterns on TestPostCreate {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
-            String author,
             String title,
             String description,
             TestPlatform platform,
@@ -318,7 +307,6 @@ extension TestPostCreatePatterns on TestPostCreate {
     switch (_that) {
       case _TestPostRequest():
         return $default(
-            _that.author,
             _that.title,
             _that.description,
             _that.platform,
@@ -348,7 +336,6 @@ extension TestPostCreatePatterns on TestPostCreate {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
-            String author,
             String title,
             String description,
             TestPlatform platform,
@@ -364,7 +351,6 @@ extension TestPostCreatePatterns on TestPostCreate {
     switch (_that) {
       case _TestPostRequest() when $default != null:
         return $default(
-            _that.author,
             _that.title,
             _that.description,
             _that.platform,
@@ -384,8 +370,7 @@ extension TestPostCreatePatterns on TestPostCreate {
 @JsonSerializable()
 class _TestPostRequest implements TestPostCreate {
   _TestPostRequest(
-      {required this.author,
-      required this.title,
+      {required this.title,
       required this.description,
       required this.platform,
       required this.type,
@@ -397,8 +382,6 @@ class _TestPostRequest implements TestPostCreate {
   factory _TestPostRequest.fromJson(Map<String, dynamic> json) =>
       _$TestPostRequestFromJson(json);
 
-  @override
-  final String author;
   @override
   final String title;
   @override
@@ -438,7 +421,6 @@ class _TestPostRequest implements TestPostCreate {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _TestPostRequest &&
-            (identical(other.author, author) || other.author == author) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
                 other.description == description) &&
@@ -457,12 +439,12 @@ class _TestPostRequest implements TestPostCreate {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, author, title, description,
-      platform, type, linkUrl, boardImage, startDate, endDate, recruitStatus);
+  int get hashCode => Object.hash(runtimeType, title, description, platform,
+      type, linkUrl, boardImage, startDate, endDate, recruitStatus);
 
   @override
   String toString() {
-    return 'TestPostCreate(author: $author, title: $title, description: $description, platform: $platform, type: $type, linkUrl: $linkUrl, boardImage: $boardImage, startDate: $startDate, endDate: $endDate, recruitStatus: $recruitStatus)';
+    return 'TestPostCreate(title: $title, description: $description, platform: $platform, type: $type, linkUrl: $linkUrl, boardImage: $boardImage, startDate: $startDate, endDate: $endDate, recruitStatus: $recruitStatus)';
   }
 }
 
@@ -475,8 +457,7 @@ abstract mixin class _$TestPostRequestCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String author,
-      String title,
+      {String title,
       String description,
       TestPlatform platform,
       TestType type,
@@ -500,7 +481,6 @@ class __$TestPostRequestCopyWithImpl<$Res>
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? author = null,
     Object? title = null,
     Object? description = null,
     Object? platform = null,
@@ -512,10 +492,6 @@ class __$TestPostRequestCopyWithImpl<$Res>
     Object? recruitStatus = null,
   }) {
     return _then(_TestPostRequest(
-      author: null == author
-          ? _self.author
-          : author // ignore: cast_nullable_to_non_nullable
-              as String,
       title: null == title
           ? _self.title
           : title // ignore: cast_nullable_to_non_nullable

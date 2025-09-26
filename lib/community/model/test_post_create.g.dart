@@ -8,7 +8,6 @@ part of 'test_post_create.dart';
 
 _TestPostRequest _$TestPostRequestFromJson(Map<String, dynamic> json) =>
     _TestPostRequest(
-      author: json['author'] as String,
       title: json['title'] as String,
       description: json['description'] as String,
       platform: $enumDecode(_$TestPlatformEnumMap, json['platform']),
@@ -22,7 +21,6 @@ _TestPostRequest _$TestPostRequestFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$TestPostRequestToJson(_TestPostRequest instance) =>
     <String, dynamic>{
-      'author': instance.author,
       'title': instance.title,
       'description': instance.description,
       'platform': _$TestPlatformEnumMap[instance.platform]!,

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$TestPostPagination {
-  List<TestPost> get gameBoards;
+  List<TestPostListItem> get gameBoards;
   bool get hasNext;
 
   /// Create a copy of TestPostPagination
@@ -55,7 +55,7 @@ abstract mixin class $TestPostPaginationCopyWith<$Res> {
           TestPostPagination value, $Res Function(TestPostPagination) _then) =
       _$TestPostPaginationCopyWithImpl;
   @useResult
-  $Res call({List<TestPost> gameBoards, bool hasNext});
+  $Res call({List<TestPostListItem> gameBoards, bool hasNext});
 }
 
 /// @nodoc
@@ -78,7 +78,7 @@ class _$TestPostPaginationCopyWithImpl<$Res>
       gameBoards: null == gameBoards
           ? _self.gameBoards
           : gameBoards // ignore: cast_nullable_to_non_nullable
-              as List<TestPost>,
+              as List<TestPostListItem>,
       hasNext: null == hasNext
           ? _self.hasNext
           : hasNext // ignore: cast_nullable_to_non_nullable
@@ -180,7 +180,8 @@ extension TestPostPaginationPatterns on TestPostPagination {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(List<TestPost> gameBoards, bool hasNext)? $default, {
+    TResult Function(List<TestPostListItem> gameBoards, bool hasNext)?
+        $default, {
     required TResult orElse(),
   }) {
     final _that = this;
@@ -207,7 +208,7 @@ extension TestPostPaginationPatterns on TestPostPagination {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(List<TestPost> gameBoards, bool hasNext) $default,
+    TResult Function(List<TestPostListItem> gameBoards, bool hasNext) $default,
   ) {
     final _that = this;
     switch (_that) {
@@ -232,7 +233,8 @@ extension TestPostPaginationPatterns on TestPostPagination {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(List<TestPost> gameBoards, bool hasNext)? $default,
+    TResult? Function(List<TestPostListItem> gameBoards, bool hasNext)?
+        $default,
   ) {
     final _that = this;
     switch (_that) {
@@ -248,14 +250,14 @@ extension TestPostPaginationPatterns on TestPostPagination {
 @JsonSerializable()
 class _TestPostPagination implements TestPostPagination {
   _TestPostPagination(
-      {required final List<TestPost> gameBoards, required this.hasNext})
+      {required final List<TestPostListItem> gameBoards, required this.hasNext})
       : _gameBoards = gameBoards;
   factory _TestPostPagination.fromJson(Map<String, dynamic> json) =>
       _$TestPostPaginationFromJson(json);
 
-  final List<TestPost> _gameBoards;
+  final List<TestPostListItem> _gameBoards;
   @override
-  List<TestPost> get gameBoards {
+  List<TestPostListItem> get gameBoards {
     if (_gameBoards is EqualUnmodifiableListView) return _gameBoards;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_gameBoards);
@@ -308,7 +310,7 @@ abstract mixin class _$TestPostPaginationCopyWith<$Res>
       __$TestPostPaginationCopyWithImpl;
   @override
   @useResult
-  $Res call({List<TestPost> gameBoards, bool hasNext});
+  $Res call({List<TestPostListItem> gameBoards, bool hasNext});
 }
 
 /// @nodoc
@@ -331,7 +333,7 @@ class __$TestPostPaginationCopyWithImpl<$Res>
       gameBoards: null == gameBoards
           ? _self._gameBoards
           : gameBoards // ignore: cast_nullable_to_non_nullable
-              as List<TestPost>,
+              as List<TestPostListItem>,
       hasNext: null == hasNext
           ? _self.hasNext
           : hasNext // ignore: cast_nullable_to_non_nullable

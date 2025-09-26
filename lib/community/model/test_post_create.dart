@@ -7,7 +7,6 @@ part 'test_post_create.g.dart';
 @freezed
 abstract class TestPostCreate with _$TestPostCreate {
   factory TestPostCreate({
-    required String author,
     required String title,
     required String description,
     required TestPlatform platform,

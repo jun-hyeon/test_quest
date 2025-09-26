@@ -4,11 +4,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_quest/auth/provider/auth_provider.dart';
 import 'package:test_quest/auth/provider/auth_state.dart';
+import 'package:test_quest/community/model/test_post_list_item.dart';
 import 'package:test_quest/community/model/test_post_pagination.dart';
 import 'package:test_quest/community/provider/pagination_state.dart';
 import 'package:test_quest/community/repository/test_post_repository_impl.dart';
 
-import '../model/test_post.dart';
 
 final testPostPaginationProvider =
     NotifierProvider<TestPostPaginationNotifier, PaginationState>(() {
@@ -17,7 +17,7 @@ final testPostPaginationProvider =
 
 class TestPostPaginationNotifier extends Notifier<PaginationState> {
   late final repository = ref.read(testPostRepositoryProvider);
-  final List<TestPost> _posts = [];
+  final List<TestPostListItem> _posts = [];
   bool _hasNext = true;
   bool _isFetching = false;
   String? _lastId;
