@@ -68,11 +68,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
     return switch (state) {
       SignupLoading() => const Center(child: CircularProgressIndicator()),
-      SignupError(:final message) => Column(
+      SignupError() => Column(
           children: [
-            const SizedBox(height: 16),
-            Text(message, style: const TextStyle(color: Colors.red)),
-            const SizedBox(height: 16),
             Expanded(child: _buildAccountFields(context, notifier)),
           ],
         ),

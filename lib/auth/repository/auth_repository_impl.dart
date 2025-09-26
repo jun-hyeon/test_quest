@@ -88,7 +88,7 @@ class AuthRepositoryImpl implements AuthRepository {
       if (response.data == null) {
         throw Exception('로그인 응답이 비어 있습니다.');
       }
-
+      log('[auth_repository_impl.dart] 로그인 응답: ${response.data}');
       final responseData = ResponseModel<TokenBundle>.fromJson(response.data,
           (json) => TokenBundle.fromJson(json as Map<String, dynamic>));
       if (responseData.data == null) {
@@ -125,6 +125,7 @@ class AuthRepositoryImpl implements AuthRepository {
         response.data,
         (_) {},
       );
+      log(responseData.toString());
 
       return responseData;
     } on DioException catch (e) {

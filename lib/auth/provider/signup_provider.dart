@@ -66,12 +66,14 @@ class SignupProvider extends Notifier<SignupState> {
         ),
       );
       if (response.code != '200') {
-        throw '[signup_provider] 로그인 실패';
+        log('[signup_provider] 회원가입 실패');
+        throw '회원가입 실패';
       }
       state = SignupSuccess();
     } catch (e) {
       state = SignupError(e.toString());
-      throw '[signup_provider] 로그인 실패';
+      log('[signup_provider] 회원가입 실패');
+      throw '회원가입 실패';
     }
   }
 

@@ -54,9 +54,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _permissionRequest() async {
+    if (!mounted) return;
+
     if (Platform.isIOS) {
       await ref.read(permissionProvider).requestTrackingPermission();
     }
+
+    if (!mounted) return;
     await ref.read(permissionProvider).requestNotificationPermission();
   }
 

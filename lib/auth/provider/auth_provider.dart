@@ -114,12 +114,22 @@ class AuthNotifier extends Notifier<AuthState> {
     log('토큰 확인 - Access: ${accessToken != null ? "존재" : "없음"}, Refresh: ${refreshToken != null ? "존재" : "없음"}',
         name: 'AuthNotifier.checkLoginStatus');
 
-    if (accessToken != null && refreshToken != null) {
-      log('토큰 존재 → Authenticated 상태로 변경',
+    // 사용자 정보도 확인
+    final userInfo = await _userRepository.getUser();
+
+    if (accessToken != null && refreshToken != null && userInfo != null) {
+      log('토큰과 사용자 정보 존재 → Authenticated 상태로 변경',
           name: 'AuthNotifier.checkLoginStatus');
       state = Authenticated();
     } else {
-      log('토큰 없음 → Unauthenticated 상태로 변경',
+      // 토큰은 있지만 사용자 정보가 없는 경우 토큰 삭제
+      if ((accessToken != null || refreshToken != null) && userInfo == null) {
+        log('토큰은 있지만 사용자 정보 없음 → 토큰 삭제', name: 'AuthNotifier.checkLoginStatus');
+        await _storage.delete(key: ACCESS_TOKEN_KEY);
+        await _storage.delete(key: REFRESH_TOKEN_KEY);
+      }
+
+      log('인증 정보 불완전 → Unauthenticated 상태로 변경',
           name: 'AuthNotifier.checkLoginStatus');
       state = Unauthenticated();
     }
