@@ -14,6 +14,7 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$UserInfo {
+  String get userId;
   String get name;
   String get nickname;
   String? get profileImg;
@@ -33,6 +34,7 @@ mixin _$UserInfo {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is UserInfo &&
+            (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.nickname, nickname) ||
                 other.nickname == nickname) &&
@@ -42,11 +44,12 @@ mixin _$UserInfo {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, name, nickname, profileImg);
+  int get hashCode =>
+      Object.hash(runtimeType, userId, name, nickname, profileImg);
 
   @override
   String toString() {
-    return 'UserInfo(name: $name, nickname: $nickname, profileImg: $profileImg)';
+    return 'UserInfo(userId: $userId, name: $name, nickname: $nickname, profileImg: $profileImg)';
   }
 }
 
@@ -55,7 +58,7 @@ abstract mixin class $UserInfoCopyWith<$Res> {
   factory $UserInfoCopyWith(UserInfo value, $Res Function(UserInfo) _then) =
       _$UserInfoCopyWithImpl;
   @useResult
-  $Res call({String name, String nickname, String? profileImg});
+  $Res call({String userId, String name, String nickname, String? profileImg});
 }
 
 /// @nodoc
@@ -70,11 +73,16 @@ class _$UserInfoCopyWithImpl<$Res> implements $UserInfoCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? userId = null,
     Object? name = null,
     Object? nickname = null,
     Object? profileImg = freezed,
   }) {
     return _then(_self.copyWith(
+      userId: null == userId
+          ? _self.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
       name: null == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -184,14 +192,16 @@ extension UserInfoPatterns on UserInfo {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(String name, String nickname, String? profileImg)?
+    TResult Function(
+            String userId, String name, String nickname, String? profileImg)?
         $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _UserInfo() when $default != null:
-        return $default(_that.name, _that.nickname, _that.profileImg);
+        return $default(
+            _that.userId, _that.name, _that.nickname, _that.profileImg);
       case _:
         return orElse();
     }
@@ -212,12 +222,15 @@ extension UserInfoPatterns on UserInfo {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(String name, String nickname, String? profileImg) $default,
+    TResult Function(
+            String userId, String name, String nickname, String? profileImg)
+        $default,
   ) {
     final _that = this;
     switch (_that) {
       case _UserInfo():
-        return $default(_that.name, _that.nickname, _that.profileImg);
+        return $default(
+            _that.userId, _that.name, _that.nickname, _that.profileImg);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -237,13 +250,15 @@ extension UserInfoPatterns on UserInfo {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(String name, String nickname, String? profileImg)?
+    TResult? Function(
+            String userId, String name, String nickname, String? profileImg)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _UserInfo() when $default != null:
-        return $default(_that.name, _that.nickname, _that.profileImg);
+        return $default(
+            _that.userId, _that.name, _that.nickname, _that.profileImg);
       case _:
         return null;
     }
@@ -254,10 +269,15 @@ extension UserInfoPatterns on UserInfo {
 @JsonSerializable()
 class _UserInfo implements UserInfo {
   _UserInfo(
-      {required this.name, required this.nickname, required this.profileImg});
+      {required this.userId,
+      required this.name,
+      required this.nickname,
+      required this.profileImg});
   factory _UserInfo.fromJson(Map<String, dynamic> json) =>
       _$UserInfoFromJson(json);
 
+  @override
+  final String userId;
   @override
   final String name;
   @override
@@ -285,6 +305,7 @@ class _UserInfo implements UserInfo {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _UserInfo &&
+            (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.nickname, nickname) ||
                 other.nickname == nickname) &&
@@ -294,11 +315,12 @@ class _UserInfo implements UserInfo {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, name, nickname, profileImg);
+  int get hashCode =>
+      Object.hash(runtimeType, userId, name, nickname, profileImg);
 
   @override
   String toString() {
-    return 'UserInfo(name: $name, nickname: $nickname, profileImg: $profileImg)';
+    return 'UserInfo(userId: $userId, name: $name, nickname: $nickname, profileImg: $profileImg)';
   }
 }
 
@@ -309,7 +331,7 @@ abstract mixin class _$UserInfoCopyWith<$Res>
       __$UserInfoCopyWithImpl;
   @override
   @useResult
-  $Res call({String name, String nickname, String? profileImg});
+  $Res call({String userId, String name, String nickname, String? profileImg});
 }
 
 /// @nodoc
@@ -324,11 +346,16 @@ class __$UserInfoCopyWithImpl<$Res> implements _$UserInfoCopyWith<$Res> {
   @override
   @pragma('vm:prefer-inline')
   $Res call({
+    Object? userId = null,
     Object? name = null,
     Object? nickname = null,
     Object? profileImg = freezed,
   }) {
     return _then(_UserInfo(
+      userId: null == userId
+          ? _self.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
       name: null == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable

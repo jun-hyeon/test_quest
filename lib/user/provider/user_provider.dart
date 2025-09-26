@@ -160,7 +160,7 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
   }
 
   /// 서버에서 최신 사용자 정보 가져오기
-  Future<void> fetchUserFromServer() async {
+  Future<UserInfo> fetchUserFromServer() async {
     state = const AsyncValue.loading();
 
     try {
@@ -172,6 +172,8 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
         '서버에서 사용자 정보 가져오기 성공: ${user.nickname}',
         name: 'UserNotifier.fetchUserFromServer',
       );
+
+      return user; // 사용자 정보 반환
     } catch (e, stackTrace) {
       log(
         '서버에서 사용자 정보 가져오기 실패',
@@ -192,21 +194,43 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
   /// 저장소에서 사용자 정보 로드
   Future<UserInfo?> _loadUserFromStorage() async {
     try {
-      final user = await _userRepository.getUser();
+      // 1. 로컬 스토리지에서 사용자 정보 로드 시도
+      UserInfo? user = await _userRepository.getUser();
 
       if (user != null) {
         log(
           '사용자 정보 로드 성공: ${user.nickname}',
           name: 'UserNotifier._loadUserFromStorage',
         );
+        return user;
       } else {
         log(
-          '로컬에 저장된 사용자 정보 없음',
+          '로컬에 저장된 사용자 정보 없음, 서버에서 불러오기 시도',
           name: 'UserNotifier._loadUserFromStorage',
         );
-      }
 
-      return user; // null일 수도 있음
+        // 2. 서버에서 사용자 정보 가져오기 시도
+        try {
+          user = await _userRepository.getMyInfo();
+          // 서버에서 가져온 정보를 로컬에 저장
+          await _userRepository.setUser(user);
+          log(
+            '서버에서 사용자 정보 로드 성공: ${user.nickname}',
+            name: 'UserNotifier._loadUserFromStorage',
+          );
+          return user; // 서버에서 가져온 사용자 정보 반환
+        } catch (serverError) {
+          log(
+            '서버에서 사용자 정보 로드 실패, 로그아웃 진행',
+            name: 'UserNotifier._loadUserFromStorage',
+            error: serverError,
+          );
+
+          // 3. 서버에서도 실패하면 로그아웃 처리
+          ref.read(authRepositoryProvider).logout();
+          return null;
+        }
+      }
     } catch (e, stackTrace) {
       log(
         '사용자 정보 로드 실패',
@@ -214,6 +238,7 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
         error: e,
         stackTrace: stackTrace,
       );
+      ref.read(authRepositoryProvider).logout();
       return null; // 에러 발생 시 null 반환
     }
   }
@@ -227,7 +252,7 @@ final userNotifierProvider = AsyncNotifierProvider<UserNotifier, UserInfo?>(
 /// 현재 사용자 정보를 동기적으로 가져오는 Provider
 final currentUserProvider = Provider<UserInfo?>((ref) {
   final userAsync = ref.watch(userNotifierProvider);
-  return userAsync.valueOrNull;
+  return userAsync.value;
 });
 
 /// 사용자 로그인 여부 확인 Provider

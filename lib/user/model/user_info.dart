@@ -6,6 +6,7 @@ part 'user_info.g.dart';
 @freezed
 abstract class UserInfo with _$UserInfo {
   factory UserInfo({
+    required String userId,
     required String name,
     required String nickname,
     required String? profileImg,

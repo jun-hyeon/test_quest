@@ -35,7 +35,6 @@ class UserRepositoryImpl extends UserRepository {
   @override
   Future<void> deleteUser() async {
     try {
-      
       await storage.delete(key: _userInfoKey);
       log(
         '사용자 정보 삭제 완료',
@@ -69,7 +68,7 @@ class UserRepositoryImpl extends UserRepository {
       final user = UserInfo.fromJson(json);
 
       log(
-        '로컬에서 사용자 정보 로드 성공: ${user.nickname}',
+        '로컬에서 사용자 정보 로드 성공: ${user.nickname}, ${user.userId}, ${user.name}, ${user.profileImg}',
         name: 'UserRepositoryImpl.getUser',
       );
 
@@ -170,11 +169,6 @@ class UserRepositoryImpl extends UserRepository {
             ),
           ),
         );
-      }
-      // URL인 경우는 기존 이미지 유지 (변경 없음을 의미)
-      else {
-        formData.fields
-            .add(MapEntry('profileImage', user.profileImg!)); // 필드명 변경
       }
     }
 
