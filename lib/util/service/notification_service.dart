@@ -134,12 +134,11 @@ class NotificationService {
 
   Future<void> showPostCreatedNotification({
     required String title,
-    required String author,
   }) async {
     await showNotification(
       id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
       title: '✅ 글 작성 완료!',
-      body: '$title\n작성자: $author\n\nFirebase Console에서 수동으로 알림을 보낼 수 있습니다.',
+      body: '$title\n 글 작성을 완료하였습니다.',
     );
   }
 }

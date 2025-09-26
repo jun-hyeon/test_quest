@@ -139,7 +139,6 @@ class FCMService {
   /// 새로운 글 등록 알림 전송
   Future<void> sendNewPostNotifications({
     required String title,
-    required String author,
     required String platform,
     required String type,
   }) async {
@@ -148,7 +147,6 @@ class FCMService {
 
       final notificationData = {
         'type': 'new_post',
-        'author': author,
         'platform': platform,
         'test_type': type,
       };
@@ -156,7 +154,7 @@ class FCMService {
       await _sendNotification(
         topic: 'new_posts',
         title: title,
-        body: '$author님이 새로운 $platform $type 테스트를 등록했습니다!',
+        body: '새로운 $platform $type 테스트를 등록했습니다!',
         data: notificationData,
       );
 
