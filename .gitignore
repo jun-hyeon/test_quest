@@ -335,11 +335,28 @@ assets/images/
 # Cursor IDE
 .cursor/
 
+# Kiro IDE
+.kiro/
+
+#fastlane files
+ios/fastlane/
+android/fastlane/
+
 # Firebase 설정 파일들
 firebase_options.dart
 firebase.json
 google-services.json
 GoogleService-Info.plist
 .firebaserc
-
+*.p8
+*.p12
+*.cer
+*.certSigningRequest
+*.mobileprovision
+*.provisionprofile
+*.provisioningprofile
+*.provisioningprofile
 # End of https://www.toptal.com/developers/gitignore/api/dotenv,visualstudiocode,macos,flutter,dart,xcode,cocoapods,android,kotlin,java,swift,swiftpackagemanager
+
+# Fastlane Service Account JSON keys
+android/fastlane/*.json
