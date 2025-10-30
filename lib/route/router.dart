@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,16 +13,15 @@ import 'package:test_quest/common/view/root_tab.dart';
 import 'package:test_quest/community/model/test_post.dart';
 import 'package:test_quest/community/view/post_create_screen.dart';
 import 'package:test_quest/community/view/post_detail_screen.dart';
-import 'package:test_quest/community/view/post_edit_screen.dart';
 import 'package:test_quest/settings/view/settings_view.dart';
 
-/// Auth State 변화를 감지하는 Router Notifier
+/// Firebase Auth 상태 변화를 감지하는 Router Notifier
 class RouterNotifier extends ChangeNotifier {
   final Ref _ref;
   late final ProviderSubscription _subscription;
 
   RouterNotifier(this._ref) {
-    // Auth Provider 상태 변화를 감지
+    // Firebase Auth 상태 변화를 감지
     _subscription = _ref.listen<AuthState>(
       authProvider,
       (_, next) {
@@ -50,10 +50,12 @@ final routerProvider = Provider<GoRouter>((ref) {
     refreshListenable: routerNotifier, // Auth State 변화 감지
     redirect: (context, state) {
       final authState = ref.read(authProvider);
+      final currentUser = FirebaseAuth.instance.currentUser;
       final isGoingToLogin = state.matchedLocation == '/login';
       final isGoingToSignup = state.matchedLocation.startsWith('/signup');
+
       log(
-        'Redirect 체크 - 경로: ${state.matchedLocation}, 인증: $authState',
+        'Redirect 체크 - 경로: ${state.matchedLocation}, 인증: $authState, currentUser: ${currentUser?.uid}',
         name: 'Router.redirect',
       );
 
@@ -62,10 +64,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         return null;
       }
 
-      // 인증되지 않은 상태에서 보호된 페이지 접근 시 로그인으로
-      if (authState is! Authenticated) {
+      // Firebase Auth currentUser가 없으면 로그인으로 리다이렉션
+      if (currentUser == null) {
         log(
-          '보호된 페이지 접근 차단 → 로그인 화면',
+          'Firebase Auth currentUser 없음 → 로그인 화면',
           name: 'Router.redirect',
         );
         return '/login';
@@ -108,13 +110,14 @@ final routerProvider = Provider<GoRouter>((ref) {
           }),
       GoRoute(
         path: '/post_create',
-        builder: (context, state) => const PostCreateScreen(),
+        builder: (context, state) =>
+            const PostCreateScreen(mode: PostFormMode.create, post: null),
       ),
       GoRoute(
         path: '/post_edit',
         builder: (context, state) {
           final post = state.extra as TestPost;
-          return PostEditScreen(post: post);
+          return PostCreateScreen(mode: PostFormMode.edit, post: post);
         },
       ),
     ],

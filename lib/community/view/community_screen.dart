@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_quest/community/component/community_card.dart';
-import 'package:test_quest/community/model/test_post_list_item.dart';
+import 'package:test_quest/community/model/test_post.dart';
 import 'package:test_quest/community/provider/pagination_state.dart';
 import 'package:test_quest/community/provider/test_post_pagination_provider.dart';
 import 'package:test_quest/schedule/provider/bookmarked_event_provider.dart';
@@ -46,7 +46,7 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
     super.dispose();
   }
 
-  void onBookmarkPressed(TestPostListItem event) {
+  void onBookmarkPressed(TestPost event) {
     final companion = CalendarEventsCompanion(
       auth: Value(event.nickname),
       postId: Value(event.id),

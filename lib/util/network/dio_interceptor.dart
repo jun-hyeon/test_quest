@@ -9,6 +9,12 @@ import 'package:test_quest/auth/provider/auth_provider.dart';
 import 'package:test_quest/common/const.dart';
 import 'package:test_quest/util/service/storage_service.dart';
 
+/// @deprecated 이 클래스는 Firebase로 마이그레이션되었습니다.
+/// 더 이상 JWT 토큰 관리가 필요하지 않습니다.
+
+/// @deprecated 이 클래스는 Firebase로 마이그레이션되었습니다.
+/// 더 이상 JWT 토큰 관리가 필요하지 않습니다.
+@Deprecated('Firebase로 마이그레이션되었습니다. 더 이상 JWT 토큰 관리가 필요하지 않습니다.')
 class DefaultInterceptor extends Interceptor {
   final Ref ref;
   DefaultInterceptor(this.ref);

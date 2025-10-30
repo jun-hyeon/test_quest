@@ -1,5 +1,4 @@
 import 'package:test_quest/community/model/test_post.dart';
-import 'package:test_quest/community/model/test_post_list_item.dart';
 
 sealed class PaginationState {
   const PaginationState();
@@ -10,12 +9,12 @@ class PaginationLoading extends PaginationState {
 }
 
 class PaginationRefreshing extends PaginationState {
-  final List<TestPostListItem> previousPosts;
+  final List<TestPost> previousPosts;
   const PaginationRefreshing(this.previousPosts);
 }
 
 class PaginationData extends PaginationState {
-  final List<TestPostListItem> posts;
+  final List<TestPost> posts;
   final bool hasNext;
   final bool isFetching;
 

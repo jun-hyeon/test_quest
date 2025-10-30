@@ -1,14 +1,12 @@
 import 'dart:developer';
 
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_quest/auth/provider/auth_provider.dart';
 import 'package:test_quest/auth/provider/auth_state.dart';
-import 'package:test_quest/community/model/test_post_list_item.dart';
+import 'package:test_quest/community/model/test_post.dart';
 import 'package:test_quest/community/model/test_post_pagination.dart';
 import 'package:test_quest/community/provider/pagination_state.dart';
-import 'package:test_quest/community/repository/test_post_repository_impl.dart';
-
+import 'package:test_quest/repository/firebase/community/community_firestore.dart';
 
 final testPostPaginationProvider =
     NotifierProvider<TestPostPaginationNotifier, PaginationState>(() {
@@ -16,8 +14,8 @@ final testPostPaginationProvider =
 });
 
 class TestPostPaginationNotifier extends Notifier<PaginationState> {
-  late final repository = ref.read(testPostRepositoryProvider);
-  final List<TestPostListItem> _posts = [];
+  late final repository = ref.read(communityFirestoreRepositoryProvider);
+  final List<TestPost> _posts = [];
   bool _hasNext = true;
   bool _isFetching = false;
   String? _lastId;
@@ -97,7 +95,7 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
         keyword: _keyword,
       );
 
-      _posts.addAll(result.gameBoards);
+      _posts.addAll(result.posts);
       _hasNext = result.hasNext;
 
       if (_posts.isNotEmpty) {
@@ -157,7 +155,7 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
         keyword: _keyword,
       );
 
-      _posts.addAll(result.gameBoards);
+      _posts.addAll(result.posts);
       _hasNext = result.hasNext;
 
       if (_posts.isNotEmpty) {
@@ -171,8 +169,8 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
         hasNext: _hasNext,
         isFetching: false,
       );
-    } on DioException catch (error, stackTrace) {
-      log('Pagination DioException during fetchMore: ${error.response?.statusCode}');
+    } catch (error, stackTrace) {
+      log('Pagination error during fetchMore: $error\n$stackTrace');
 
       // 인증 상태 재확인
       final currentAuthState = ref.read(authProvider);
@@ -185,39 +183,7 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
         return;
       }
 
-      if (error.response?.statusCode == 401) {
-        log('[fetchMore] 401 detected, retrying after token refresh...');
-        try {
-          final result = await _fetchPosts(
-            lastId: _lastId,
-            lastCreateAt: _lastCreateAt,
-            pageSize: _pageSize,
-            sortOrder: _sortOrder,
-            keyword: _keyword,
-          );
-
-          _posts.addAll(result.gameBoards);
-          _hasNext = result.hasNext;
-
-          if (_posts.isNotEmpty) {
-            _lastId = _posts.last.id;
-            _lastCreateAt = _posts.last.createdAt;
-            log('[LastItemInfo] $_lastId, $_lastCreateAt');
-          }
-
-          state = PaginationData(
-            posts: List.unmodifiable(_posts),
-            hasNext: _hasNext,
-            isFetching: false,
-          );
-        } catch (e, st) {
-          log('Pagination fetchMore retry failed: $e\n$st');
-          state = PaginationError(e, st);
-        }
-      } else {
-        log('Pagination error during fetchMore: $error\n$stackTrace');
-        state = PaginationError(error, stackTrace);
-      }
+      state = PaginationError(error, stackTrace);
     } finally {
       _isFetching = false;
     }

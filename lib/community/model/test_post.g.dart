@@ -21,7 +21,7 @@ _TestPost _$TestPostFromJson(Map<String, dynamic> json) => _TestPost(
       linkUrl: json['linkUrl'] as String,
       startDate: DateTime.parse(json['startDate'] as String),
       endDate: DateTime.parse(json['endDate'] as String),
-      createdAt: DateTime.parse(json['createAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String),
       recruitStatus: json['recruitStatus'] as String,
     );
 
@@ -38,7 +38,7 @@ Map<String, dynamic> _$TestPostToJson(_TestPost instance) => <String, dynamic>{
       'linkUrl': instance.linkUrl,
       'startDate': instance.startDate.toIso8601String(),
       'endDate': instance.endDate.toIso8601String(),
-      'createAt': instance.createdAt.toIso8601String(),
+      'createdAt': instance.createdAt.toIso8601String(),
       'recruitStatus': instance.recruitStatus,
     };
 

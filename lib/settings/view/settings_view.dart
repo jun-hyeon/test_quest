@@ -4,7 +4,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:test_quest/auth/provider/auth_provider.dart';
 import 'package:test_quest/common/component/testquest_snackbar.dart';
 import 'package:test_quest/settings/provider/theme_provider.dart';
-import 'package:test_quest/user/provider/user_provider.dart';
 import 'package:test_quest/util/service/permission_service.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -208,7 +207,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     try {
       // userProvider를 통해 계정 삭제
-      await ref.read(userNotifierProvider.notifier).deleteAccount();
+      await ref.read(authProvider.notifier).deleteAccount();
 
       // 성공 시 로그아웃 처리
       await ref.read(authProvider.notifier).logout();

@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:test_quest/community/model/test_post_list_item.dart';
+import 'package:test_quest/community/model/test_post.dart';
 
 part 'test_post_pagination.freezed.dart';
 part 'test_post_pagination.g.dart';
@@ -7,7 +7,7 @@ part 'test_post_pagination.g.dart';
 @freezed
 abstract class TestPostPagination with _$TestPostPagination {
   factory TestPostPagination({
-    required List<TestPostListItem> gameBoards,
+    required List<TestPost> posts,
     required bool hasNext,
   }) = _TestPostPagination;
 

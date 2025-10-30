@@ -1,16 +1,15 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:test_quest/community/model/test_post.dart';
-import 'package:test_quest/community/model/test_post_create.dart';
-import 'package:test_quest/community/model/test_post_update.dart';
 import 'package:test_quest/community/provider/test_post_pagination_provider.dart';
-import 'package:test_quest/community/repository/test_post_repository_impl.dart';
-import 'package:test_quest/user/provider/user_provider.dart';
+import 'package:test_quest/repository/firebase/community/community_firestore.dart';
+import 'package:test_quest/repository/firebase/storage/storage_repository.dart';
+import 'package:test_quest/repository/firebase/user/user_firestore_repository.dart';
+import 'package:test_quest/repository/firebase/user/user_repository.dart';
 import 'package:test_quest/util/extensions/enum_extension.dart';
-import 'package:test_quest/util/extensions/xfile_extension.dart';
 import 'package:test_quest/util/service/fcm_service.dart';
 import 'package:test_quest/util/service/notification_service.dart';
 
@@ -38,13 +37,20 @@ class PostError extends PostState {
 }
 
 class PostNotifier extends Notifier<PostState> {
-  late final repository = ref.read(testPostRepositoryProvider);
-  late final notificationService = ref.read(notiProvider);
-  late final fcmService = ref.read(fcmServiceProvider);
-  late final userProvider = ref.read(userNotifierProvider.notifier);
+  late CommunityFirestoreRepositoryImpl _repository;
+  late NotificationService _notificationService;
+  late FCMService _fcmService;
+  late StorageRepository _storageRepository;
+  late UserRepository _userRepository;
 
   @override
   PostState build() {
+    _repository = ref.read(communityFirestoreRepositoryProvider);
+    _notificationService = ref.read(notiProvider);
+    _fcmService = ref.read(fcmServiceProvider);
+    _storageRepository = ref.read(storageRepositoryProvider);
+    _userRepository = ref.read(userFirestoreRepositoryProvider);
+
     return PostState.initial();
   }
 
@@ -61,32 +67,45 @@ class PostNotifier extends Notifier<PostState> {
   }) async {
     state = PostState.loading();
     try {
-      final DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+      final user = await _userRepository.getCurrentUser();
 
-      final post = TestPostCreate(
+      // Firestore 문서 ID를 먼저 생성하여 TestPost.id로 사용
+      final docId = await _repository.generatePostId();
+      String? imageUrl;
+      if (boardImage != null) {
+        imageUrl = await _storageRepository.uploadPostImage(
+          postId: docId,
+          imageFile: File(boardImage.path),
+        );
+      }
+      final post = TestPost(
+        id: docId,
+        userId: user.uid,
+        nickname: user.nickname,
+        views: 0,
         title: title,
         description: description,
         platform: platform,
         type: type,
         linkUrl: linkUrl,
-        startDate: dateFormat.format(startDate),
-        endDate: dateFormat.format(endDate),
+        startDate: startDate,
+        endDate: endDate,
+        thumbnailUrl: imageUrl,
         recruitStatus: DateTime.now().isBefore(endDate) ? '모집중' : '모집마감',
-        boardImage: boardImage?.toFile().path,
+        createdAt: DateTime.now(),
       );
 
-      await repository.createPost(post);
+      await _repository.createPost(post);
       await _refreshCommunityList();
 
       // 글 작성 완료 알림 표시
-      await notificationService.showPostCreatedNotification(
+      await _notificationService.showPostCreatedNotification(
         title: title,
-        
       );
 
       // FCM 알림 전송 (다른 사용자들에게)
       try {
-        await fcmService.sendNewPostNotifications(
+        await _fcmService.sendNewPostNotifications(
           title: title,
           platform: platform.toPostString(),
           type: type.toPostString(),
@@ -107,7 +126,7 @@ class PostNotifier extends Notifier<PostState> {
   Future<TestPost?> getPost({required String id}) async {
     state = PostState.loading();
     try {
-      final post = await repository.getPost(id);
+      final post = await _repository.getPost(id);
       log('Post get success: $post');
       state = PostState.success();
       return post;
@@ -121,20 +140,36 @@ class PostNotifier extends Notifier<PostState> {
   /// 글 수정
   Future<void> updatePost({
     required String id,
+    required XFile? image,
     required String title,
     required String description,
-    XFile? boardImage,
+    required TestPlatform platform,
+    required TestType type,
+    required String linkUrl,
+    required DateTime startDate,
+    required DateTime endDate,
   }) async {
     state = PostState.loading();
     try {
-      final post = TestPostUpdate(
-        id: id,
+      final existingPost = await _repository.getPost(id);
+      String? imageUrl;
+      if (image != null) {
+        imageUrl = await _storageRepository.uploadPostImage(
+          postId: id,
+          imageFile: File(image.path),
+        );
+      }
+      final updatedPost = existingPost.copyWith(
         title: title,
         description: description,
-        boardImage: boardImage?.toFile().path,
+        platform: platform,
+        type: type,
+        linkUrl: linkUrl,
+        startDate: startDate,
+        endDate: endDate,
+        thumbnailUrl: imageUrl,
       );
-
-      await repository.updatePost(id, post);
+      await _repository.updatePost(updatedPost);
       await _refreshCommunityList();
       state = PostState.success();
     } catch (e) {
@@ -147,7 +182,7 @@ class PostNotifier extends Notifier<PostState> {
   Future<void> deletePost(String id) async {
     state = PostState.loading();
     try {
-      await repository.deletePost(id);
+      await _repository.deletePost(id);
       await _refreshCommunityList();
       state = PostState.success();
     } catch (e) {

@@ -25,8 +25,14 @@ class MyPageScreen extends ConsumerWidget {
       body: userAsync.when(
         data: (user) {
           if (user == null) {
+            // 사용자 정보가 없으면 로그아웃 후 로그인 화면으로
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ref.read(authProvider.notifier).logout();
+              context.go('/login');
+            });
+
             return const Center(
-              child: Text('사용자 정보가 없습니다.'),
+              child: CircularProgressIndicator(),
             );
           }
 
@@ -38,7 +44,7 @@ class MyPageScreen extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     CircleNetworkImage(
-                      imageUrl: user.profileImg ?? "",
+                      imageUrl: user.profileUrl ?? "",
                     ),
                     const SizedBox(width: 16),
                     Flexible(

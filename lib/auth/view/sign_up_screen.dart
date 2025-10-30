@@ -27,6 +27,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   @override
   void initState() {
     super.initState();
+    // 회원가입 상태 초기화
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(signupProvider.notifier).reset();
+    });
   }
 
   @override

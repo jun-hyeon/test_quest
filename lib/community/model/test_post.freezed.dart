@@ -30,7 +30,7 @@ mixin _$TestPost {
   DateTime get startDate;
   @JsonKey(name: 'endDate')
   DateTime get endDate;
-  @JsonKey(name: 'createAt')
+  @JsonKey(name: 'createdAt')
   DateTime get createdAt;
   String get recruitStatus;
 
@@ -115,7 +115,7 @@ abstract mixin class $TestPostCopyWith<$Res> {
       String linkUrl,
       @JsonKey(name: 'startDate') DateTime startDate,
       @JsonKey(name: 'endDate') DateTime endDate,
-      @JsonKey(name: 'createAt') DateTime createdAt,
+      @JsonKey(name: 'createdAt') DateTime createdAt,
       String recruitStatus});
 }
 
@@ -314,7 +314,7 @@ extension TestPostPatterns on TestPost {
             String linkUrl,
             @JsonKey(name: 'startDate') DateTime startDate,
             @JsonKey(name: 'endDate') DateTime endDate,
-            @JsonKey(name: 'createAt') DateTime createdAt,
+            @JsonKey(name: 'createdAt') DateTime createdAt,
             String recruitStatus)?
         $default, {
     required TResult orElse(),
@@ -371,7 +371,7 @@ extension TestPostPatterns on TestPost {
             String linkUrl,
             @JsonKey(name: 'startDate') DateTime startDate,
             @JsonKey(name: 'endDate') DateTime endDate,
-            @JsonKey(name: 'createAt') DateTime createdAt,
+            @JsonKey(name: 'createdAt') DateTime createdAt,
             String recruitStatus)
         $default,
   ) {
@@ -426,7 +426,7 @@ extension TestPostPatterns on TestPost {
             String linkUrl,
             @JsonKey(name: 'startDate') DateTime startDate,
             @JsonKey(name: 'endDate') DateTime endDate,
-            @JsonKey(name: 'createAt') DateTime createdAt,
+            @JsonKey(name: 'createdAt') DateTime createdAt,
             String recruitStatus)?
         $default,
   ) {
@@ -470,7 +470,7 @@ class _TestPost implements TestPost {
       required this.linkUrl,
       @JsonKey(name: 'startDate') required this.startDate,
       @JsonKey(name: 'endDate') required this.endDate,
-      @JsonKey(name: 'createAt') required this.createdAt,
+      @JsonKey(name: 'createdAt') required this.createdAt,
       required this.recruitStatus});
   factory _TestPost.fromJson(Map<String, dynamic> json) =>
       _$TestPostFromJson(json);
@@ -504,7 +504,7 @@ class _TestPost implements TestPost {
   @JsonKey(name: 'endDate')
   final DateTime endDate;
   @override
-  @JsonKey(name: 'createAt')
+  @JsonKey(name: 'createdAt')
   final DateTime createdAt;
   @override
   final String recruitStatus;
@@ -597,7 +597,7 @@ abstract mixin class _$TestPostCopyWith<$Res>
       String linkUrl,
       @JsonKey(name: 'startDate') DateTime startDate,
       @JsonKey(name: 'endDate') DateTime endDate,
-      @JsonKey(name: 'createAt') DateTime createdAt,
+      @JsonKey(name: 'createdAt') DateTime createdAt,
       String recruitStatus});
 }
 

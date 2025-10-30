@@ -1,14 +1,10 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_quest/auth/provider/auth_state.dart';
-import 'package:test_quest/auth/repository/auth_repository.dart';
-import 'package:test_quest/auth/repository/auth_repository_impl.dart';
-import 'package:test_quest/common/const.dart';
-import 'package:test_quest/user/provider/user_provider.dart';
-import 'package:test_quest/user/repository/user_repository.dart';
-import 'package:test_quest/user/repository/user_repository_impl.dart';
-import 'package:test_quest/util/service/storage_service.dart';
+import 'package:test_quest/repository/firebase/auth/firebase_auth_repository_impl.dart';
+import 'package:test_quest/repository/firebase/user/user_firestore_repository.dart';
 import 'package:test_quest/util/validator.dart';
 
 final authProvider = NotifierProvider<AuthNotifier, AuthState>(
@@ -16,9 +12,8 @@ final authProvider = NotifierProvider<AuthNotifier, AuthState>(
 );
 
 class AuthNotifier extends Notifier<AuthState> {
-  late final AuthRepository _authRepository;
-  late final StorageService _storage;
-  late final UserRepository _userRepository;
+  late final FirebaseAuthRepositoryImpl _authRepository;
+  late final UserFirestoreRepositoryImpl _userRepository;
 
   String _email = '';
   String _password = '';
@@ -26,9 +21,19 @@ class AuthNotifier extends Notifier<AuthState> {
   @override
   AuthState build() {
     // 의존성 주입 - build에서 안전하게 초기화
-    _authRepository = ref.read(authRepositoryProvider);
-    _storage = ref.read(storageProvider);
-    _userRepository = ref.read(userRepositoryProvider);
+    _authRepository = ref.read(firebaseAuthRepositoryProvider);
+    _userRepository = ref.read(userFirestoreRepositoryProvider);
+    // Firebase Auth 상태 변화를 감지하여 자동으로 상태 업데이트
+    _authRepository.authStateChanges().listen((User? user) {
+      if (user != null) {
+        // 사용자가 로그인된 경우
+        state = Authenticated();
+      } else {
+        // 사용자가 로그아웃된 경우
+        state = Unauthenticated();
+      }
+    });
+
     return Unauthenticated();
   }
 
@@ -62,28 +67,20 @@ class AuthNotifier extends Notifier<AuthState> {
     }
 
     state = AuthLoading();
-    // Simulate a network call for login
 
     try {
-      final result =
+      log('로그인 시작: $_email', name: 'AuthNotifier.login');
+      final userCredential =
           await _authRepository.login(email: _email, password: _password);
 
-      final tokenBundle = result;
-
-      // if (tokenBundle == null) {
-      //   state = Unauthenticated(errorMessage: '이메일 또는 비밀번호가 잘못되었습니다.');
-      //   return;
-      // }
-
-      final accessToken = tokenBundle.access.token;
-      final refreshToken = tokenBundle.refresh.token;
-      await _storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
-      await _storage.write(key: REFRESH_TOKEN_KEY, value: refreshToken);
-
-      final userInfo = await _userRepository.getMyInfo();
-      await ref.read(userNotifierProvider.notifier).setUser(userInfo);
-
-      state = Authenticated();
+      if (userCredential.user != null) {
+        log('Firebase Auth 로그인 성공: ${userCredential.user!.uid}',
+            name: 'AuthNotifier.login');
+        // 직접 사용자 데이터 로드
+        state = Authenticated();
+      } else {
+        throw Exception('로그인 후 사용자 정보를 가져올 수 없습니다.');
+      }
     } catch (e) {
       state = Unauthenticated(errorMessage: e.toString());
       log('로그인 실패', name: 'AuthNotifier.login', error: e);
@@ -93,48 +90,26 @@ class AuthNotifier extends Notifier<AuthState> {
   Future<void> logout() async {
     try {
       log('로그아웃 시작', name: 'AuthNotifier.logout');
-      // await _authRepository.logout();
-      await _storage.delete(key: ACCESS_TOKEN_KEY);
-      await _storage.delete(key: REFRESH_TOKEN_KEY);
-      await ref.read(userNotifierProvider.notifier).deleteUser();
-      state = Unauthenticated();
+      await _authRepository.logout();
+      // Firebase Auth 상태 변화 리스너가 자동으로 처리
       log('로그아웃 완료 - Router Provider가 자동으로 로그인 화면으로 리다이렉션',
           name: 'AuthNotifier.logout');
+      state = Unauthenticated();
     } catch (e) {
       log('로그아웃 실패', name: 'AuthNotifier.logout', error: e);
       state = Unauthenticated(errorMessage: e.toString());
     }
   }
 
-  Future<void> checkLoginStatus() async {
-    log('로그인 상태 확인 시작', name: 'AuthNotifier.checkLoginStatus');
-    final accessToken = await _storage.read(key: ACCESS_TOKEN_KEY);
-    final refreshToken = await _storage.read(key: REFRESH_TOKEN_KEY);
-
-    log('토큰 확인 - Access: ${accessToken != null ? "존재" : "없음"}, Refresh: ${refreshToken != null ? "존재" : "없음"}',
-        name: 'AuthNotifier.checkLoginStatus');
-
-    // 사용자 정보도 확인
-    final userInfo = await _userRepository.getUser();
-
-    if (accessToken != null && refreshToken != null && userInfo != null) {
-      log('토큰과 사용자 정보 존재 → Authenticated 상태로 변경',
-          name: 'AuthNotifier.checkLoginStatus');
-      state = Authenticated();
-    } else {
-      // 토큰은 있지만 사용자 정보가 없는 경우 토큰 삭제
-      if ((accessToken != null || refreshToken != null) && userInfo == null) {
-        log('토큰은 있지만 사용자 정보 없음 → 토큰 삭제', name: 'AuthNotifier.checkLoginStatus');
-        await _storage.delete(key: ACCESS_TOKEN_KEY);
-        await _storage.delete(key: REFRESH_TOKEN_KEY);
-      }
-
-      log('인증 정보 불완전 → Unauthenticated 상태로 변경',
-          name: 'AuthNotifier.checkLoginStatus');
+  Future<void> deleteAccount() async {
+    try {
+      final currentUser = await _userRepository.getCurrentUser();
+      await _authRepository.deleteAccount();
+      await _userRepository.deleteUser(currentUser.uid);
       state = Unauthenticated();
+    } catch (e) {
+      state = Unauthenticated(errorMessage: e.toString());
     }
-
-    log('최종 상태: $state', name: 'AuthNotifier.checkLoginStatus');
   }
 
   String? _validateEmail(String email) => Validator.validateEmail(email);

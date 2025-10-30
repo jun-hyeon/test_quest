@@ -89,9 +89,14 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
 
     ref.read(postProvider.notifier).updatePost(
           id: widget.post.id,
+          image: _selectedImage,
           title: _titleController.text.trim(),
           description: _contentController.text.trim(),
-          boardImage: _selectedImage,
+          platform: widget.post.platform,
+          type: widget.post.type,
+          linkUrl: _linkController.text.trim(),
+          startDate: widget.post.startDate,
+          endDate: widget.post.endDate,
         );
   }
 
@@ -134,7 +139,9 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
                               height: 200,
                               fit: BoxFit.cover,
                             )
-                          : (widget.post.thumbnailUrl != null
+                          : (widget.post.thumbnailUrl != null &&
+                                  widget.post.thumbnailUrl!.isNotEmpty &&
+                                  widget.post.thumbnailUrl!.startsWith('http')
                               ? Image.network(
                                   widget.post.thumbnailUrl!,
                                   width: double.infinity,

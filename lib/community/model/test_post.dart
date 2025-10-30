@@ -45,7 +45,7 @@ abstract class TestPost with _$TestPost {
     required String linkUrl,
     @JsonKey(name: 'startDate') required DateTime startDate,
     @JsonKey(name: 'endDate') required DateTime endDate,
-    @JsonKey(name: 'createAt') required DateTime createdAt,
+    @JsonKey(name: 'createdAt') required DateTime createdAt,
     required String recruitStatus,
   }) = _TestPost;
 

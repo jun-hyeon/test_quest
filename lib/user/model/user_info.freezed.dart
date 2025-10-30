@@ -14,10 +14,10 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$UserInfo {
-  String get userId;
+  String get uid;
   String get name;
   String get nickname;
-  String? get profileImg;
+  String? get profileUrl;
 
   /// Create a copy of UserInfo
   /// with the given fields replaced by the non-null parameter values.
@@ -34,22 +34,21 @@ mixin _$UserInfo {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is UserInfo &&
-            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.uid, uid) || other.uid == uid) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.nickname, nickname) ||
                 other.nickname == nickname) &&
-            (identical(other.profileImg, profileImg) ||
-                other.profileImg == profileImg));
+            (identical(other.profileUrl, profileUrl) ||
+                other.profileUrl == profileUrl));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, userId, name, nickname, profileImg);
+  int get hashCode => Object.hash(runtimeType, uid, name, nickname, profileUrl);
 
   @override
   String toString() {
-    return 'UserInfo(userId: $userId, name: $name, nickname: $nickname, profileImg: $profileImg)';
+    return 'UserInfo(uid: $uid, name: $name, nickname: $nickname, profileUrl: $profileUrl)';
   }
 }
 
@@ -58,7 +57,7 @@ abstract mixin class $UserInfoCopyWith<$Res> {
   factory $UserInfoCopyWith(UserInfo value, $Res Function(UserInfo) _then) =
       _$UserInfoCopyWithImpl;
   @useResult
-  $Res call({String userId, String name, String nickname, String? profileImg});
+  $Res call({String uid, String name, String nickname, String? profileUrl});
 }
 
 /// @nodoc
@@ -73,15 +72,15 @@ class _$UserInfoCopyWithImpl<$Res> implements $UserInfoCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = null,
+    Object? uid = null,
     Object? name = null,
     Object? nickname = null,
-    Object? profileImg = freezed,
+    Object? profileUrl = freezed,
   }) {
     return _then(_self.copyWith(
-      userId: null == userId
-          ? _self.userId
-          : userId // ignore: cast_nullable_to_non_nullable
+      uid: null == uid
+          ? _self.uid
+          : uid // ignore: cast_nullable_to_non_nullable
               as String,
       name: null == name
           ? _self.name
@@ -91,9 +90,9 @@ class _$UserInfoCopyWithImpl<$Res> implements $UserInfoCopyWith<$Res> {
           ? _self.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
               as String,
-      profileImg: freezed == profileImg
-          ? _self.profileImg
-          : profileImg // ignore: cast_nullable_to_non_nullable
+      profileUrl: freezed == profileUrl
+          ? _self.profileUrl
+          : profileUrl // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -193,7 +192,7 @@ extension UserInfoPatterns on UserInfo {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
-            String userId, String name, String nickname, String? profileImg)?
+            String uid, String name, String nickname, String? profileUrl)?
         $default, {
     required TResult orElse(),
   }) {
@@ -201,7 +200,7 @@ extension UserInfoPatterns on UserInfo {
     switch (_that) {
       case _UserInfo() when $default != null:
         return $default(
-            _that.userId, _that.name, _that.nickname, _that.profileImg);
+            _that.uid, _that.name, _that.nickname, _that.profileUrl);
       case _:
         return orElse();
     }
@@ -223,14 +222,14 @@ extension UserInfoPatterns on UserInfo {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
-            String userId, String name, String nickname, String? profileImg)
+            String uid, String name, String nickname, String? profileUrl)
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _UserInfo():
         return $default(
-            _that.userId, _that.name, _that.nickname, _that.profileImg);
+            _that.uid, _that.name, _that.nickname, _that.profileUrl);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -251,14 +250,14 @@ extension UserInfoPatterns on UserInfo {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
-            String userId, String name, String nickname, String? profileImg)?
+            String uid, String name, String nickname, String? profileUrl)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _UserInfo() when $default != null:
         return $default(
-            _that.userId, _that.name, _that.nickname, _that.profileImg);
+            _that.uid, _that.name, _that.nickname, _that.profileUrl);
       case _:
         return null;
     }
@@ -269,21 +268,21 @@ extension UserInfoPatterns on UserInfo {
 @JsonSerializable()
 class _UserInfo implements UserInfo {
   _UserInfo(
-      {required this.userId,
+      {required this.uid,
       required this.name,
       required this.nickname,
-      required this.profileImg});
+      required this.profileUrl});
   factory _UserInfo.fromJson(Map<String, dynamic> json) =>
       _$UserInfoFromJson(json);
 
   @override
-  final String userId;
+  final String uid;
   @override
   final String name;
   @override
   final String nickname;
   @override
-  final String? profileImg;
+  final String? profileUrl;
 
   /// Create a copy of UserInfo
   /// with the given fields replaced by the non-null parameter values.
@@ -305,22 +304,21 @@ class _UserInfo implements UserInfo {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _UserInfo &&
-            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.uid, uid) || other.uid == uid) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.nickname, nickname) ||
                 other.nickname == nickname) &&
-            (identical(other.profileImg, profileImg) ||
-                other.profileImg == profileImg));
+            (identical(other.profileUrl, profileUrl) ||
+                other.profileUrl == profileUrl));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, userId, name, nickname, profileImg);
+  int get hashCode => Object.hash(runtimeType, uid, name, nickname, profileUrl);
 
   @override
   String toString() {
-    return 'UserInfo(userId: $userId, name: $name, nickname: $nickname, profileImg: $profileImg)';
+    return 'UserInfo(uid: $uid, name: $name, nickname: $nickname, profileUrl: $profileUrl)';
   }
 }
 
@@ -331,7 +329,7 @@ abstract mixin class _$UserInfoCopyWith<$Res>
       __$UserInfoCopyWithImpl;
   @override
   @useResult
-  $Res call({String userId, String name, String nickname, String? profileImg});
+  $Res call({String uid, String name, String nickname, String? profileUrl});
 }
 
 /// @nodoc
@@ -346,15 +344,15 @@ class __$UserInfoCopyWithImpl<$Res> implements _$UserInfoCopyWith<$Res> {
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? userId = null,
+    Object? uid = null,
     Object? name = null,
     Object? nickname = null,
-    Object? profileImg = freezed,
+    Object? profileUrl = freezed,
   }) {
     return _then(_UserInfo(
-      userId: null == userId
-          ? _self.userId
-          : userId // ignore: cast_nullable_to_non_nullable
+      uid: null == uid
+          ? _self.uid
+          : uid // ignore: cast_nullable_to_non_nullable
               as String,
       name: null == name
           ? _self.name
@@ -364,9 +362,9 @@ class __$UserInfoCopyWithImpl<$Res> implements _$UserInfoCopyWith<$Res> {
           ? _self.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
               as String,
-      profileImg: freezed == profileImg
-          ? _self.profileImg
-          : profileImg // ignore: cast_nullable_to_non_nullable
+      profileUrl: freezed == profileUrl
+          ? _self.profileUrl
+          : profileUrl // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }

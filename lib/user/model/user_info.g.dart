@@ -7,15 +7,15 @@ part of 'user_info.dart';
 // **************************************************************************
 
 _UserInfo _$UserInfoFromJson(Map<String, dynamic> json) => _UserInfo(
-      userId: json['userId'] as String,
+      uid: json['uid'] as String,
       name: json['name'] as String,
       nickname: json['nickname'] as String,
-      profileImg: json['profileImg'] as String?,
+      profileUrl: json['profileUrl'] as String?,
     );
 
 Map<String, dynamic> _$UserInfoToJson(_UserInfo instance) => <String, dynamic>{
-      'userId': instance.userId,
+      'uid': instance.uid,
       'name': instance.name,
       'nickname': instance.nickname,
-      'profileImg': instance.profileImg,
+      'profileUrl': instance.profileUrl,
     };

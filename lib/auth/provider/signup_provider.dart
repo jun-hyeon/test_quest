@@ -5,8 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:test_quest/auth/model/signup_form.dart';
 import 'package:test_quest/auth/provider/signup_state.dart';
-import 'package:test_quest/auth/repository/auth_repository.dart';
-import 'package:test_quest/auth/repository/auth_repository_impl.dart';
+import 'package:test_quest/repository/firebase/auth/auth_repository.dart';
+import 'package:test_quest/repository/firebase/auth/firebase_auth_repository_impl.dart';
+import 'package:test_quest/repository/firebase/storage/storage_repository.dart';
+import 'package:test_quest/repository/firebase/user/user_firestore_repository.dart';
+import 'package:test_quest/repository/firebase/user/user_repository.dart';
+import 'package:test_quest/user/model/user_info.dart';
 import 'package:test_quest/util/validator.dart';
 
 final signupProvider = NotifierProvider<SignupProvider, SignupState>(
@@ -15,6 +19,8 @@ final signupProvider = NotifierProvider<SignupProvider, SignupState>(
 
 class SignupProvider extends Notifier<SignupState> {
   late final AuthRepository _authRepository;
+  late final UserRepository _userRepository;
+  late final StorageRepository _storageRepository;
   String _email = '';
   String _password = '';
   String _nickname = '';
@@ -29,7 +35,9 @@ class SignupProvider extends Notifier<SignupState> {
 
   @override
   SignupState build() {
-    _authRepository = ref.read(authRepositoryProvider);
+    _authRepository = ref.read(firebaseAuthRepositoryProvider);
+    _userRepository = ref.read(userFirestoreRepositoryProvider);
+    _storageRepository = ref.read(storageRepositoryProvider);
     return const SignupInitial();
   }
 
@@ -54,9 +62,9 @@ class SignupProvider extends Notifier<SignupState> {
   Future<void> signup() async {
     state = SignupLoading();
     try {
-      // network call
+      // Firebase Auth를 통한 회원가입
       log('Signed up with email: $_email, password: $_password, nickname: $_nickname, name: $_name, profileImg: ${_image?.path}');
-      final response = await _authRepository.signup(
+      final result = await _authRepository.signup(
         data: SignupForm(
           email: _email,
           password: _password,
@@ -65,21 +73,48 @@ class SignupProvider extends Notifier<SignupState> {
           profileImage: _image != null ? File(_image!.path).path : null,
         ),
       );
-      if (response.code != '200') {
-        log('[signup_provider] 회원가입 실패');
-        throw '회원가입 실패';
+
+      // 회원가입 성공 후 Firestore에서 사용자 정보 가져오기
+      if (result.user != null) {
+        try {
+          String? profileUrl;
+          if (_image != null) {
+            profileUrl = await _storageRepository.uploadProfileImage(
+              userId: result.user!.uid,
+              imageFile: File(_image!.path),
+            );
+          }
+          final userInfo = UserInfo(
+            uid: result.user!.uid,
+            name: _name,
+            nickname: _nickname,
+            profileUrl: profileUrl,
+          );
+          await _userRepository.setUser(userInfo);
+
+          state = SignupSuccess();
+        } catch (e) {
+          log('사용자 정보 가져오기 실패: $e');
+          // Firestore에서 가져오기 실패 시 기본 정보로 설정
+          state = SignupError(e.toString());
+        }
       }
-      state = SignupSuccess();
     } catch (e) {
       state = SignupError(e.toString());
-      log('[signup_provider] 회원가입 실패');
-      throw '회원가입 실패';
+      log('[signup_provider] 회원가입 실패: $e');
+      throw '회원가입 실패: $e';
     }
   }
 
-  // void goToProfileStep() {
-  //   state = const SignupInitial(step: SignupStep.profile);
-  // }
+  /// 회원가입 상태 초기화
+  void reset() {
+    _email = '';
+    _password = '';
+    _nickname = '';
+    _name = '';
+    _image = null;
+    state = const SignupInitial();
+  }
 
   String? validateEmail(String? value) => Validator.validateEmail(value);
   String? validatePassword(String? value) => Validator.validatePassword(value);

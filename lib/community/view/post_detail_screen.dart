@@ -108,14 +108,18 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   Widget _buildPostDetail(
       BuildContext context, TestPost post, bool isDeleting) {
     final currentUser = ref.watch(currentUserProvider);
-    final isAuthor = currentUser?.userId == post.userId ||
+
+    // Firebase Auth의 uid를 사용하여 작성자 확인
+    final isAuthor = currentUser?.uid == post.userId ||
         currentUser?.nickname == post.nickname;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: ListView(
         children: [
-          if (post.thumbnailUrl != null)
+          if (post.thumbnailUrl != null &&
+              post.thumbnailUrl!.isNotEmpty &&
+              post.thumbnailUrl!.startsWith('http'))
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.network(

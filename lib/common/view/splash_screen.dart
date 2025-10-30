@@ -50,9 +50,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       },
     );
 
-    // 인증 상태 확인
-    await ref.read(authProvider.notifier).checkLoginStatus();
-    log('[SplashScreen] 인증 상태 확인 완료');
+    // Firebase Auth는 자동으로 상태를 관리하므로 별도 확인 불필요
+    log('[SplashScreen] Firebase Auth 자동 상태 관리');
   }
 
   @override

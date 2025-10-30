@@ -62,6 +62,14 @@ class _ProfileStepFormState extends ConsumerState<SignupProfileScreen> {
   void initState() {
     super.initState();
     _listenSignupState();
+
+    // 회원가입 상태가 초기 상태가 아니면 초기화
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final currentState = ref.read(signupProvider);
+      if (currentState is! SignupInitial) {
+        ref.read(signupProvider.notifier).reset();
+      }
+    });
   }
 
   @override

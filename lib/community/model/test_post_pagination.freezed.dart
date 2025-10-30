@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$TestPostPagination {
-  List<TestPostListItem> get gameBoards;
+  List<TestPost> get posts;
   bool get hasNext;
 
   /// Create a copy of TestPostPagination
@@ -33,19 +33,18 @@ mixin _$TestPostPagination {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is TestPostPagination &&
-            const DeepCollectionEquality()
-                .equals(other.gameBoards, gameBoards) &&
+            const DeepCollectionEquality().equals(other.posts, posts) &&
             (identical(other.hasNext, hasNext) || other.hasNext == hasNext));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(gameBoards), hasNext);
+      runtimeType, const DeepCollectionEquality().hash(posts), hasNext);
 
   @override
   String toString() {
-    return 'TestPostPagination(gameBoards: $gameBoards, hasNext: $hasNext)';
+    return 'TestPostPagination(posts: $posts, hasNext: $hasNext)';
   }
 }
 
@@ -55,7 +54,7 @@ abstract mixin class $TestPostPaginationCopyWith<$Res> {
           TestPostPagination value, $Res Function(TestPostPagination) _then) =
       _$TestPostPaginationCopyWithImpl;
   @useResult
-  $Res call({List<TestPostListItem> gameBoards, bool hasNext});
+  $Res call({List<TestPost> posts, bool hasNext});
 }
 
 /// @nodoc
@@ -71,14 +70,14 @@ class _$TestPostPaginationCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? gameBoards = null,
+    Object? posts = null,
     Object? hasNext = null,
   }) {
     return _then(_self.copyWith(
-      gameBoards: null == gameBoards
-          ? _self.gameBoards
-          : gameBoards // ignore: cast_nullable_to_non_nullable
-              as List<TestPostListItem>,
+      posts: null == posts
+          ? _self.posts
+          : posts // ignore: cast_nullable_to_non_nullable
+              as List<TestPost>,
       hasNext: null == hasNext
           ? _self.hasNext
           : hasNext // ignore: cast_nullable_to_non_nullable
@@ -180,14 +179,13 @@ extension TestPostPaginationPatterns on TestPostPagination {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(List<TestPostListItem> gameBoards, bool hasNext)?
-        $default, {
+    TResult Function(List<TestPost> posts, bool hasNext)? $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _TestPostPagination() when $default != null:
-        return $default(_that.gameBoards, _that.hasNext);
+        return $default(_that.posts, _that.hasNext);
       case _:
         return orElse();
     }
@@ -208,12 +206,12 @@ extension TestPostPaginationPatterns on TestPostPagination {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(List<TestPostListItem> gameBoards, bool hasNext) $default,
+    TResult Function(List<TestPost> posts, bool hasNext) $default,
   ) {
     final _that = this;
     switch (_that) {
       case _TestPostPagination():
-        return $default(_that.gameBoards, _that.hasNext);
+        return $default(_that.posts, _that.hasNext);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -233,13 +231,12 @@ extension TestPostPaginationPatterns on TestPostPagination {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(List<TestPostListItem> gameBoards, bool hasNext)?
-        $default,
+    TResult? Function(List<TestPost> posts, bool hasNext)? $default,
   ) {
     final _that = this;
     switch (_that) {
       case _TestPostPagination() when $default != null:
-        return $default(_that.gameBoards, _that.hasNext);
+        return $default(_that.posts, _that.hasNext);
       case _:
         return null;
     }
@@ -250,17 +247,17 @@ extension TestPostPaginationPatterns on TestPostPagination {
 @JsonSerializable()
 class _TestPostPagination implements TestPostPagination {
   _TestPostPagination(
-      {required final List<TestPostListItem> gameBoards, required this.hasNext})
-      : _gameBoards = gameBoards;
+      {required final List<TestPost> posts, required this.hasNext})
+      : _posts = posts;
   factory _TestPostPagination.fromJson(Map<String, dynamic> json) =>
       _$TestPostPaginationFromJson(json);
 
-  final List<TestPostListItem> _gameBoards;
+  final List<TestPost> _posts;
   @override
-  List<TestPostListItem> get gameBoards {
-    if (_gameBoards is EqualUnmodifiableListView) return _gameBoards;
+  List<TestPost> get posts {
+    if (_posts is EqualUnmodifiableListView) return _posts;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_gameBoards);
+    return EqualUnmodifiableListView(_posts);
   }
 
   @override
@@ -286,19 +283,18 @@ class _TestPostPagination implements TestPostPagination {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _TestPostPagination &&
-            const DeepCollectionEquality()
-                .equals(other._gameBoards, _gameBoards) &&
+            const DeepCollectionEquality().equals(other._posts, _posts) &&
             (identical(other.hasNext, hasNext) || other.hasNext == hasNext));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_gameBoards), hasNext);
+      runtimeType, const DeepCollectionEquality().hash(_posts), hasNext);
 
   @override
   String toString() {
-    return 'TestPostPagination(gameBoards: $gameBoards, hasNext: $hasNext)';
+    return 'TestPostPagination(posts: $posts, hasNext: $hasNext)';
   }
 }
 
@@ -310,7 +306,7 @@ abstract mixin class _$TestPostPaginationCopyWith<$Res>
       __$TestPostPaginationCopyWithImpl;
   @override
   @useResult
-  $Res call({List<TestPostListItem> gameBoards, bool hasNext});
+  $Res call({List<TestPost> posts, bool hasNext});
 }
 
 /// @nodoc
@@ -326,14 +322,14 @@ class __$TestPostPaginationCopyWithImpl<$Res>
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? gameBoards = null,
+    Object? posts = null,
     Object? hasNext = null,
   }) {
     return _then(_TestPostPagination(
-      gameBoards: null == gameBoards
-          ? _self._gameBoards
-          : gameBoards // ignore: cast_nullable_to_non_nullable
-              as List<TestPostListItem>,
+      posts: null == posts
+          ? _self._posts
+          : posts // ignore: cast_nullable_to_non_nullable
+              as List<TestPost>,
       hasNext: null == hasNext
           ? _self.hasNext
           : hasNext // ignore: cast_nullable_to_non_nullable

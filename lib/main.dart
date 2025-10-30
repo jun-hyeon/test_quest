@@ -7,7 +7,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:test_quest/auth/provider/auth_provider.dart';
 import 'package:test_quest/firebase_options.dart';
 import 'package:test_quest/route/router.dart';
 import 'package:test_quest/settings/provider/theme_provider.dart';
@@ -70,10 +69,8 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
-    // 앱이 시작되면 인증 상태 확인
-    Future.microtask(() {
-      ref.read(authProvider.notifier).checkLoginStatus();
-    });
+    // Firebase Auth는 자동으로 상태를 관리하므로 별도 확인 불필요
+    log('[MyApp] Firebase Auth 자동 상태 관리');
   }
 
   @override

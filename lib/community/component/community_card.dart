@@ -38,17 +38,7 @@ class CommunityCard extends StatelessWidget {
             SizedBox(
               width: 80,
               height: 80,
-              child: Image.network(
-                thumbnailUrl ?? "",
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.grey[300],
-                    child: const Icon(Icons.broken_image,
-                        size: 40, color: Colors.grey),
-                  );
-                },
-              ),
+              child: _buildThumbnailImage(thumbnailUrl),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -117,6 +107,30 @@ class CommunityCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildThumbnailImage(String? thumbnailUrl) {
+    // 썸네일 URL이 유효하지 않은 경우 기본 아이콘 표시
+    if (thumbnailUrl == null ||
+        thumbnailUrl.isEmpty ||
+        thumbnailUrl == "null" ||
+        !thumbnailUrl.startsWith('http')) {
+      return Container(
+        color: Colors.grey[300],
+        child: const Icon(Icons.broken_image, size: 40, color: Colors.grey),
+      );
+    }
+
+    return Image.network(
+      thumbnailUrl,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          color: Colors.grey[300],
+          child: const Icon(Icons.broken_image, size: 40, color: Colors.grey),
+        );
+      },
     );
   }
 }

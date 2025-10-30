@@ -11,5 +11,6 @@
     ],
     "cursor.rules": [
         ".cursor/rules/flutter-rule.mdc"
-    ]
+    ],
+    "kiroAgent.configureMCP": "Disabled"
 }

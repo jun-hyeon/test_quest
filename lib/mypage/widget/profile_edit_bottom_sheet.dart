@@ -100,11 +100,13 @@ class _ProfileEditBottomSheetState
       await ref.read(userNotifierProvider.notifier).updateUser(
             (user) => user.copyWith(
               nickname: nicknameController.text.trim(),
-              profileImg: selectedImage != null
+              profileUrl: selectedImage != null
                   ? File(selectedImage!.path).path
-                  : user.profileImg,
+                  : user.profileUrl,
             ),
           );
+
+      await ref.read(userNotifierProvider.notifier).refresh();
 
       if (!mounted) return;
       _showSuccessAndClose();

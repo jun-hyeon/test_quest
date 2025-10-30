@@ -13,8 +13,20 @@ import 'package:test_quest/community/model/test_post.dart';
 import 'package:test_quest/community/provider/post_provider.dart';
 import 'package:test_quest/util/service/image_picker_service.dart';
 
+enum PostFormMode {
+  create,
+  edit,
+}
+
 class PostCreateScreen extends ConsumerStatefulWidget {
-  const PostCreateScreen({super.key});
+  final PostFormMode mode;
+  final TestPost? post;
+
+  const PostCreateScreen({
+    super.key,
+    required this.mode,
+    this.post,
+  });
 
   @override
   ConsumerState<PostCreateScreen> createState() => _PostCreateScreenState();
@@ -22,17 +34,17 @@ class PostCreateScreen extends ConsumerStatefulWidget {
 
 class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
-  final _contentController = TextEditingController();
-  final _linkController = TextEditingController();
+  late final TextEditingController _title;
+  late final TextEditingController _desc;
+  late final TextEditingController _link;
 
   TestType? _selectedType;
   TestPlatform? _selectedPlatform;
 
   XFile? _selectedImage;
 
-  DateTime? startDate;
-  DateTime? endDate;
+  DateTime? _startDate;
+  DateTime? _endDate;
 
   @override
   void initState() {
@@ -57,12 +69,24 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
         }
       }
     });
+
+    final p = widget.post;
+    final isEdit = widget.mode == PostFormMode.edit;
+
+    _title = TextEditingController(text: isEdit ? p!.title : '');
+    _desc = TextEditingController(text: isEdit ? p!.description : '');
+    _link = TextEditingController(text: isEdit ? p!.linkUrl : '');
+    _selectedType = isEdit ? p!.type : null;
+    _selectedPlatform = isEdit ? p!.platform : null;
+    _startDate = isEdit ? p!.startDate : null;
+    _endDate = isEdit ? p!.endDate : null;
   }
 
   @override
   void dispose() {
-    _titleController.dispose();
-    _contentController.dispose();
+    _title.dispose();
+    _desc.dispose();
+    _link.dispose();
     super.dispose();
   }
 
@@ -84,21 +108,37 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
 
     if (_selectedPlatform == null ||
         _selectedType == null ||
-        startDate == null ||
-        endDate == null) {
+        _startDate == null ||
+        _endDate == null) {
       return;
     }
-
-    ref.read(postProvider.notifier).createPost(
-          title: _titleController.text.trim(),
-          description: _contentController.text.trim(),
-          platform: _selectedPlatform!,
-          type: _selectedType!,
-          linkUrl: _linkController.text.trim(),
-          startDate: startDate!,
-          endDate: endDate!,
-          boardImage: _selectedImage,
-        );
+    final notifier = ref.read(postProvider.notifier);
+    if (widget.mode == PostFormMode.create) {
+      notifier.createPost(
+        title: _title.text.trim(),
+        description: _desc.text.trim(),
+        platform: _selectedPlatform!,
+        type: _selectedType!,
+        linkUrl: _link.text.trim(),
+        startDate: _startDate!,
+        endDate: _endDate!,
+        boardImage: _selectedImage,
+      );
+    } else {
+      notifier.updatePost(
+        id: widget.post!.id,
+        image: _selectedImage,
+        title: _title.text.trim(),
+        description: _desc.text.trim(),
+        platform: _selectedPlatform!,
+        type: _selectedType!,
+        linkUrl: _link.text.trim(),
+        startDate: _startDate!,
+        endDate: _endDate!,
+      );
+    }
+    if (!mounted) return;
+    context.pop(); // 완료 후 돌아가기
   }
 
   void pickImage() async {
@@ -135,7 +175,7 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
                 children: [
                   CustomTextfield(
                     obscure: false,
-                    controller: _titleController,
+                    controller: _title,
                     hintText: '제목',
                     validator: (value) => value == null || value.trim().isEmpty
                         ? '제목을 입력하세요'
@@ -147,9 +187,9 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
                       Expanded(
                         child: _DatePickerButton(
                           text: '시작일',
-                          startDate: startDate,
+                          startDate: _startDate,
                           onDatePick: () {
-                            onDatePick((picked) => startDate = picked);
+                            onDatePick((picked) => _startDate = picked);
                           },
                         ),
                       ),
@@ -157,9 +197,9 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
                       Expanded(
                         child: _DatePickerButton(
                           text: '마감일',
-                          startDate: endDate,
+                          startDate: _endDate,
                           onDatePick: () {
-                            onDatePick((picked) => endDate = picked);
+                            onDatePick((picked) => _endDate = picked);
                           },
                         ),
                       ),
@@ -255,7 +295,7 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
                     child: TextFormField(
                       textAlignVertical: TextAlignVertical.top,
                       textAlign: TextAlign.start,
-                      controller: _contentController,
+                      controller: _desc,
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(), hintText: '내용을 입력해주세요'),
                       maxLines: null,
@@ -270,7 +310,7 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
                   const SizedBox(height: 16),
                   CustomTextfield(
                     obscure: false,
-                    controller: _linkController,
+                    controller: _link,
                     hintText: '링크',
                     validator: (value) => value == null || value.trim().isEmpty
                         ? '링크를 입력해주세요'
