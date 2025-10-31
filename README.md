@@ -92,6 +92,9 @@
 | Freezed      | 불변 데이터 모델,                    |
 | Dio          | HTTP 통신                         |
 | json_serializable | JSON 직렬화 자동화             |
+| Firebase Auth | 사용자 인증(회원가입/로그인/프로필)      |
+| Cloud Firestore | 실시간/문서 기반 데이터베이스         |
+| Firebase Storage | 이미지/파일 업로드 및 관리           |
 ---
 
 ## 📦 프로젝트 구조
@@ -116,4 +119,3 @@ lib
 ## 👨‍💻 개발자
 
 APP - 최준현  
-BackEnd - [강찬혁](https://github.com/ChanHyeokKang99)
