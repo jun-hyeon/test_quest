@@ -37,8 +37,8 @@ class CommunityCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              width: 80,
-              height: 80,
+              width: 120,
+              height: 120,
               child: _buildThumbnailImage(thumbnailUrl),
             ),
             const SizedBox(width: 16),
@@ -117,21 +117,29 @@ class CommunityCard extends StatelessWidget {
         thumbnailUrl.isEmpty ||
         thumbnailUrl == "null" ||
         !thumbnailUrl.startsWith('http')) {
-      return Container(
-        color: Colors.grey[300],
-        child: const Icon(Icons.broken_image, size: 40, color: Colors.grey),
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          color: Colors.grey[300],
+          child: const Icon(Icons.broken_image, size: 40, color: Colors.grey),
+        ),
       );
     }
 
-    return CachedNetworkImage(
-      imageUrl: thumbnailUrl,
-      fit: BoxFit.cover,
-      errorWidget: (context, error, stackTrace) {
-        return Container(
-          color: Colors.grey[300],
-          child: const Icon(Icons.broken_image, size: 40, color: Colors.grey),
-        );
-      },
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: CachedNetworkImage(
+        imageUrl: thumbnailUrl,
+        fit: BoxFit.cover,
+        errorWidget: (context, error, stackTrace) {
+          return Container(
+            color: Colors.grey[300],
+            child: const Center(
+              child: Icon(Icons.broken_image, size: 40, color: Colors.grey),
+            ),
+          );
+        },
+      ),
     );
   }
 }
