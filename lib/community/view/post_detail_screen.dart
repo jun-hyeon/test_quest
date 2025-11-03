@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -117,15 +118,13 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
       padding: const EdgeInsets.all(16.0),
       child: ListView(
         children: [
-          if (post.thumbnailUrl != null &&
-              post.thumbnailUrl!.isNotEmpty &&
-              post.thumbnailUrl!.startsWith('http'))
+          if (post.thumbnailUrl != null && post.thumbnailUrl!.isNotEmpty)
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                post.thumbnailUrl!,
+              child: CachedNetworkImage(
+                imageUrl: post.thumbnailUrl!,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
+                errorWidget: (context, error, stackTrace) {
                   return const Placeholder(
                     strokeWidth: 1,
                     fallbackHeight: 200,

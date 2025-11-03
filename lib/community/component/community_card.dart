@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:test_quest/common/const.dart';
 
@@ -122,10 +123,10 @@ class CommunityCard extends StatelessWidget {
       );
     }
 
-    return Image.network(
-      thumbnailUrl,
+    return CachedNetworkImage(
+      imageUrl: thumbnailUrl,
       fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) {
+      errorWidget: (context, error, stackTrace) {
         return Container(
           color: Colors.grey[300],
           child: const Icon(Icons.broken_image, size: 40, color: Colors.grey),

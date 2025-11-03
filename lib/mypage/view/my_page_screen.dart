@@ -1,9 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_quest/auth/provider/auth_provider.dart';
 import 'package:test_quest/common/component/card_tile.dart';
-import 'package:test_quest/mypage/widget/circle_network_image.dart';
 import 'package:test_quest/mypage/widget/profile_edit_bottom_sheet.dart';
 import 'package:test_quest/user/model/user_info.dart';
 import 'package:test_quest/user/provider/user_provider.dart';
@@ -43,9 +43,20 @@ class MyPageScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CircleNetworkImage(
+                    CachedNetworkImage(
                       imageUrl: user.profileUrl ?? "",
+                      imageBuilder: (context, imageProvider) => CircleAvatar(
+                        backgroundImage: imageProvider,
+                        radius: 50,
+                      ),
+                      fit: BoxFit.cover,
+                      errorWidget: (context, error, stackTrace) {
+                        return const Icon(Icons.person);
+                      },
                     ),
+                    // CircleNetworkImage(
+                    //   imageUrl: user.profileUrl ?? "",
+                    // ),
                     const SizedBox(width: 16),
                     Flexible(
                       child: Column(
