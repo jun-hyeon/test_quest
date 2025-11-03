@@ -51,20 +51,10 @@ class CommunityFirestoreRepositoryImpl implements TestPostRepository {
     String sortOrder = 'latest',
   }) async {
     try {
-      log('[Community] 포스트 조회 시작 - keyword: $keyword, pageSize: $pageSize, sortOrder: $sortOrder');
+      log('[Community] 포스트 조회 시작 - keyword: $keyword, pageSize: $pageSize, sortOrder: $sortOrder, lastId: $lastId');
 
-      Query query = _firebaseService.firestore.collection('posts');
-
-      // 키워드가 있으면 검색 쿼리 구성
-      if (keyword != null && keyword.isNotEmpty) {
-        log('[Community] 키워드 검색 모드: $keyword');
-        // Firestore 텍스트 검색은 복합 인덱스가 필요합니다
-        // 간단한 접근: title 필드로 시작하는 문서 검색
-        final keywordLower = keyword.toLowerCase();
-        query = query
-            .where('title', isGreaterThanOrEqualTo: keywordLower)
-            .where('title', isLessThan: '$keywordLower\uf8ff');
-      }
+      // 키워드가 있으면 키워드 검색 쿼리, 없으면 일반 쿼리
+      var query = _buildQuery(keyword: keyword);
 
       // 정렬
       if (sortOrder == 'latest') {
@@ -73,25 +63,73 @@ class CommunityFirestoreRepositoryImpl implements TestPostRepository {
         query = query.orderBy('createdAt', descending: false);
       }
 
-      // 페이지네이션: lastCreateAt이 있으면 해당 시점 이후부터 가져오기
-      if (lastCreateAt != null) {
+      // 쿼리 커서 사용: lastId가 있으면 해당 문서의 DocumentSnapshot을 사용
+      // 문서 참조: https://firebase.google.com/docs/firestore/query-data/query-cursors
+      DocumentSnapshot? lastDocumentSnapshot;
+      if (lastId != null && lastId.isNotEmpty) {
+        try {
+          final lastDoc = await _firebaseService.firestore
+              .collection('posts')
+              .doc(lastId)
+              .get();
+
+          if (lastDoc.exists) {
+            lastDocumentSnapshot = lastDoc;
+            log('[Community] 쿼리 커서 사용: lastDocumentSnapshot (${lastDoc.id})');
+            query = query.startAfterDocument(lastDocumentSnapshot);
+          } else {
+            log('[Community] lastId 문서를 찾을 수 없음: $lastId, lastCreateAt 사용');
+            // 문서를 찾을 수 없으면 lastCreateAt 사용
+            if (lastCreateAt != null) {
+              query = query.startAfter([lastCreateAt]);
+            }
+          }
+        } catch (e) {
+          log('[Community] lastId로 문서 가져오기 실패: $e, lastCreateAt 사용');
+          // 에러 발생 시 lastCreateAt 사용
+          if (lastCreateAt != null) {
+            query = query.startAfter([lastCreateAt]);
+          }
+        }
+      } else if (lastCreateAt != null) {
+        // lastId가 없고 lastCreateAt만 있는 경우
         log('[Community] 페이지네이션: lastCreateAt = $lastCreateAt');
         query = query.startAfter([lastCreateAt]);
       }
 
-      // limit + 1로 요청하여 hasNext 판단
-      query = query.limit(pageSize + 1);
+      // 키워드 검색의 경우 더 많은 데이터를 가져와서 클라이언트에서 필터링
+      // (부분 문자열 포함 검색을 위해 - 첫 글자가 같은 모든 문서를 가져옴)
+      final limitSize = (keyword != null && keyword.isNotEmpty)
+          ? (pageSize + 1) * 5 // 키워드 검색 시 5배 더 가져옴 (포함 검색을 위해)
+          : pageSize + 1;
+
+      query = query.limit(limitSize);
 
       final snapshot = await query.get();
 
       log('[Community] 조회된 문서 수: ${snapshot.docs.length}');
 
+      // 키워드 검색의 경우 클라이언트에서 부분 문자열 포함 검색 수행
+      List<QueryDocumentSnapshot> filteredDocs = snapshot.docs;
+      if (keyword != null && keyword.isNotEmpty) {
+        final keywordLower = keyword.toLowerCase();
+        filteredDocs = snapshot.docs.where((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          final title = (data['title'] as String?)?.toLowerCase() ?? '';
+          final nickname = (data['nickname'] as String?)?.toLowerCase() ?? '';
+          // title 또는 nickname에 키워드가 포함되어 있는지 확인
+          return title.contains(keywordLower) ||
+              nickname.contains(keywordLower);
+        }).toList();
+        log('[Community] 클라이언트 필터링 후 문서 수: ${filteredDocs.length}개');
+      }
+
       // hasNext 판단: 실제로 받은 문서가 limit보다 많으면 다음 페이지가 있음
-      final hasNextPage = snapshot.docs.length > pageSize;
+      final hasNextPage = filteredDocs.length > pageSize;
 
       // 실제로는 pageSize만큼만 사용
       final docsToUse =
-          hasNextPage ? snapshot.docs.take(pageSize).toList() : snapshot.docs;
+          hasNextPage ? filteredDocs.take(pageSize).toList() : filteredDocs;
 
       final posts = docsToUse.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
@@ -103,9 +141,11 @@ class CommunityFirestoreRepositoryImpl implements TestPostRepository {
 
       log('[Community] 포스트 조회 완료 - posts: ${posts.length}개, hasNext: $hasNextPage');
 
-      // lastCreateAt 업데이트를 위한 정보 로깅
+      // 마지막 문서 정보 로깅 (다음 쿼리 커서를 위해)
       if (posts.isNotEmpty) {
-        log('[Community] 마지막 포스트 createdAt: ${posts.last.createdAt}');
+        final lastPost = posts.last;
+        log('[Community] 마지막 포스트 - id: ${lastPost.id}, createdAt: ${lastPost.createdAt}');
+        log('[Community] 다음 페이지네이션을 위해 lastId를 ${lastPost.id}로 설정하세요');
       }
 
       return TestPostPagination(
@@ -117,6 +157,40 @@ class CommunityFirestoreRepositoryImpl implements TestPostRepository {
       log('[Community] 스택 트레이스: $stackTrace');
       rethrow;
     }
+  }
+
+  /// 키워드 검색 쿼리 생성 (포함 검색을 위한 접두사 쿼리)
+  /// 참조: https://firebase.google.com/docs/firestore/query-data/queries?hl=ko
+  /// 주의: Firestore는 부분 문자열 검색을 직접 지원하지 않으므로,
+  /// 키워드의 첫 글자로 시작하는 문서들을 가져온 후 클라이언트에서 포함 검색 수행
+  Query _buildQuery({String? keyword}) {
+    // 키워드가 없으면 일반 쿼리
+    if (keyword == null || keyword.isEmpty) {
+      return _firebaseService.firestore.collection('posts');
+    }
+
+    log('[Community] 키워드 검색 모드: $keyword (title, nickname 포함 검색)');
+    final keywordLower = keyword.toLowerCase();
+    final firstChar = keywordLower.isNotEmpty ? keywordLower[0] : '';
+    final nextChar = firstChar.isEmpty
+        ? '\uf8ff'
+        : String.fromCharCode(firstChar.codeUnitAt(0) + 1);
+
+    // Firestore Filter.or() 쿼리를 사용하여 title 또는 nickname 검색
+    // 키워드의 첫 글자로 시작하는 모든 문서를 가져옴 (부분 문자열 검색을 위해)
+    // 이후 클라이언트에서 실제 포함 검색 수행
+    return _firebaseService.firestore.collection('posts').where(
+          Filter.or(
+            Filter.and(
+              Filter('title', isGreaterThanOrEqualTo: firstChar),
+              Filter('title', isLessThan: nextChar),
+            ),
+            Filter.and(
+              Filter('nickname', isGreaterThanOrEqualTo: firstChar),
+              Filter('nickname', isLessThan: nextChar),
+            ),
+          ),
+        );
   }
 
   @override
