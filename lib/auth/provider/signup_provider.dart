@@ -26,12 +26,20 @@ class SignupProvider extends Notifier<SignupState> {
   String _nickname = '';
   String _name = '';
   XFile? _image;
+  bool _termsAgreed = false;
+  bool _privacyAgreed = false;
+  String _termsUrl = '';
+  String _privacyUrl = '';
 
   String get email => _email;
   String get password => _password;
   String get nickname => _nickname;
   String get name => _name;
   XFile? get image => _image;
+  bool get termsAgreed => _termsAgreed;
+  bool get privacyAgreed => _privacyAgreed;
+  String get termsUrl => _termsUrl;
+  String get privacyUrl => _privacyUrl;
 
   @override
   SignupState build() {
@@ -106,6 +114,22 @@ class SignupProvider extends Notifier<SignupState> {
     }
   }
 
+  void setTermsAgreed(bool agreed) {
+    _termsAgreed = agreed;
+  }
+
+  void setPrivacyAgreed(bool agreed) {
+    _privacyAgreed = agreed;
+  }
+
+  void setTermsUrl(String url) {
+    _termsUrl = url;
+  }
+
+  void setPrivacyUrl(String url) {
+    _privacyUrl = url;
+  }
+
   /// 회원가입 상태 초기화
   void reset() {
     _email = '';
@@ -113,6 +137,10 @@ class SignupProvider extends Notifier<SignupState> {
     _nickname = '';
     _name = '';
     _image = null;
+    _termsAgreed = false;
+    _privacyAgreed = false;
+    _termsUrl = '';
+    _privacyUrl = '';
     state = const SignupInitial();
   }
 
