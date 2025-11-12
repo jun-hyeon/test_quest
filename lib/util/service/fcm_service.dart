@@ -1,24 +1,22 @@
-import 'dart:convert';
 import 'dart:developer';
 
-import 'package:dio/dio.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:test_quest/util/network/provider/dio_provider.dart';
 import 'package:test_quest/util/service/notification_service.dart';
 
 final fcmServiceProvider = Provider<FCMService>((ref) {
   final notificationService = ref.read(notiProvider);
-  final dio = ref.read(dioProvider);
-  return FCMService(notificationService, dio);
+  final functions = FirebaseFunctions.instanceFor(region: 'asia-northeast3');
+  return FCMService(notificationService, functions);
 });
 
 class FCMService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final NotificationService _notificationService;
-  final Dio dio;
+  final FirebaseFunctions _functions;
 
-  FCMService(this._notificationService, this.dio);
+  FCMService(this._notificationService, this._functions);
 
   /// FCM 초기화
   Future<void> initialize() async {
@@ -172,29 +170,19 @@ class FCMService {
     required Map<String, dynamic> data,
   }) async {
     try {
-      final requestBody = {
-        'message': {
-          'topic': topic,
-          'notification': {
-            'title': title,
-            'body': body,
-          },
-          'data': data.map((key, value) => MapEntry(key, value.toString())),
-        },
-      };
+      final callable = _functions.httpsCallable('sendTopicNotification');
+      final result = await callable.call<Map<String, dynamic>>({
+        'topic': topic,
+        'title': title,
+        'body': body,
+        'data': data,
+      });
 
-      final response =
-          await dio.post('/v1/fcm/send', data: jsonEncode(requestBody));
-
-      log('FCM 응답 상태 코드: ${response.statusCode}');
-      log('FCM 응답 본문: ${response.data}');
-
-      if (response.statusCode == 200) {
-        log('FCM 알림 전송 성공');
-      } else {
-        throw Exception(
-            'FCM 알림 전송 실패: ${response.statusCode} - ${response.data}');
-      }
+      log('Functions 응답: ${result.data}');
+      log('FCM 알림 전송 성공');
+    } on FirebaseFunctionsException catch (e) {
+      log('FCM Functions 예외: ${e.code} - ${e.message}');
+      rethrow;
     } catch (e) {
       log('FCM 알림 전송 중 오류: $e');
       rethrow;
