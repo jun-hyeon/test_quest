@@ -2,6 +2,8 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:test_quest/auth/provider/auth_provider.dart';
+import 'package:test_quest/auth/provider/auth_state.dart';
 import 'package:test_quest/repository/firebase/storage/storage_repository.dart';
 import 'package:test_quest/repository/firebase/user/user_firestore_repository.dart';
 import 'package:test_quest/user/model/user_info.dart';
@@ -41,6 +43,15 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
     // 의존성 주입 - build에서 한 번만 초기화
     _userRepository = ref.read(userFirestoreRepositoryProvider);
     _storageRepository = ref.read(storageRepositoryProvider);
+
+    ref.listen<AuthState>(authProvider, (previous, next) {
+      if (next is Unauthenticated) {
+        state = const AsyncValue.data(null);
+      } else if (next is Authenticated) {
+        refresh();
+      }
+    });
+
     // 초기화 시 자동으로 사용자 정보 로드
     return await _loadUserFromFirestore();
   }
@@ -75,6 +86,11 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
       state = AsyncValue.error(e, stackTrace);
       rethrow;
     }
+  }
+
+  /// 외부에서 최신 사용자 정보를 직접 주입할 때 사용
+  void hydrate(UserInfo user) {
+    state = AsyncValue.data(user);
   }
 
   /// 사용자 정보 새로고침
@@ -156,10 +172,13 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
         error: e,
         stackTrace: stackTrace,
       );
-      state = AsyncValue.error(e, stackTrace);
-      // 로그아웃 처리
-      // ref.read(authProvider.notifier).logout();
-      return null;
+
+      final message = e.toString();
+      if (message.contains('사용자 정보를 찾을 수 없습니다')) {
+        return null;
+      }
+
+      Error.throwWithStackTrace(e, stackTrace);
     }
   }
 }
