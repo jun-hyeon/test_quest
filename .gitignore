@@ -359,6 +359,10 @@ GoogleService-Info.plist
 
 # Firebase Functions
 functions/
+
+# Claude Code 설정 파일
+.mcp.json
+CLAUDE.md
 # End of https://www.toptal.com/developers/gitignore/api/dotenv,visualstudiocode,macos,flutter,dart,xcode,cocoapods,android,kotlin,java,swift,swiftpackagemanager
 
 # Fastlane Service Account JSON keys
