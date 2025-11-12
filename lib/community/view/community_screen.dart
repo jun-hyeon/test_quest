@@ -73,11 +73,10 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
         },
       ),
       body: RefreshIndicator(
-        onRefresh: () async {
-          notifier.refresh();
-        },
+        onRefresh: () => notifier.refresh(),
         child: CustomScrollView(
           controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             // 첫 번째 SliverAppBar: 제목만 포함하고 스크롤 시 사라짐
             SliverAppBar(
