@@ -56,19 +56,8 @@ class FirebaseAuthRepositoryImpl implements AuthRepository {
       }
       log('✅ Firebase Auth 계정 생성 성공: ${user.uid}');
 
-      // 2. 프로필 이미지가 있으면 Storage에 업로드
-      log('2️⃣ 프로필 이미지 업로드 처리 중...');
-      String? profileImageUrl;
-      if (data.profileImage != null && data.profileImage!.isNotEmpty) {
-        await user.updatePhotoURL(profileImageUrl);
-        log('✅ Firebase Auth photoURL 업데이트 성공: $profileImageUrl');
-      } else {
-        log('ℹ️ 프로필 이미지가 없어서 업로드 건너뜀');
-      }
-
-      // 4. Firebase Auth 프로필 업데이트
+      log('2️⃣ 프로필 이미지는 별도 단계에서 업로드됩니다.');
       log('=== Firebase Auth 프로필 업데이트 시작 ===');
-
       await user.updateDisplayName(data.nickname);
       log('✅ Firebase Auth displayName 업데이트 성공: ${data.nickname}');
 

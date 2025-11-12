@@ -11,6 +11,7 @@ import 'package:test_quest/repository/firebase/storage/storage_repository.dart';
 import 'package:test_quest/repository/firebase/user/user_firestore_repository.dart';
 import 'package:test_quest/repository/firebase/user/user_repository.dart';
 import 'package:test_quest/user/model/user_info.dart';
+import 'package:test_quest/user/provider/user_provider.dart';
 import 'package:test_quest/util/validator.dart';
 
 final signupProvider = NotifierProvider<SignupProvider, SignupState>(
@@ -70,47 +71,55 @@ class SignupProvider extends Notifier<SignupState> {
   Future<void> signup() async {
     state = SignupLoading();
     try {
-      // Firebase Auth를 통한 회원가입
-      log('Signed up with email: $_email, password: $_password, nickname: $_nickname, name: $_name, profileImg: ${_image?.path}');
-      final result = await _authRepository.signup(
+      log(
+        'Signed up with email: $_email, password: $_password, nickname: $_nickname, name: $_name, profileImg: ${_image?.path}',
+      );
+
+      final credential = await _authRepository.signup(
         data: SignupForm(
           email: _email,
           password: _password,
           nickname: _nickname,
           name: _name,
-          profileImage: _image != null ? File(_image!.path).path : null,
+          profileImage: _image?.path,
         ),
       );
 
-      // 회원가입 성공 후 Firestore에서 사용자 정보 가져오기
-      if (result.user != null) {
-        try {
-          String? profileUrl;
-          if (_image != null) {
-            profileUrl = await _storageRepository.uploadProfileImage(
-              userId: result.user!.uid,
-              imageFile: File(_image!.path),
-            );
-          }
-          final userInfo = UserInfo(
-            uid: result.user!.uid,
-            name: _name,
-            nickname: _nickname,
-            profileUrl: profileUrl,
-          );
-          await _userRepository.setUser(userInfo);
-
-          state = SignupSuccess();
-        } catch (e) {
-          log('사용자 정보 가져오기 실패: $e');
-          // Firestore에서 가져오기 실패 시 기본 정보로 설정
-          state = SignupError(e.toString());
-        }
+      final user = credential.user;
+      if (user == null) {
+        throw Exception('Firebase Auth 사용자 정보를 가져올 수 없습니다.');
       }
-    } catch (e) {
+
+      String? profileUrl;
+      if (_image != null) {
+        profileUrl = await _storageRepository.uploadProfileImage(
+          userId: user.uid,
+          imageFile: File(_image!.path),
+        );
+        await user.updatePhotoURL(profileUrl);
+      }
+
+      await user.updateDisplayName(_nickname);
+      await user.reload();
+
+      final userInfo = UserInfo(
+        uid: user.uid,
+        name: _name,
+        nickname: _nickname,
+        profileUrl: profileUrl,
+      );
+
+      await _userRepository.setUser(userInfo);
+      ref.read(userNotifierProvider.notifier).hydrate(userInfo);
+
+      state = SignupSuccess();
+    } catch (e, stackTrace) {
+      log(
+        '[signup_provider] 회원가입 실패',
+        error: e,
+        stackTrace: stackTrace,
+      );
       state = SignupError(e.toString());
-      log('[signup_provider] 회원가입 실패: $e');
-      throw '회원가입 실패: $e';
     }
   }
 
