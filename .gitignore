@@ -356,6 +356,9 @@ GoogleService-Info.plist
 *.provisionprofile
 *.provisioningprofile
 *.provisioningprofile
+
+# Firebase Functions
+functions/
 # End of https://www.toptal.com/developers/gitignore/api/dotenv,visualstudiocode,macos,flutter,dart,xcode,cocoapods,android,kotlin,java,swift,swiftpackagemanager
 
 # Fastlane Service Account JSON keys
