@@ -119,17 +119,20 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
       child: ListView(
         children: [
           if (post.thumbnailUrl != null && post.thumbnailUrl!.isNotEmpty)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: CachedNetworkImage(
-                imageUrl: post.thumbnailUrl!,
-                fit: BoxFit.cover,
-                errorWidget: (context, error, stackTrace) {
-                  return const Placeholder(
-                    strokeWidth: 1,
-                    fallbackHeight: 200,
-                  );
-                },
+            Hero(
+              tag: 'post_thumbnail_${post.id}',
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: CachedNetworkImage(
+                  imageUrl: post.thumbnailUrl!,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, error, stackTrace) {
+                    return const Placeholder(
+                      strokeWidth: 1,
+                      fallbackHeight: 200,
+                    );
+                  },
+                ),
               ),
             ),
           const SizedBox(height: 16),
@@ -236,6 +239,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     final Uri url = Uri.parse(post.linkUrl);
     try {
       final bool canLaunch = await canLaunchUrl(url);
+      if (!mounted) return;
       if (!canLaunch) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('링크를 열 수 없습니다.')),
@@ -244,6 +248,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
       }
       await launchUrl(url, mode: LaunchMode.externalApplication);
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('오류 발생: $e')),
       );

@@ -15,7 +15,4 @@ _TestPostPagination _$TestPostPaginationFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$TestPostPaginationToJson(_TestPostPagination instance) =>
-    <String, dynamic>{
-      'posts': instance.posts,
-      'hasNext': instance.hasNext,
-    };
+    <String, dynamic>{'posts': instance.posts, 'hasNext': instance.hasNext};

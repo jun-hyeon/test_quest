@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:test_quest/common/const.dart';
 
 class CommunityCard extends StatelessWidget {
+  final String id;
   final String? thumbnailUrl;
   final String title;
   final String author;
@@ -11,9 +12,11 @@ class CommunityCard extends StatelessWidget {
   final int views;
   final String status;
   final VoidCallback? onPressed;
+  final VoidCallback? onTap;
 
   const CommunityCard({
     super.key,
+    required this.id,
     this.thumbnailUrl,
     required this.title,
     required this.author,
@@ -22,6 +25,7 @@ class CommunityCard extends StatelessWidget {
     required this.views,
     required this.status,
     required this.onPressed,
+    required this.onTap,
   });
 
   @override
@@ -29,117 +33,169 @@ class CommunityCard extends StatelessWidget {
     final isBeforeDeadline = DateTime.now().isBefore(
       endDate.add(const Duration(days: 1)),
     );
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 120,
-              height: 120,
-              child: _buildThumbnailImage(thumbnailUrl),
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Semantics(
+      label: '$title, 작성자 $author, ${isBeforeDeadline ? "모집 중" : "모집 완료"}',
+      hint: '탭하여 자세히 보기',
+      button: true,
+      child: Card.filled(
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 160,
+                  height: 160,
+                  child: _buildThumbnailImage(thumbnailUrl),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              title,
+                              style: textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: false,
+                            ),
+                          ),
+                          IconButton.filledTonal(
+                            icon: const Icon(Icons.bookmark_add_outlined),
+                            onPressed: onPressed,
+                            tooltip: '북마크 추가',
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '작성자: $author',
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '기간: ${formatToYMD(startDate)} - ${formatToYMD(endDate)}',
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.remove_red_eye_outlined,
+                            size: 16,
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '$views 조회수',
+                            style: textTheme.labelSmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Chip(
+                            label: Text(
+                              isBeforeDeadline ? '모집 중' : '모집 완료',
+                              style: textTheme.labelSmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: isBeforeDeadline
+                                    ? colorScheme.onPrimaryContainer
+                                    : colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                            color: WidgetStateProperty.all(
+                              isBeforeDeadline
+                                  ? colorScheme.primaryContainer
+                                  : colorScheme.surfaceContainerHighest,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          title,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: false,
-                        ),
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.bookmark_add),
-                        onPressed: onPressed,
-                      )
-                    ],
-                  ),
-                  Text('작성자: $author'),
-                  const SizedBox(height: 4),
-                  Text(
-                      '기간: ${formatToYMD(startDate)} - ${formatToYMD(endDate)}'),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Icon(Icons.remove_red_eye,
-                          size: 14, color: Colors.grey[600]),
-                      const SizedBox(width: 4),
-                      Text('$views 조회수'),
-                      const SizedBox(width: 16),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: isBeforeDeadline
-                              ? Colors.green[100]
-                              : Colors.grey[300],
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          isBeforeDeadline ? '모집 중' : '모집 완료',
-                          style: TextStyle(
-                            color: isBeforeDeadline
-                                ? Colors.green[800]
-                                : Colors.grey[600],
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )
-          ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildThumbnailImage(String? thumbnailUrl) {
-    // 썸네일 URL이 유효하지 않은 경우 기본 아이콘 표시
-    if (thumbnailUrl == null ||
-        thumbnailUrl.isEmpty ||
-        thumbnailUrl == "null" ||
-        !thumbnailUrl.startsWith('http')) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          color: Colors.grey[300],
-          child: const Icon(Icons.broken_image, size: 40, color: Colors.grey),
-        ),
-      );
-    }
+    return Builder(
+      builder: (context) {
+        final colorScheme = Theme.of(context).colorScheme;
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: CachedNetworkImage(
-        imageUrl: thumbnailUrl,
-        fit: BoxFit.cover,
-        errorWidget: (context, error, stackTrace) {
-          return Container(
-            color: Colors.grey[300],
-            child: const Center(
-              child: Icon(Icons.broken_image, size: 40, color: Colors.grey),
+        // 썸네일 URL이 유효하지 않은 경우 기본 아이콘 표시
+        if (thumbnailUrl == null ||
+            thumbnailUrl.isEmpty ||
+            thumbnailUrl == "null" ||
+            !thumbnailUrl.startsWith('http')) {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              color: colorScheme.surfaceContainerHighest,
+              child: Icon(
+                Icons.image_outlined,
+                size: 48,
+                color: colorScheme.onSurfaceVariant,
+              ),
             ),
           );
-        },
-      ),
+        }
+
+        return Hero(
+          tag: 'post_thumbnail_$id',
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: CachedNetworkImage(
+              imageUrl: thumbnailUrl,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                color: colorScheme.surfaceContainerHighest,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: colorScheme.primary,
+                  ),
+                ),
+              ),
+              errorWidget: (context, error, stackTrace) {
+                return Container(
+                  color: colorScheme.surfaceContainerHighest,
+                  child: Center(
+                    child: Icon(
+                      Icons.broken_image_outlined,
+                      size: 48,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }

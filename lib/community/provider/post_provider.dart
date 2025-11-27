@@ -9,8 +9,6 @@ import 'package:test_quest/repository/firebase/community/community_firestore.dar
 import 'package:test_quest/repository/firebase/storage/storage_repository.dart';
 import 'package:test_quest/repository/firebase/user/user_firestore_repository.dart';
 import 'package:test_quest/repository/firebase/user/user_repository.dart';
-import 'package:test_quest/util/extensions/enum_extension.dart';
-import 'package:test_quest/util/service/fcm_service.dart';
 import 'package:test_quest/util/service/notification_service.dart';
 
 final postProvider = NotifierProvider<PostNotifier, PostState>(() {
@@ -39,7 +37,6 @@ class PostError extends PostState {
 class PostNotifier extends Notifier<PostState> {
   late CommunityFirestoreRepositoryImpl _repository;
   late NotificationService _notificationService;
-  late FCMService _fcmService;
   late StorageRepository _storageRepository;
   late UserRepository _userRepository;
 
@@ -47,7 +44,6 @@ class PostNotifier extends Notifier<PostState> {
   PostState build() {
     _repository = ref.read(communityFirestoreRepositoryProvider);
     _notificationService = ref.read(notiProvider);
-    _fcmService = ref.read(fcmServiceProvider);
     _storageRepository = ref.read(storageRepositoryProvider);
     _userRepository = ref.read(userFirestoreRepositoryProvider);
 
@@ -103,18 +99,7 @@ class PostNotifier extends Notifier<PostState> {
         title: title,
       );
 
-      // FCM 알림 전송 (다른 사용자들에게)
-      try {
-        await _fcmService.sendNewPostNotifications(
-          title: title,
-          platform: platform.toPostString(),
-          type: type.toPostString(),
-        );
-        log('FCM 알림 전송 성공');
-      } catch (e) {
-        log('FCM 알림 전송 실패: $e');
-        // FCM 알림 실패는 글 작성 성공에 영향을 주지 않도록 함
-      }
+      // FCM 알림은 Firestore Trigger에서 자동으로 처리됨
 
       state = PostState.success();
     } catch (e) {
