@@ -11,7 +11,7 @@ final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     primary: Colors.black,
     onPrimary: Colors.white,
-    secondary: Color(0xFFB794F4),
+    secondary: Colors.black,
     onSecondary: Colors.white,
     error: Color(0xFFD32F2F),
     onError: Colors.white,
@@ -37,9 +37,7 @@ final ThemeData lightTheme = ThemeData(
     ),
   ),
   textButtonTheme: TextButtonThemeData(
-    style: TextButton.styleFrom(
-      foregroundColor: Colors.black,
-    ),
+    style: TextButton.styleFrom(foregroundColor: Colors.black),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
@@ -49,18 +47,18 @@ final ThemeData lightTheme = ThemeData(
       textStyle: GoogleFonts.pressStart2p(fontSize: 10),
     ),
   ),
+  cardTheme: CardThemeData(
+    color: Colors.grey[100],
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+  ),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: Colors.white,
     selectedItemColor: Colors.black,
     unselectedItemColor: Colors.black.withAlpha(128),
     selectedIconTheme: const IconThemeData(size: 24),
     unselectedIconTheme: const IconThemeData(size: 20),
-    selectedLabelStyle: GoogleFonts.pressStart2p(
-      fontSize: 10,
-    ),
-    unselectedLabelStyle: GoogleFonts.pressStart2p(
-      fontSize: 10,
-    ),
+    selectedLabelStyle: GoogleFonts.pressStart2p(fontSize: 10),
+    unselectedLabelStyle: GoogleFonts.pressStart2p(fontSize: 10),
   ),
 );
 
@@ -72,7 +70,7 @@ final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     primary: AppColors.darkText,
     onPrimary: Colors.black,
-    secondary: Color(0xFF9575CD), // Example accent
+    secondary: AppColors.darkText, // Example accent
     onSecondary: Colors.black,
     error: Color(0xFFEF5350),
     onError: Colors.black,
@@ -98,19 +96,19 @@ final ThemeData darkTheme = ThemeData(
     ),
   ),
   textButtonTheme: TextButtonThemeData(
-    style: TextButton.styleFrom(
-      foregroundColor: AppColors.darkText,
-    ),
+    style: TextButton.styleFrom(foregroundColor: AppColors.darkText),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
       side: const BorderSide(width: 2, color: AppColors.darkBorder),
       foregroundColor: AppColors.darkText,
       backgroundColor: Colors.transparent,
-      textStyle: GoogleFonts.pressStart2p(
-        fontSize: 10,
-      ),
+      textStyle: GoogleFonts.pressStart2p(fontSize: 10),
     ),
+  ),
+  cardTheme: CardThemeData(
+    color: Colors.grey[900],
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
   ),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: AppColors.darkBackground,
@@ -118,11 +116,7 @@ final ThemeData darkTheme = ThemeData(
     unselectedItemColor: AppColors.darkText.withValues(alpha: 0.5),
     selectedIconTheme: const IconThemeData(size: 24),
     unselectedIconTheme: const IconThemeData(size: 20),
-    selectedLabelStyle: GoogleFonts.pressStart2p(
-      fontSize: 10,
-    ),
-    unselectedLabelStyle: GoogleFonts.pressStart2p(
-      fontSize: 10,
-    ),
+    selectedLabelStyle: GoogleFonts.pressStart2p(fontSize: 10),
+    unselectedLabelStyle: GoogleFonts.pressStart2p(fontSize: 10),
   ),
 );
