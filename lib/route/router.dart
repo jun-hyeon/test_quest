@@ -22,16 +22,10 @@ class RouterNotifier extends ChangeNotifier {
 
   RouterNotifier(this._ref) {
     // Firebase Auth 상태 변화를 감지
-    _subscription = _ref.listen<AuthState>(
-      authProvider,
-      (_, next) {
-        log(
-          'Auth State 변화 감지: $next',
-          name: 'RouterNotifier',
-        );
-        notifyListeners(); // Router에게 상태 변화 알림
-      },
-    );
+    _subscription = _ref.listen<AuthState>(authProvider, (_, next) {
+      log('Auth State 변화 감지: $next', name: 'RouterNotifier');
+      notifyListeners(); // Router에게 상태 변화 알림
+    });
   }
 
   @override
@@ -49,33 +43,36 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: '/login', // '/splash'에서 '/login'으로 변경
     refreshListenable: routerNotifier, // Auth State 변화 감지
     redirect: (context, state) {
-      final authState = ref.read(authProvider);
+      // Firebase Auth로 인증 상태 확인 (가장 빠르고 신뢰성 높음)
       final currentUser = FirebaseAuth.instance.currentUser;
       final isGoingToLogin = state.matchedLocation == '/login';
       final isGoingToSignup = state.matchedLocation.startsWith('/signup');
 
       log(
-        'Redirect 체크 - 경로: ${state.matchedLocation}, 인증: $authState, currentUser: ${currentUser?.uid}',
+        'Redirect 체크 - 경로: ${state.matchedLocation}, currentUser: ${currentUser?.uid}',
         name: 'Router.redirect',
       );
 
-      // 로그인, 회원가입은 항상 허용
-      if (isGoingToLogin || isGoingToSignup) {
+      // 회원가입 중이면 절대 리다이렉트하지 않음 (회원가입 프로세스 완료까지 대기)
+      if (isGoingToSignup) {
+        log('회원가입 진행 중 - 리다이렉트 없음', name: 'Router.redirect');
+        return null;
+      }
+
+      // 로그인 페이지는 항상 허용
+      if (isGoingToLogin) {
+        // 단, 이미 인증된 사용자가 로그인 페이지에 접근하려고 하면 메인으로
+        if (currentUser != null) {
+          log('이미 인증된 사용자 → 메인 화면', name: 'Router.redirect');
+          return '/root';
+        }
         return null;
       }
 
       // Firebase Auth currentUser가 없으면 로그인으로 리다이렉션
       if (currentUser == null) {
-        log(
-          'Firebase Auth currentUser 없음 → 로그인 화면',
-          name: 'Router.redirect',
-        );
+        log('Firebase Auth currentUser 없음 → 로그인 화면', name: 'Router.redirect');
         return '/login';
-      }
-
-      // 인증된 상태에서 로그인 페이지 접근 시 메인 화면으로
-      if (isGoingToLogin) {
-        return '/root';
       }
 
       // 그 외의 경우는 그대로 진행
@@ -91,23 +88,21 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'profile',
             builder: (context, state) => const SignupProfileScreen(),
-          )
+          ),
         ],
       ),
-      GoRoute(
-        path: '/root',
-        builder: (context, state) => const RootTab(),
-      ),
+      GoRoute(path: '/root', builder: (context, state) => const RootTab()),
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
       ),
       GoRoute(
-          path: '/post_detail',
-          builder: (context, state) {
-            final postId = state.extra as String;
-            return PostDetailScreen(postId: postId);
-          }),
+        path: '/post_detail',
+        builder: (context, state) {
+          final postId = state.extra as String;
+          return PostDetailScreen(postId: postId);
+        },
+      ),
       GoRoute(
         path: '/post_create',
         builder: (context, state) =>
