@@ -7,15 +7,12 @@ part of 'token_info.dart';
 // **************************************************************************
 
 _TokenInfo _$TokenInfoFromJson(Map<String, dynamic> json) => _TokenInfo(
-      token: json['token'] as String,
-      expiresIn: (json['expiresIn'] as num).toInt(),
-    );
+  token: json['token'] as String,
+  expiresIn: (json['expiresIn'] as num).toInt(),
+);
 
 Map<String, dynamic> _$TokenInfoToJson(_TokenInfo instance) =>
-    <String, dynamic>{
-      'token': instance.token,
-      'expiresIn': instance.expiresIn,
-    };
+    <String, dynamic>{'token': instance.token, 'expiresIn': instance.expiresIn};
 
 _AccessResponse _$AccessResponseFromJson(Map<String, dynamic> json) =>
     _AccessResponse(
@@ -23,6 +20,4 @@ _AccessResponse _$AccessResponseFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$AccessResponseToJson(_AccessResponse instance) =>
-    <String, dynamic>{
-      'access': instance.access,
-    };
+    <String, dynamic>{'access': instance.access};

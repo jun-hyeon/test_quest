@@ -2,20 +2,34 @@ sealed class SignupState {
   const SignupState();
 }
 
-// enum SignupStep { account, profile }
-
 class SignupInitial extends SignupState {
-  // final SignupStep step;
   const SignupInitial();
 }
 
-class SignupLoading extends SignupState {}
+class SignupLoading extends SignupState {
+  final String message;
+  final int step;
+  final int totalSteps;
 
-class SignupSuccess extends SignupState {}
+  const SignupLoading({
+    required this.message,
+    required this.step,
+    this.totalSteps = 6,
+  });
+
+  double get progress => step / totalSteps;
+}
+
+class SignupSuccess extends SignupState {
+  const SignupSuccess();
+}
 
 class SignupError extends SignupState {
   final String message;
-  SignupError(this.message);
+  final StackTrace? stackTrace;
+
+  const SignupError(this.message, [this.stackTrace]);
+
   @override
   String toString() => 'SignupError{message: $message}';
 }

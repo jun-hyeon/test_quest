@@ -7,12 +7,12 @@ part of 'signup_form.dart';
 // **************************************************************************
 
 _SignupForm _$SignupFormFromJson(Map<String, dynamic> json) => _SignupForm(
-      email: json['email'] as String,
-      password: json['password'] as String,
-      nickname: json['nickname'] as String,
-      name: json['name'] as String,
-      profileImage: json['profileImage'] as String?,
-    );
+  email: json['email'] as String,
+  password: json['password'] as String,
+  nickname: json['nickname'] as String,
+  name: json['name'] as String,
+  profileImage: json['profileImage'] as String?,
+);
 
 Map<String, dynamic> _$SignupFormToJson(_SignupForm instance) =>
     <String, dynamic>{

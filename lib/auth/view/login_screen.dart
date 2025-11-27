@@ -123,7 +123,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       emailError = authState.errorMessage;
     }
 
-    final textColor = Theme.of(context).textTheme.bodyLarge?.color;
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return SingleChildScrollView(
       child: Form(
@@ -139,18 +140,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
             Text(
               "TestQuest",
-              style: GoogleFonts.pressStart2p(
-                textStyle: TextStyle(
-                  fontSize: 32,
-                  color: textColor,
-                  fontWeight: FontWeight.bold,
-                ),
+              style: textTheme.displayMedium?.copyWith(
+                fontFamily: GoogleFonts.pressStart2p().fontFamily,
+                color: colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 16),
             Text(
               "게임 테스터를 위한 테스트 일정 관리 앱",
-              style: TextStyle(color: textColor?.withAlpha(150)),
+              style: textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: 32),
 

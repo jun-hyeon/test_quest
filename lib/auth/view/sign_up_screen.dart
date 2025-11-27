@@ -102,9 +102,74 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     final notifier = ref.read(signupProvider.notifier);
 
     return switch (state) {
-      SignupLoading() => const Center(child: CircularProgressIndicator()),
-      SignupError() => Column(
+      SignupLoading(:final message, :final step, :final totalSteps) =>
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 24),
+              Text(
+                message,
+                style: Theme.of(context).textTheme.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                '$step / $totalSteps 단계',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.color
+                          ?.withAlpha(153), // 0.6 * 255
+                    ),
+              ),
+              const SizedBox(height: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 48),
+                child: LinearProgressIndicator(
+                  value: step / totalSteps,
+                  backgroundColor:
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      SignupError(:final message) => Column(
           children: [
+            // ✅ 에러 메시지 표시
+            if (message.isNotEmpty)
+              Container(
+                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.only(top: 16, bottom: 8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.errorContainer,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        message,
+                        style: TextStyle(
+                          color:
+                              Theme.of(context).colorScheme.onErrorContainer,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             Expanded(child: _buildAccountFields(context, notifier)),
           ],
         ),

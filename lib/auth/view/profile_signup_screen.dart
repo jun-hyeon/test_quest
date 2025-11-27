@@ -45,23 +45,9 @@ class _ProfileStepFormState extends ConsumerState<SignupProfileScreen> {
     });
   }
 
-  void _listenSignupState() {
-    ref.listenManual<SignupState>(signupProvider, (previous, next) {
-      if (next is SignupSuccess) {
-        if (!mounted) return;
-        TestQuestSnackbar.show(context, '회원가입이 완료되었습니다.');
-        context.go('/root');
-      } else if (next is SignupError) {
-        if (!mounted) return;
-        TestQuestSnackbar.show(context, next.message, isError: true);
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    _listenSignupState();
 
     // 회원가입 상태가 초기 상태가 아니면 초기화
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -83,6 +69,16 @@ class _ProfileStepFormState extends ConsumerState<SignupProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ ref.listen을 사용하여 상태 변화 감지
+    ref.listen<SignupState>(signupProvider, (previous, next) {
+      if (next is SignupSuccess) {
+        TestQuestSnackbar.show(context, '회원가입이 완료되었습니다.');
+        context.go('/root');
+      } else if (next is SignupError) {
+        TestQuestSnackbar.show(context, next.message, isError: true);
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('프로필 정보'),
@@ -101,9 +97,74 @@ class _ProfileStepFormState extends ConsumerState<SignupProfileScreen> {
     final notifier = ref.read(signupProvider.notifier);
 
     return switch (state) {
-      SignupLoading() => const Center(child: CircularProgressIndicator()),
-      SignupError() => Column(
+      SignupLoading(:final message, :final step, :final totalSteps) =>
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 24),
+              Text(
+                message,
+                style: Theme.of(context).textTheme.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                '$step / $totalSteps 단계',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.color
+                          ?.withAlpha(153), // 0.6 * 255
+                    ),
+              ),
+              const SizedBox(height: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 48),
+                child: LinearProgressIndicator(
+                  value: step / totalSteps,
+                  backgroundColor:
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      SignupError(:final message) => Column(
           children: [
+            // ✅ 에러 메시지 표시
+            if (message.isNotEmpty)
+              Container(
+                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.only(top: 16, bottom: 8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.errorContainer,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        message,
+                        style: TextStyle(
+                          color:
+                              Theme.of(context).colorScheme.onErrorContainer,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             Expanded(child: _buildProfileFields(context, notifier)),
           ],
         ),
@@ -126,6 +187,7 @@ class _ProfileStepFormState extends ConsumerState<SignupProfileScreen> {
                 final granted = await checkPhotoCameraPermission();
                 if (!mounted) return;
                 if (!granted) {
+                  // ignore: use_build_context_synchronously
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
