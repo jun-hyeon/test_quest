@@ -12,94 +12,146 @@ class $CalendarEventsTable extends CalendarEvents
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
   static const VerificationMeta _postIdMeta = const VerificationMeta('postId');
   @override
   late final GeneratedColumn<String> postId = GeneratedColumn<String>(
-      'post_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+    'post_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
-      'title', aliasedName, false,
-      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 32),
-      type: DriftSqlType.string,
-      requiredDuringInsert: true);
+    'title',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 32),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _authMeta = const VerificationMeta('auth');
   @override
   late final GeneratedColumn<String> auth = GeneratedColumn<String>(
-      'auth', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _thumbnailUrlMeta =
-      const VerificationMeta('thumbnailUrl');
+    'auth',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _thumbnailUrlMeta = const VerificationMeta(
+    'thumbnailUrl',
+  );
   @override
   late final GeneratedColumn<String> thumbnailUrl = GeneratedColumn<String>(
-      'thumbnail_url', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _startDateMeta =
-      const VerificationMeta('startDate');
+    'thumbnail_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
   @override
   late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
-      'start_date', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _endDateMeta =
-      const VerificationMeta('endDate');
+    'start_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endDateMeta = const VerificationMeta(
+    'endDate',
+  );
   @override
   late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
-      'end_date', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+    'end_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, postId, title, auth, thumbnailUrl, startDate, endDate];
+  List<GeneratedColumn> get $columns => [
+    id,
+    postId,
+    title,
+    auth,
+    thumbnailUrl,
+    startDate,
+    endDate,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'calendar_events';
   @override
-  VerificationContext validateIntegrity(Insertable<CalendarEvent> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<CalendarEvent> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('post_id')) {
-      context.handle(_postIdMeta,
-          postId.isAcceptableOrUnknown(data['post_id']!, _postIdMeta));
+      context.handle(
+        _postIdMeta,
+        postId.isAcceptableOrUnknown(data['post_id']!, _postIdMeta),
+      );
     }
     if (data.containsKey('title')) {
       context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
     } else if (isInserting) {
       context.missing(_titleMeta);
     }
     if (data.containsKey('auth')) {
       context.handle(
-          _authMeta, auth.isAcceptableOrUnknown(data['auth']!, _authMeta));
+        _authMeta,
+        auth.isAcceptableOrUnknown(data['auth']!, _authMeta),
+      );
     } else if (isInserting) {
       context.missing(_authMeta);
     }
     if (data.containsKey('thumbnail_url')) {
       context.handle(
+        _thumbnailUrlMeta,
+        thumbnailUrl.isAcceptableOrUnknown(
+          data['thumbnail_url']!,
           _thumbnailUrlMeta,
-          thumbnailUrl.isAcceptableOrUnknown(
-              data['thumbnail_url']!, _thumbnailUrlMeta));
+        ),
+      );
     }
     if (data.containsKey('start_date')) {
-      context.handle(_startDateMeta,
-          startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta));
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
     } else if (isInserting) {
       context.missing(_startDateMeta);
     }
     if (data.containsKey('end_date')) {
-      context.handle(_endDateMeta,
-          endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
+      context.handle(
+        _endDateMeta,
+        endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta),
+      );
     } else if (isInserting) {
       context.missing(_endDateMeta);
     }
@@ -112,20 +164,34 @@ class $CalendarEventsTable extends CalendarEvents
   CalendarEvent map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return CalendarEvent(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      postId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}post_id']),
-      title: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      auth: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}auth'])!,
-      thumbnailUrl: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}thumbnail_url']),
-      startDate: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}start_date'])!,
-      endDate: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}end_date'])!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      postId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}post_id'],
+      ),
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      auth: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}auth'],
+      )!,
+      thumbnailUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}thumbnail_url'],
+      ),
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_date'],
+      )!,
+      endDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end_date'],
+      )!,
     );
   }
 
@@ -143,14 +209,15 @@ class CalendarEvent extends DataClass implements Insertable<CalendarEvent> {
   final String? thumbnailUrl;
   final DateTime startDate;
   final DateTime endDate;
-  const CalendarEvent(
-      {required this.id,
-      this.postId,
-      required this.title,
-      required this.auth,
-      this.thumbnailUrl,
-      required this.startDate,
-      required this.endDate});
+  const CalendarEvent({
+    required this.id,
+    this.postId,
+    required this.title,
+    required this.auth,
+    this.thumbnailUrl,
+    required this.startDate,
+    required this.endDate,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -171,8 +238,9 @@ class CalendarEvent extends DataClass implements Insertable<CalendarEvent> {
   CalendarEventsCompanion toCompanion(bool nullToAbsent) {
     return CalendarEventsCompanion(
       id: Value(id),
-      postId:
-          postId == null && nullToAbsent ? const Value.absent() : Value(postId),
+      postId: postId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(postId),
       title: Value(title),
       auth: Value(auth),
       thumbnailUrl: thumbnailUrl == null && nullToAbsent
@@ -183,8 +251,10 @@ class CalendarEvent extends DataClass implements Insertable<CalendarEvent> {
     );
   }
 
-  factory CalendarEvent.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory CalendarEvent.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return CalendarEvent(
       id: serializer.fromJson<int>(json['id']),
@@ -210,24 +280,23 @@ class CalendarEvent extends DataClass implements Insertable<CalendarEvent> {
     };
   }
 
-  CalendarEvent copyWith(
-          {int? id,
-          Value<String?> postId = const Value.absent(),
-          String? title,
-          String? auth,
-          Value<String?> thumbnailUrl = const Value.absent(),
-          DateTime? startDate,
-          DateTime? endDate}) =>
-      CalendarEvent(
-        id: id ?? this.id,
-        postId: postId.present ? postId.value : this.postId,
-        title: title ?? this.title,
-        auth: auth ?? this.auth,
-        thumbnailUrl:
-            thumbnailUrl.present ? thumbnailUrl.value : this.thumbnailUrl,
-        startDate: startDate ?? this.startDate,
-        endDate: endDate ?? this.endDate,
-      );
+  CalendarEvent copyWith({
+    int? id,
+    Value<String?> postId = const Value.absent(),
+    String? title,
+    String? auth,
+    Value<String?> thumbnailUrl = const Value.absent(),
+    DateTime? startDate,
+    DateTime? endDate,
+  }) => CalendarEvent(
+    id: id ?? this.id,
+    postId: postId.present ? postId.value : this.postId,
+    title: title ?? this.title,
+    auth: auth ?? this.auth,
+    thumbnailUrl: thumbnailUrl.present ? thumbnailUrl.value : this.thumbnailUrl,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate ?? this.endDate,
+  );
   CalendarEvent copyWithCompanion(CalendarEventsCompanion data) {
     return CalendarEvent(
       id: data.id.present ? data.id.value : this.id,
@@ -297,10 +366,10 @@ class CalendarEventsCompanion extends UpdateCompanion<CalendarEvent> {
     this.thumbnailUrl = const Value.absent(),
     required DateTime startDate,
     required DateTime endDate,
-  })  : title = Value(title),
-        auth = Value(auth),
-        startDate = Value(startDate),
-        endDate = Value(endDate);
+  }) : title = Value(title),
+       auth = Value(auth),
+       startDate = Value(startDate),
+       endDate = Value(endDate);
   static Insertable<CalendarEvent> custom({
     Expression<int>? id,
     Expression<String>? postId,
@@ -321,14 +390,15 @@ class CalendarEventsCompanion extends UpdateCompanion<CalendarEvent> {
     });
   }
 
-  CalendarEventsCompanion copyWith(
-      {Value<int>? id,
-      Value<String?>? postId,
-      Value<String>? title,
-      Value<String>? auth,
-      Value<String?>? thumbnailUrl,
-      Value<DateTime>? startDate,
-      Value<DateTime>? endDate}) {
+  CalendarEventsCompanion copyWith({
+    Value<int>? id,
+    Value<String?>? postId,
+    Value<String>? title,
+    Value<String>? auth,
+    Value<String?>? thumbnailUrl,
+    Value<DateTime>? startDate,
+    Value<DateTime>? endDate,
+  }) {
     return CalendarEventsCompanion(
       id: id ?? this.id,
       postId: postId ?? this.postId,
@@ -393,26 +463,26 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [calendarEvents];
 }
 
-typedef $$CalendarEventsTableCreateCompanionBuilder = CalendarEventsCompanion
-    Function({
-  Value<int> id,
-  Value<String?> postId,
-  required String title,
-  required String auth,
-  Value<String?> thumbnailUrl,
-  required DateTime startDate,
-  required DateTime endDate,
-});
-typedef $$CalendarEventsTableUpdateCompanionBuilder = CalendarEventsCompanion
-    Function({
-  Value<int> id,
-  Value<String?> postId,
-  Value<String> title,
-  Value<String> auth,
-  Value<String?> thumbnailUrl,
-  Value<DateTime> startDate,
-  Value<DateTime> endDate,
-});
+typedef $$CalendarEventsTableCreateCompanionBuilder =
+    CalendarEventsCompanion Function({
+      Value<int> id,
+      Value<String?> postId,
+      required String title,
+      required String auth,
+      Value<String?> thumbnailUrl,
+      required DateTime startDate,
+      required DateTime endDate,
+    });
+typedef $$CalendarEventsTableUpdateCompanionBuilder =
+    CalendarEventsCompanion Function({
+      Value<int> id,
+      Value<String?> postId,
+      Value<String> title,
+      Value<String> auth,
+      Value<String?> thumbnailUrl,
+      Value<DateTime> startDate,
+      Value<DateTime> endDate,
+    });
 
 class $$CalendarEventsTableFilterComposer
     extends Composer<_$AppDatabase, $CalendarEventsTable> {
@@ -424,25 +494,39 @@ class $$CalendarEventsTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get postId => $composableBuilder(
-      column: $table.postId, builder: (column) => ColumnFilters(column));
+    column: $table.postId,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get title => $composableBuilder(
-      column: $table.title, builder: (column) => ColumnFilters(column));
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get auth => $composableBuilder(
-      column: $table.auth, builder: (column) => ColumnFilters(column));
+    column: $table.auth,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get thumbnailUrl => $composableBuilder(
-      column: $table.thumbnailUrl, builder: (column) => ColumnFilters(column));
+    column: $table.thumbnailUrl,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get startDate => $composableBuilder(
-      column: $table.startDate, builder: (column) => ColumnFilters(column));
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get endDate => $composableBuilder(
-      column: $table.endDate, builder: (column) => ColumnFilters(column));
+    column: $table.endDate,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$CalendarEventsTableOrderingComposer
@@ -455,26 +539,39 @@ class $$CalendarEventsTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get postId => $composableBuilder(
-      column: $table.postId, builder: (column) => ColumnOrderings(column));
+    column: $table.postId,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get title => $composableBuilder(
-      column: $table.title, builder: (column) => ColumnOrderings(column));
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get auth => $composableBuilder(
-      column: $table.auth, builder: (column) => ColumnOrderings(column));
+    column: $table.auth,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get thumbnailUrl => $composableBuilder(
-      column: $table.thumbnailUrl,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.thumbnailUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get startDate => $composableBuilder(
-      column: $table.startDate, builder: (column) => ColumnOrderings(column));
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get endDate => $composableBuilder(
-      column: $table.endDate, builder: (column) => ColumnOrderings(column));
+    column: $table.endDate,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$CalendarEventsTableAnnotationComposer
@@ -499,7 +596,9 @@ class $$CalendarEventsTableAnnotationComposer
       $composableBuilder(column: $table.auth, builder: (column) => column);
 
   GeneratedColumn<String> get thumbnailUrl => $composableBuilder(
-      column: $table.thumbnailUrl, builder: (column) => column);
+    column: $table.thumbnailUrl,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get startDate =>
       $composableBuilder(column: $table.startDate, builder: (column) => column);
@@ -508,24 +607,29 @@ class $$CalendarEventsTableAnnotationComposer
       $composableBuilder(column: $table.endDate, builder: (column) => column);
 }
 
-class $$CalendarEventsTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $CalendarEventsTable,
-    CalendarEvent,
-    $$CalendarEventsTableFilterComposer,
-    $$CalendarEventsTableOrderingComposer,
-    $$CalendarEventsTableAnnotationComposer,
-    $$CalendarEventsTableCreateCompanionBuilder,
-    $$CalendarEventsTableUpdateCompanionBuilder,
-    (
-      CalendarEvent,
-      BaseReferences<_$AppDatabase, $CalendarEventsTable, CalendarEvent>
-    ),
-    CalendarEvent,
-    PrefetchHooks Function()> {
+class $$CalendarEventsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CalendarEventsTable,
+          CalendarEvent,
+          $$CalendarEventsTableFilterComposer,
+          $$CalendarEventsTableOrderingComposer,
+          $$CalendarEventsTableAnnotationComposer,
+          $$CalendarEventsTableCreateCompanionBuilder,
+          $$CalendarEventsTableUpdateCompanionBuilder,
+          (
+            CalendarEvent,
+            BaseReferences<_$AppDatabase, $CalendarEventsTable, CalendarEvent>,
+          ),
+          CalendarEvent,
+          PrefetchHooks Function()
+        > {
   $$CalendarEventsTableTableManager(
-      _$AppDatabase db, $CalendarEventsTable table)
-      : super(TableManagerState(
+    _$AppDatabase db,
+    $CalendarEventsTable table,
+  ) : super(
+        TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -534,64 +638,67 @@ class $$CalendarEventsTableTableManager extends RootTableManager<
               $$CalendarEventsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$CalendarEventsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String?> postId = const Value.absent(),
-            Value<String> title = const Value.absent(),
-            Value<String> auth = const Value.absent(),
-            Value<String?> thumbnailUrl = const Value.absent(),
-            Value<DateTime> startDate = const Value.absent(),
-            Value<DateTime> endDate = const Value.absent(),
-          }) =>
-              CalendarEventsCompanion(
-            id: id,
-            postId: postId,
-            title: title,
-            auth: auth,
-            thumbnailUrl: thumbnailUrl,
-            startDate: startDate,
-            endDate: endDate,
-          ),
-          createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String?> postId = const Value.absent(),
-            required String title,
-            required String auth,
-            Value<String?> thumbnailUrl = const Value.absent(),
-            required DateTime startDate,
-            required DateTime endDate,
-          }) =>
-              CalendarEventsCompanion.insert(
-            id: id,
-            postId: postId,
-            title: title,
-            auth: auth,
-            thumbnailUrl: thumbnailUrl,
-            startDate: startDate,
-            endDate: endDate,
-          ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> postId = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String> auth = const Value.absent(),
+                Value<String?> thumbnailUrl = const Value.absent(),
+                Value<DateTime> startDate = const Value.absent(),
+                Value<DateTime> endDate = const Value.absent(),
+              }) => CalendarEventsCompanion(
+                id: id,
+                postId: postId,
+                title: title,
+                auth: auth,
+                thumbnailUrl: thumbnailUrl,
+                startDate: startDate,
+                endDate: endDate,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> postId = const Value.absent(),
+                required String title,
+                required String auth,
+                Value<String?> thumbnailUrl = const Value.absent(),
+                required DateTime startDate,
+                required DateTime endDate,
+              }) => CalendarEventsCompanion.insert(
+                id: id,
+                postId: postId,
+                title: title,
+                auth: auth,
+                thumbnailUrl: thumbnailUrl,
+                startDate: startDate,
+                endDate: endDate,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ));
+        ),
+      );
 }
 
-typedef $$CalendarEventsTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $CalendarEventsTable,
-    CalendarEvent,
-    $$CalendarEventsTableFilterComposer,
-    $$CalendarEventsTableOrderingComposer,
-    $$CalendarEventsTableAnnotationComposer,
-    $$CalendarEventsTableCreateCompanionBuilder,
-    $$CalendarEventsTableUpdateCompanionBuilder,
-    (
+typedef $$CalendarEventsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CalendarEventsTable,
       CalendarEvent,
-      BaseReferences<_$AppDatabase, $CalendarEventsTable, CalendarEvent>
-    ),
-    CalendarEvent,
-    PrefetchHooks Function()>;
+      $$CalendarEventsTableFilterComposer,
+      $$CalendarEventsTableOrderingComposer,
+      $$CalendarEventsTableAnnotationComposer,
+      $$CalendarEventsTableCreateCompanionBuilder,
+      $$CalendarEventsTableUpdateCompanionBuilder,
+      (
+        CalendarEvent,
+        BaseReferences<_$AppDatabase, $CalendarEventsTable, CalendarEvent>,
+      ),
+      CalendarEvent,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;

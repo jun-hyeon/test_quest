@@ -12,10 +12,7 @@ class EventReminderManager {
   final AppDatabase db;
   final NotificationService notificationService;
 
-  EventReminderManager({
-    required this.db,
-    required this.notificationService,
-  });
+  EventReminderManager({required this.db, required this.notificationService});
 
   Future<void> addEvent(CalendarEventsCompanion newEvent) async {
     final id = await db.insertEvent(newEvent);
@@ -34,7 +31,7 @@ class EventReminderManager {
 
     await notificationService.showNotification(
       id: id * 10 + 1,
-      title: "알림이 등록되었습니다!",
+      title: "${newEvent.title}이 일정에 등록되었습니다!",
     );
 
     //알림 스케줄 설정
