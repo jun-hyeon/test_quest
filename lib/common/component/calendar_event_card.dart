@@ -38,27 +38,20 @@ class CalendarEventCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(
-                    Icons.flag,
-                    color: borderColor,
-                    size: 20,
-                  ),
+                  Icon(Icons.flag, color: borderColor, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       event.title,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   IconButton(
                     onPressed: onDelete,
-                    icon: Icon(
-                      Icons.close,
-                      color: borderColor,
-                    ),
-                  )
+                    icon: Icon(Icons.close, color: borderColor),
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -74,7 +67,7 @@ class CalendarEventCard extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: Icon(Icons.chevron_right, color: borderColor),
-              )
+              ),
             ],
           ),
         ),

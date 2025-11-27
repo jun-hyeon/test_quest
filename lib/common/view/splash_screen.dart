@@ -57,9 +57,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
+      backgroundColor: colorScheme.surface,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -72,9 +74,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               animatedTexts: [
                 TyperAnimatedText(
                   'TestQuest',
-                  textStyle: GoogleFonts.pressStart2p(
-                    fontSize: 30,
-                  ),
+                  textStyle: textTheme.displayMedium?.copyWith(
+                    fontFamily: GoogleFonts.pressStart2p().fontFamily,
+                    color: colorScheme.onSurface,
+                  ) ?? GoogleFonts.pressStart2p(fontSize: 30),
                 ),
               ],
               isRepeatingAnimation: false,
@@ -93,9 +96,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 animatedTexts: [
                   TyperAnimatedText(
                     '게임 테스트 정보의 모든 것',
-                    textStyle: const TextStyle(
-                      fontSize: 16,
-                    ),
+                    textStyle: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ) ?? const TextStyle(fontSize: 16),
                   ),
                 ],
                 isRepeatingAnimation: false,

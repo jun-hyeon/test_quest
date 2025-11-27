@@ -27,29 +27,25 @@ class _RootTabState extends State<RootTab> {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = Theme.of(context).textTheme.bodyLarge?.color;
-
     return Scaffold(
       body: SafeArea(child: _screens[_selectedIndex]),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
-        selectedFontSize: 10,
-        unselectedFontSize: 10,
-        selectedItemColor: textColor,
-        unselectedItemColor: textColor?.withValues(alpha: 0.5),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.event),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _onItemTapped,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.event_outlined),
+            selectedIcon: Icon(Icons.event),
             label: '일정',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.forum),
+          NavigationDestination(
+            icon: Icon(Icons.forum_outlined),
+            selectedIcon: Icon(Icons.forum),
             label: '커뮤니티',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
             label: '마이페이지',
           ),
         ],
