@@ -25,9 +25,7 @@ class MyPageScreen extends ConsumerWidget {
       body: userAsync.when(
         data: (user) {
           if (user == null) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           return SingleChildScrollView(
@@ -37,17 +35,57 @@ class MyPageScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CachedNetworkImage(
-                      imageUrl: user.profileUrl ?? "",
-                      imageBuilder: (context, imageProvider) => CircleAvatar(
-                        backgroundImage: imageProvider,
-                        radius: 50,
-                      ),
-                      fit: BoxFit.cover,
-                      errorWidget: (context, error, stackTrace) {
-                        return const Icon(Icons.person);
-                      },
-                    ),
+                    user.profileUrl == null || user.profileUrl!.isEmpty
+                        ? CircleAvatar(
+                            radius: 50,
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerHighest,
+                            child: Icon(
+                              Icons.person,
+                              size: 50,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: user.profileUrl!,
+                            imageBuilder: (context, imageProvider) =>
+                                CircleAvatar(
+                                  backgroundImage: imageProvider,
+                                  radius: 50,
+                                ),
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => CircleAvatar(
+                              radius: 50,
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.surfaceContainerHighest,
+                              child: Icon(
+                                Icons.person,
+                                size: 50,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                            errorWidget: (context, error, stackTrace) {
+                              return CircleAvatar(
+                                radius: 50,
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.surfaceContainerHighest,
+                                child: Icon(
+                                  Icons.person,
+                                  size: 50,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                ),
+                              );
+                            },
+                          ),
                     // CircleNetworkImage(
                     //   imageUrl: user.profileUrl ?? "",
                     // ),
@@ -101,17 +139,15 @@ class MyPageScreen extends ConsumerWidget {
             ),
           );
         },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stackTrace) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
+              Icon(
                 Icons.error_outline,
                 size: 48,
-                color: Colors.red,
+                color: Theme.of(context).colorScheme.error,
               ),
               const SizedBox(height: 16),
               Text(
