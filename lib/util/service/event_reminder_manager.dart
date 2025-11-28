@@ -31,7 +31,7 @@ class EventReminderManager {
 
     await notificationService.showNotification(
       id: id * 10 + 1,
-      title: "${newEvent.title}이 일정에 등록되었습니다!",
+      title: "${newEvent.title.value}이 일정에 등록되었습니다!",
     );
 
     //알림 스케줄 설정
