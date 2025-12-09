@@ -166,32 +166,35 @@ class CommunityCard extends StatelessWidget {
 
         return Hero(
           tag: 'post_thumbnail_$id',
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: CachedNetworkImage(
-              imageUrl: thumbnailUrl,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
-                color: colorScheme.surfaceContainerHighest,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: colorScheme.primary,
-                  ),
-                ),
-              ),
-              errorWidget: (context, error, stackTrace) {
-                return Container(
+          child: Material(
+            color: Colors.transparent,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: CachedNetworkImage(
+                imageUrl: thumbnailUrl,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Container(
                   color: colorScheme.surfaceContainerHighest,
                   child: Center(
-                    child: Icon(
-                      Icons.broken_image_outlined,
-                      size: 48,
-                      color: colorScheme.onSurfaceVariant,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: colorScheme.primary,
                     ),
                   ),
-                );
-              },
+                ),
+                errorWidget: (context, error, stackTrace) {
+                  return Container(
+                    color: colorScheme.surfaceContainerHighest,
+                    child: Center(
+                      child: Icon(
+                        Icons.broken_image_outlined,
+                        size: 48,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         );
