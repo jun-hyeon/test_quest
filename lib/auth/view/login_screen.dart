@@ -138,11 +138,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 height: 200,
               ),
             ),
-            Text(
-              "TestQuest",
-              style: textTheme.displayMedium?.copyWith(
-                fontFamily: GoogleFonts.pressStart2p().fontFamily,
-                color: colorScheme.onSurface,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                "TestQuest",
+                style: textTheme.displayMedium?.copyWith(
+                  fontFamily: GoogleFonts.pressStart2p().fontFamily,
+                  color: colorScheme.onSurface,
+                ),
               ),
             ),
             const SizedBox(height: 16),
