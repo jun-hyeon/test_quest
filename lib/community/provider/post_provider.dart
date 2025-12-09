@@ -60,6 +60,7 @@ class PostNotifier extends Notifier<PostState> {
     required DateTime startDate,
     required DateTime endDate,
     XFile? boardImage,
+    List<dynamic>? content,
   }) async {
     state = PostState.loading();
     try {
@@ -89,6 +90,7 @@ class PostNotifier extends Notifier<PostState> {
         thumbnailUrl: imageUrl,
         recruitStatus: DateTime.now().isBefore(endDate) ? '모집중' : '모집마감',
         createdAt: DateTime.now(),
+        content: content,
       );
 
       await _repository.createPost(post);
@@ -133,6 +135,7 @@ class PostNotifier extends Notifier<PostState> {
     required String linkUrl,
     required DateTime startDate,
     required DateTime endDate,
+    List<dynamic>? content,
   }) async {
     state = PostState.loading();
     try {
@@ -153,6 +156,7 @@ class PostNotifier extends Notifier<PostState> {
         startDate: startDate,
         endDate: endDate,
         thumbnailUrl: imageUrl,
+        content: content,
       );
       await _repository.updatePost(updatedPost);
       await _refreshCommunityList();

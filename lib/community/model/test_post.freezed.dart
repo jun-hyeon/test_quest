@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TestPost {
 
- String get id; String get title; String get userId; String get nickname; String get description;@JsonKey(unknownEnumValue: TestPlatform.unknown) TestPlatform get platform;@JsonKey(unknownEnumValue: TestType.unknown) TestType get type; int get views; String? get thumbnailUrl; String get linkUrl;@JsonKey(name: 'startDate') DateTime get startDate;@JsonKey(name: 'endDate') DateTime get endDate;@JsonKey(name: 'createdAt') DateTime get createdAt; String get recruitStatus;
+ String get id; String get title; String get userId; String get nickname; String get description;@JsonKey(unknownEnumValue: TestPlatform.unknown) TestPlatform get platform;@JsonKey(unknownEnumValue: TestType.unknown) TestType get type; int get views; String? get thumbnailUrl; String get linkUrl;@JsonKey(name: 'startDate') DateTime get startDate;@JsonKey(name: 'endDate') DateTime get endDate;@JsonKey(name: 'createdAt') DateTime get createdAt; String get recruitStatus; List<dynamic>? get content;
 /// Create a copy of TestPost
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $TestPostCopyWith<TestPost> get copyWith => _$TestPostCopyWithImpl<TestPost>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TestPost&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.description, description) || other.description == description)&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.type, type) || other.type == type)&&(identical(other.views, views) || other.views == views)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.linkUrl, linkUrl) || other.linkUrl == linkUrl)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.recruitStatus, recruitStatus) || other.recruitStatus == recruitStatus));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TestPost&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.description, description) || other.description == description)&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.type, type) || other.type == type)&&(identical(other.views, views) || other.views == views)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.linkUrl, linkUrl) || other.linkUrl == linkUrl)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.recruitStatus, recruitStatus) || other.recruitStatus == recruitStatus)&&const DeepCollectionEquality().equals(other.content, content));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,userId,nickname,description,platform,type,views,thumbnailUrl,linkUrl,startDate,endDate,createdAt,recruitStatus);
+int get hashCode => Object.hash(runtimeType,id,title,userId,nickname,description,platform,type,views,thumbnailUrl,linkUrl,startDate,endDate,createdAt,recruitStatus,const DeepCollectionEquality().hash(content));
 
 @override
 String toString() {
-  return 'TestPost(id: $id, title: $title, userId: $userId, nickname: $nickname, description: $description, platform: $platform, type: $type, views: $views, thumbnailUrl: $thumbnailUrl, linkUrl: $linkUrl, startDate: $startDate, endDate: $endDate, createdAt: $createdAt, recruitStatus: $recruitStatus)';
+  return 'TestPost(id: $id, title: $title, userId: $userId, nickname: $nickname, description: $description, platform: $platform, type: $type, views: $views, thumbnailUrl: $thumbnailUrl, linkUrl: $linkUrl, startDate: $startDate, endDate: $endDate, createdAt: $createdAt, recruitStatus: $recruitStatus, content: $content)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $TestPostCopyWith<$Res>  {
   factory $TestPostCopyWith(TestPost value, $Res Function(TestPost) _then) = _$TestPostCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String userId, String nickname, String description,@JsonKey(unknownEnumValue: TestPlatform.unknown) TestPlatform platform,@JsonKey(unknownEnumValue: TestType.unknown) TestType type, int views, String? thumbnailUrl, String linkUrl,@JsonKey(name: 'startDate') DateTime startDate,@JsonKey(name: 'endDate') DateTime endDate,@JsonKey(name: 'createdAt') DateTime createdAt, String recruitStatus
+ String id, String title, String userId, String nickname, String description,@JsonKey(unknownEnumValue: TestPlatform.unknown) TestPlatform platform,@JsonKey(unknownEnumValue: TestType.unknown) TestType type, int views, String? thumbnailUrl, String linkUrl,@JsonKey(name: 'startDate') DateTime startDate,@JsonKey(name: 'endDate') DateTime endDate,@JsonKey(name: 'createdAt') DateTime createdAt, String recruitStatus, List<dynamic>? content
 });
 
 
@@ -65,7 +65,7 @@ class _$TestPostCopyWithImpl<$Res>
 
 /// Create a copy of TestPost
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? userId = null,Object? nickname = null,Object? description = null,Object? platform = null,Object? type = null,Object? views = null,Object? thumbnailUrl = freezed,Object? linkUrl = null,Object? startDate = null,Object? endDate = null,Object? createdAt = null,Object? recruitStatus = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? userId = null,Object? nickname = null,Object? description = null,Object? platform = null,Object? type = null,Object? views = null,Object? thumbnailUrl = freezed,Object? linkUrl = null,Object? startDate = null,Object? endDate = null,Object? createdAt = null,Object? recruitStatus = null,Object? content = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -81,7 +81,8 @@ as String,startDate: null == startDate ? _self.startDate : startDate // ignore: 
 as DateTime,endDate: null == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
 as DateTime,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,recruitStatus: null == recruitStatus ? _self.recruitStatus : recruitStatus // ignore: cast_nullable_to_non_nullable
-as String,
+as String,content: freezed == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
+as List<dynamic>?,
   ));
 }
 
@@ -166,10 +167,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String userId,  String nickname,  String description, @JsonKey(unknownEnumValue: TestPlatform.unknown)  TestPlatform platform, @JsonKey(unknownEnumValue: TestType.unknown)  TestType type,  int views,  String? thumbnailUrl,  String linkUrl, @JsonKey(name: 'startDate')  DateTime startDate, @JsonKey(name: 'endDate')  DateTime endDate, @JsonKey(name: 'createdAt')  DateTime createdAt,  String recruitStatus)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String userId,  String nickname,  String description, @JsonKey(unknownEnumValue: TestPlatform.unknown)  TestPlatform platform, @JsonKey(unknownEnumValue: TestType.unknown)  TestType type,  int views,  String? thumbnailUrl,  String linkUrl, @JsonKey(name: 'startDate')  DateTime startDate, @JsonKey(name: 'endDate')  DateTime endDate, @JsonKey(name: 'createdAt')  DateTime createdAt,  String recruitStatus,  List<dynamic>? content)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TestPost() when $default != null:
-return $default(_that.id,_that.title,_that.userId,_that.nickname,_that.description,_that.platform,_that.type,_that.views,_that.thumbnailUrl,_that.linkUrl,_that.startDate,_that.endDate,_that.createdAt,_that.recruitStatus);case _:
+return $default(_that.id,_that.title,_that.userId,_that.nickname,_that.description,_that.platform,_that.type,_that.views,_that.thumbnailUrl,_that.linkUrl,_that.startDate,_that.endDate,_that.createdAt,_that.recruitStatus,_that.content);case _:
   return orElse();
 
 }
@@ -187,10 +188,10 @@ return $default(_that.id,_that.title,_that.userId,_that.nickname,_that.descripti
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String userId,  String nickname,  String description, @JsonKey(unknownEnumValue: TestPlatform.unknown)  TestPlatform platform, @JsonKey(unknownEnumValue: TestType.unknown)  TestType type,  int views,  String? thumbnailUrl,  String linkUrl, @JsonKey(name: 'startDate')  DateTime startDate, @JsonKey(name: 'endDate')  DateTime endDate, @JsonKey(name: 'createdAt')  DateTime createdAt,  String recruitStatus)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String userId,  String nickname,  String description, @JsonKey(unknownEnumValue: TestPlatform.unknown)  TestPlatform platform, @JsonKey(unknownEnumValue: TestType.unknown)  TestType type,  int views,  String? thumbnailUrl,  String linkUrl, @JsonKey(name: 'startDate')  DateTime startDate, @JsonKey(name: 'endDate')  DateTime endDate, @JsonKey(name: 'createdAt')  DateTime createdAt,  String recruitStatus,  List<dynamic>? content)  $default,) {final _that = this;
 switch (_that) {
 case _TestPost():
-return $default(_that.id,_that.title,_that.userId,_that.nickname,_that.description,_that.platform,_that.type,_that.views,_that.thumbnailUrl,_that.linkUrl,_that.startDate,_that.endDate,_that.createdAt,_that.recruitStatus);case _:
+return $default(_that.id,_that.title,_that.userId,_that.nickname,_that.description,_that.platform,_that.type,_that.views,_that.thumbnailUrl,_that.linkUrl,_that.startDate,_that.endDate,_that.createdAt,_that.recruitStatus,_that.content);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +208,10 @@ return $default(_that.id,_that.title,_that.userId,_that.nickname,_that.descripti
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String userId,  String nickname,  String description, @JsonKey(unknownEnumValue: TestPlatform.unknown)  TestPlatform platform, @JsonKey(unknownEnumValue: TestType.unknown)  TestType type,  int views,  String? thumbnailUrl,  String linkUrl, @JsonKey(name: 'startDate')  DateTime startDate, @JsonKey(name: 'endDate')  DateTime endDate, @JsonKey(name: 'createdAt')  DateTime createdAt,  String recruitStatus)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String userId,  String nickname,  String description, @JsonKey(unknownEnumValue: TestPlatform.unknown)  TestPlatform platform, @JsonKey(unknownEnumValue: TestType.unknown)  TestType type,  int views,  String? thumbnailUrl,  String linkUrl, @JsonKey(name: 'startDate')  DateTime startDate, @JsonKey(name: 'endDate')  DateTime endDate, @JsonKey(name: 'createdAt')  DateTime createdAt,  String recruitStatus,  List<dynamic>? content)?  $default,) {final _that = this;
 switch (_that) {
 case _TestPost() when $default != null:
-return $default(_that.id,_that.title,_that.userId,_that.nickname,_that.description,_that.platform,_that.type,_that.views,_that.thumbnailUrl,_that.linkUrl,_that.startDate,_that.endDate,_that.createdAt,_that.recruitStatus);case _:
+return $default(_that.id,_that.title,_that.userId,_that.nickname,_that.description,_that.platform,_that.type,_that.views,_that.thumbnailUrl,_that.linkUrl,_that.startDate,_that.endDate,_that.createdAt,_that.recruitStatus,_that.content);case _:
   return null;
 
 }
@@ -222,7 +223,7 @@ return $default(_that.id,_that.title,_that.userId,_that.nickname,_that.descripti
 @JsonSerializable()
 
 class _TestPost implements TestPost {
-   _TestPost({required this.id, required this.title, required this.userId, required this.nickname, required this.description, @JsonKey(unknownEnumValue: TestPlatform.unknown) required this.platform, @JsonKey(unknownEnumValue: TestType.unknown) required this.type, required this.views, this.thumbnailUrl, required this.linkUrl, @JsonKey(name: 'startDate') required this.startDate, @JsonKey(name: 'endDate') required this.endDate, @JsonKey(name: 'createdAt') required this.createdAt, required this.recruitStatus});
+   _TestPost({required this.id, required this.title, required this.userId, required this.nickname, required this.description, @JsonKey(unknownEnumValue: TestPlatform.unknown) required this.platform, @JsonKey(unknownEnumValue: TestType.unknown) required this.type, required this.views, this.thumbnailUrl, required this.linkUrl, @JsonKey(name: 'startDate') required this.startDate, @JsonKey(name: 'endDate') required this.endDate, @JsonKey(name: 'createdAt') required this.createdAt, required this.recruitStatus, final  List<dynamic>? content}): _content = content;
   factory _TestPost.fromJson(Map<String, dynamic> json) => _$TestPostFromJson(json);
 
 @override final  String id;
@@ -239,6 +240,15 @@ class _TestPost implements TestPost {
 @override@JsonKey(name: 'endDate') final  DateTime endDate;
 @override@JsonKey(name: 'createdAt') final  DateTime createdAt;
 @override final  String recruitStatus;
+ final  List<dynamic>? _content;
+@override List<dynamic>? get content {
+  final value = _content;
+  if (value == null) return null;
+  if (_content is EqualUnmodifiableListView) return _content;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of TestPost
 /// with the given fields replaced by the non-null parameter values.
@@ -253,16 +263,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TestPost&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.description, description) || other.description == description)&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.type, type) || other.type == type)&&(identical(other.views, views) || other.views == views)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.linkUrl, linkUrl) || other.linkUrl == linkUrl)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.recruitStatus, recruitStatus) || other.recruitStatus == recruitStatus));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TestPost&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.description, description) || other.description == description)&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.type, type) || other.type == type)&&(identical(other.views, views) || other.views == views)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.linkUrl, linkUrl) || other.linkUrl == linkUrl)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.recruitStatus, recruitStatus) || other.recruitStatus == recruitStatus)&&const DeepCollectionEquality().equals(other._content, _content));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,userId,nickname,description,platform,type,views,thumbnailUrl,linkUrl,startDate,endDate,createdAt,recruitStatus);
+int get hashCode => Object.hash(runtimeType,id,title,userId,nickname,description,platform,type,views,thumbnailUrl,linkUrl,startDate,endDate,createdAt,recruitStatus,const DeepCollectionEquality().hash(_content));
 
 @override
 String toString() {
-  return 'TestPost(id: $id, title: $title, userId: $userId, nickname: $nickname, description: $description, platform: $platform, type: $type, views: $views, thumbnailUrl: $thumbnailUrl, linkUrl: $linkUrl, startDate: $startDate, endDate: $endDate, createdAt: $createdAt, recruitStatus: $recruitStatus)';
+  return 'TestPost(id: $id, title: $title, userId: $userId, nickname: $nickname, description: $description, platform: $platform, type: $type, views: $views, thumbnailUrl: $thumbnailUrl, linkUrl: $linkUrl, startDate: $startDate, endDate: $endDate, createdAt: $createdAt, recruitStatus: $recruitStatus, content: $content)';
 }
 
 
@@ -273,7 +283,7 @@ abstract mixin class _$TestPostCopyWith<$Res> implements $TestPostCopyWith<$Res>
   factory _$TestPostCopyWith(_TestPost value, $Res Function(_TestPost) _then) = __$TestPostCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String userId, String nickname, String description,@JsonKey(unknownEnumValue: TestPlatform.unknown) TestPlatform platform,@JsonKey(unknownEnumValue: TestType.unknown) TestType type, int views, String? thumbnailUrl, String linkUrl,@JsonKey(name: 'startDate') DateTime startDate,@JsonKey(name: 'endDate') DateTime endDate,@JsonKey(name: 'createdAt') DateTime createdAt, String recruitStatus
+ String id, String title, String userId, String nickname, String description,@JsonKey(unknownEnumValue: TestPlatform.unknown) TestPlatform platform,@JsonKey(unknownEnumValue: TestType.unknown) TestType type, int views, String? thumbnailUrl, String linkUrl,@JsonKey(name: 'startDate') DateTime startDate,@JsonKey(name: 'endDate') DateTime endDate,@JsonKey(name: 'createdAt') DateTime createdAt, String recruitStatus, List<dynamic>? content
 });
 
 
@@ -290,7 +300,7 @@ class __$TestPostCopyWithImpl<$Res>
 
 /// Create a copy of TestPost
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? userId = null,Object? nickname = null,Object? description = null,Object? platform = null,Object? type = null,Object? views = null,Object? thumbnailUrl = freezed,Object? linkUrl = null,Object? startDate = null,Object? endDate = null,Object? createdAt = null,Object? recruitStatus = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? userId = null,Object? nickname = null,Object? description = null,Object? platform = null,Object? type = null,Object? views = null,Object? thumbnailUrl = freezed,Object? linkUrl = null,Object? startDate = null,Object? endDate = null,Object? createdAt = null,Object? recruitStatus = null,Object? content = freezed,}) {
   return _then(_TestPost(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -306,7 +316,8 @@ as String,startDate: null == startDate ? _self.startDate : startDate // ignore: 
 as DateTime,endDate: null == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
 as DateTime,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,recruitStatus: null == recruitStatus ? _self.recruitStatus : recruitStatus // ignore: cast_nullable_to_non_nullable
-as String,
+as String,content: freezed == content ? _self._content : content // ignore: cast_nullable_to_non_nullable
+as List<dynamic>?,
   ));
 }
 

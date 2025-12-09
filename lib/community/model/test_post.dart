@@ -47,6 +47,7 @@ abstract class TestPost with _$TestPost {
     @JsonKey(name: 'endDate') required DateTime endDate,
     @JsonKey(name: 'createdAt') required DateTime createdAt,
     required String recruitStatus,
+    List<dynamic>? content, // Quill Delta JSON 형식
   }) = _TestPost;
 
   factory TestPost.fromJson(Map<String, dynamic> json) =>

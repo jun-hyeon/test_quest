@@ -29,6 +29,7 @@ _TestPost _$TestPostFromJson(Map<String, dynamic> json) => _TestPost(
   endDate: DateTime.parse(json['endDate'] as String),
   createdAt: DateTime.parse(json['createdAt'] as String),
   recruitStatus: json['recruitStatus'] as String,
+  content: json['content'] as List<dynamic>?,
 );
 
 Map<String, dynamic> _$TestPostToJson(_TestPost instance) => <String, dynamic>{
@@ -46,6 +47,7 @@ Map<String, dynamic> _$TestPostToJson(_TestPost instance) => <String, dynamic>{
   'endDate': instance.endDate.toIso8601String(),
   'createdAt': instance.createdAt.toIso8601String(),
   'recruitStatus': instance.recruitStatus,
+  'content': instance.content,
 };
 
 const _$TestPlatformEnumMap = {

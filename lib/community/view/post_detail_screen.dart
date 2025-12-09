@@ -1,5 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dart_quill_delta/dart_quill_delta.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -121,17 +124,20 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
           if (post.thumbnailUrl != null && post.thumbnailUrl!.isNotEmpty)
             Hero(
               tag: 'post_thumbnail_${post.id}',
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: CachedNetworkImage(
-                  imageUrl: post.thumbnailUrl!,
-                  fit: BoxFit.cover,
-                  errorWidget: (context, error, stackTrace) {
-                    return const Placeholder(
-                      strokeWidth: 1,
-                      fallbackHeight: 200,
-                    );
-                  },
+              child: Material(
+                color: Colors.transparent,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: CachedNetworkImage(
+                    imageUrl: post.thumbnailUrl!,
+                    fit: BoxFit.cover,
+                    errorWidget: (context, error, stackTrace) {
+                      return const Placeholder(
+                        strokeWidth: 1,
+                        fallbackHeight: 200,
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
@@ -220,10 +226,14 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
             style: Theme.of(context).textTheme.labelMedium,
           ),
           const Divider(height: 32),
-          Text(
-            post.description,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
+          // 리치 콘텐츠 표시
+          if (post.content != null && post.content!.isNotEmpty)
+            _buildRichContent(post.content!)
+          else
+            Text(
+              post.description,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
           const SizedBox(height: 24),
           FilledButton(
             onPressed: () => _openRelatedLink(post),
@@ -232,6 +242,37 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
         ],
       ),
     );
+  }
+
+  /// 리치 콘텐츠 빌더 (읽기 전용 Quill Editor)
+  Widget _buildRichContent(List<dynamic> content) {
+    try {
+      final delta = Delta.fromJson(content);
+      final controller = QuillController(
+        document: Document.fromDelta(delta),
+        selection: const TextSelection.collapsed(offset: 0),
+        readOnly: true,
+      );
+
+      return QuillEditor(
+        controller: controller,
+        scrollController: ScrollController(),
+        focusNode: FocusNode(),
+        config: QuillEditorConfig(
+          padding: EdgeInsets.zero,
+          showCursor: false,
+          embedBuilders: FlutterQuillEmbeds.editorBuilders(),
+        ),
+      );
+    } catch (e) {
+      // Delta 파싱 실패 시 fallback
+      return Text(
+        '콘텐츠를 표시할 수 없습니다.',
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.grey,
+            ),
+      );
+    }
   }
 
   /// 관련 링크 열기
