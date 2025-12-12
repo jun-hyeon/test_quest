@@ -14,6 +14,7 @@ import 'package:test_quest/settings/provider/theme_provider.dart';
 import 'package:test_quest/theme/theme_data.dart';
 import 'package:test_quest/util/service/fcm_service.dart';
 import 'package:test_quest/util/service/notification_service.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 void main() async {
   // Flutter 바인딩 초기화
@@ -22,7 +23,7 @@ void main() async {
   // 필수 초기화 작업
   await dotenv.load(fileName: '.env');
   await initializeDateFormatting('ko_KR');
-
+  timeago.setLocaleMessages('ko', timeago.KoMessages());
   try {
     // Firebase 초기화
     await Firebase.initializeApp(

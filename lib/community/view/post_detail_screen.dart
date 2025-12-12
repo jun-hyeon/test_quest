@@ -6,6 +6,8 @@ import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:test_quest/comment/view/comment_input_widget.dart';
+import 'package:test_quest/comment/view/comment_section_widget.dart';
 import 'package:test_quest/common/component/testquest_snackbar.dart';
 import 'package:test_quest/community/model/test_post.dart';
 import 'package:test_quest/community/provider/post_detail_provider.dart';
@@ -16,10 +18,7 @@ import 'package:url_launcher/url_launcher.dart';
 class PostDetailScreen extends ConsumerStatefulWidget {
   final String postId;
 
-  const PostDetailScreen({
-    super.key,
-    required this.postId,
-  });
+  const PostDetailScreen({super.key, required this.postId});
 
   @override
   ConsumerState<PostDetailScreen> createState() => _PostDetailScreenState();
@@ -33,11 +32,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     ref.listenManual(postProvider, (previous, next) {
       if (next is PostSuccess) {
         if (mounted) {
-          TestQuestSnackbar.show(
-            context,
-            '글이 성공적으로 삭제되었습니다.',
-            isError: false,
-          );
+          TestQuestSnackbar.show(context, '글이 성공적으로 삭제되었습니다.', isError: false);
           context.pop();
         }
       } else if (next is PostError) {
@@ -82,39 +77,52 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     final isDeleting = deleteState is PostLoading;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('게시글 상세'),
-      ),
-      body: postDetailAsync.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
-        data: (post) => _buildPostDetail(context, post, isDeleting),
-        error: (error, stackTrace) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(error.toString()),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => ref
-                    .read(postDetailProvider(widget.postId).notifier)
-                    .refresh(widget.postId),
-                child: const Text('다시 시도'),
+      appBar: AppBar(title: const Text('게시글 상세')),
+      body: SafeArea(
+        bottom: true,
+        child: Stack(
+          children: [
+            postDetailAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              data: (post) => _buildPostDetail(context, post, isDeleting),
+              error: (error, stackTrace) => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(error.toString()),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () => ref
+                          .read(postDetailProvider(widget.postId).notifier)
+                          .refresh(widget.postId),
+                      child: const Text('다시 시도'),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: CommentInputWidget(postId: widget.postId),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildPostDetail(
-      BuildContext context, TestPost post, bool isDeleting) {
+    BuildContext context,
+    TestPost post,
+    bool isDeleting,
+  ) {
     final currentUser = ref.watch(currentUserProvider);
 
     // Firebase Auth의 uid를 사용하여 작성자 확인
-    final isAuthor = currentUser?.uid == post.userId ||
+    final isAuthor =
+        currentUser?.uid == post.userId ||
         currentUser?.nickname == post.nickname;
 
     return Padding(
@@ -212,10 +220,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
             ],
           ),
           const SizedBox(height: 16),
-          Text(
-            '테스트 기간',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text('테스트 기간', style: Theme.of(context).textTheme.titleMedium),
           Text(
             '${_formatDate(post.startDate)} ~ ${_formatDate(post.endDate)}',
             style: Theme.of(context).textTheme.bodyMedium,
@@ -239,6 +244,15 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
             onPressed: () => _openRelatedLink(post),
             child: const Text('관련 링크 열기'),
           ),
+
+          const SizedBox(height: 32),
+          const Divider(thickness: 8, height: 32),
+
+          //댓글
+          CommentSectionWidget(postId: widget.postId),
+
+          // 입력창 공간 확보
+          const SizedBox(height: 80),
         ],
       ),
     );
@@ -268,9 +282,9 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
       // Delta 파싱 실패 시 fallback
       return Text(
         '콘텐츠를 표시할 수 없습니다.',
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
       );
     }
   }
@@ -282,17 +296,17 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
       final bool canLaunch = await canLaunchUrl(url);
       if (!mounted) return;
       if (!canLaunch) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('링크를 열 수 없습니다.')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('링크를 열 수 없습니다.')));
         return;
       }
       await launchUrl(url, mode: LaunchMode.externalApplication);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('오류 발생: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('오류 발생: $e')));
     }
   }
 
@@ -337,9 +351,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
               Navigator.of(context).pop();
               _deletePost(context, post);
             },
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.red,
-            ),
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('삭제'),
           ),
         ],
