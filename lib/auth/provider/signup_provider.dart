@@ -51,10 +51,7 @@ class SignupProvider extends Notifier<SignupState> {
     return const SignupInitial();
   }
 
-  void setEmailPassword({
-    required String email,
-    required String password,
-  }) {
+  void setEmailPassword({required String email, required String password}) {
     _email = email;
     _password = password;
   }
@@ -199,11 +196,7 @@ class SignupProvider extends Notifier<SignupState> {
       await _userRepository.setUser(userInfo);
 
       // 6단계: Provider에 사용자 정보 반영
-      state = const SignupLoading(
-        message: '완료하는 중...',
-        step: 6,
-        totalSteps: 6,
-      );
+      state = const SignupLoading(message: '완료하는 중...', step: 6, totalSteps: 6);
       ref.read(userNotifierProvider.notifier).hydrate(userInfo);
 
       state = const SignupSuccess();

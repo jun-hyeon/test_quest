@@ -309,12 +309,8 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                   color: colorScheme.onPrimary,
                   fontWeight: FontWeight.bold,
                 ),
-                defaultTextStyle: TextStyle(
-                  color: colorScheme.onSurface,
-                ),
-                weekendTextStyle: TextStyle(
-                  color: colorScheme.error,
-                ),
+                defaultTextStyle: TextStyle(color: colorScheme.onSurface),
+                weekendTextStyle: TextStyle(color: colorScheme.error),
                 markerDecoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: colorScheme.primary,

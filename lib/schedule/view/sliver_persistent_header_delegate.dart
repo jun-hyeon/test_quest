@@ -20,7 +20,10 @@ class CalendarSliverDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     return SizedBox.expand(
       child: Container(
         color: Theme.of(context).scaffoldBackgroundColor,

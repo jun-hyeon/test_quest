@@ -355,7 +355,6 @@ GoogleService-Info.plist
 *.mobileprovision
 *.provisionprofile
 *.provisioningprofile
-*.provisioningprofile
 
 # Firebase Functions
 functions/
@@ -367,3 +366,4 @@ CLAUDE.md
 
 # Fastlane Service Account JSON keys
 android/fastlane/*.json
+gemini.md

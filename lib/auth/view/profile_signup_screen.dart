@@ -12,9 +12,7 @@ import 'package:test_quest/common/component/testquest_snackbar.dart';
 import 'package:test_quest/util/service/permission_service.dart';
 
 class SignupProfileScreen extends ConsumerStatefulWidget {
-  const SignupProfileScreen({
-    super.key,
-  });
+  const SignupProfileScreen({super.key});
 
   @override
   ConsumerState<SignupProfileScreen> createState() => _ProfileStepFormState();
@@ -80,9 +78,7 @@ class _ProfileStepFormState extends ConsumerState<SignupProfileScreen> {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('프로필 정보'),
-      ),
+      appBar: AppBar(title: const Text('프로필 정보')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -97,77 +93,74 @@ class _ProfileStepFormState extends ConsumerState<SignupProfileScreen> {
     final notifier = ref.read(signupProvider.notifier);
 
     return switch (state) {
-      SignupLoading(:final message, :final step, :final totalSteps) =>
-        Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const CircularProgressIndicator(),
-              const SizedBox(height: 24),
-              Text(
-                message,
-                style: Theme.of(context).textTheme.titleMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                '$step / $totalSteps 단계',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.color
-                          ?.withAlpha(153), // 0.6 * 255
-                    ),
-              ),
-              const SizedBox(height: 24),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 48),
-                child: LinearProgressIndicator(
-                  value: step / totalSteps,
-                  backgroundColor:
-                      Theme.of(context).colorScheme.surfaceContainerHighest,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      SignupError(:final message) => Column(
+      SignupLoading(:final message, :final step, :final totalSteps) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // ✅ 에러 메시지 표시
-            if (message.isNotEmpty)
-              Container(
-                padding: const EdgeInsets.all(12),
-                margin: const EdgeInsets.only(top: 16, bottom: 8),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.errorContainer,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        message,
-                        style: TextStyle(
-                          color:
-                              Theme.of(context).colorScheme.onErrorContainer,
-                        ),
-                      ),
-                    ),
-                  ],
+            const CircularProgressIndicator(),
+            const SizedBox(height: 24),
+            Text(
+              message,
+              style: Theme.of(context).textTheme.titleMedium,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              '$step / $totalSteps 단계',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.color?.withAlpha(153), // 0.6 * 255
+              ),
+            ),
+            const SizedBox(height: 24),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 48),
+              child: LinearProgressIndicator(
+                value: step / totalSteps,
+                backgroundColor: Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerHighest,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Theme.of(context).colorScheme.primary,
                 ),
               ),
-            Expanded(child: _buildProfileFields(context, notifier)),
+            ),
           ],
         ),
+      ),
+      SignupError(:final message) => Column(
+        children: [
+          // ✅ 에러 메시지 표시
+          if (message.isNotEmpty)
+            Container(
+              padding: const EdgeInsets.all(12),
+              margin: const EdgeInsets.only(top: 16, bottom: 8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.errorContainer,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      message,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onErrorContainer,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          Expanded(child: _buildProfileFields(context, notifier)),
+        ],
+      ),
       SignupInitial() => _buildProfileFields(context, notifier),
       SignupSuccess() => const SizedBox.shrink(),
     };
@@ -192,8 +185,9 @@ class _ProfileStepFormState extends ConsumerState<SignupProfileScreen> {
                     context: context,
                     builder: (context) => AlertDialog(
                       title: const Text('권한 필요'),
-                      content:
-                          const Text('프로필 이미지를 선택하려면 권한이 필요합니다.\n설정에서 허용해주세요.'),
+                      content: const Text(
+                        '프로필 이미지를 선택하려면 권한이 필요합니다.\n설정에서 허용해주세요.',
+                      ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(),

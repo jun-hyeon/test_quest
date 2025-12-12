@@ -97,9 +97,7 @@ class PostNotifier extends Notifier<PostState> {
       await _refreshCommunityList();
 
       // 글 작성 완료 알림 표시
-      await _notificationService.showPostCreatedNotification(
-        title: title,
-      );
+      await _notificationService.showPostCreatedNotification(title: title);
 
       // FCM 알림은 Firestore Trigger에서 자동으로 처리됨
 

@@ -13,6 +13,7 @@ class CommunityCard extends StatelessWidget {
   final String status;
   final VoidCallback? onPressed;
   final VoidCallback? onTap;
+  final bool isBookmarked;
 
   const CommunityCard({
     super.key,
@@ -26,6 +27,7 @@ class CommunityCard extends StatelessWidget {
     required this.status,
     required this.onPressed,
     required this.onTap,
+    this.isBookmarked = false,
   });
 
   @override
@@ -76,9 +78,13 @@ class CommunityCard extends StatelessWidget {
                             ),
                           ),
                           IconButton.filledTonal(
-                            icon: const Icon(Icons.bookmark_add_outlined),
+                            icon: Icon(
+                              isBookmarked
+                                  ? Icons.bookmark_remove_outlined
+                                  : Icons.bookmark_add_outlined,
+                            ),
                             onPressed: onPressed,
-                            tooltip: '북마크 추가',
+                            tooltip: isBookmarked ? '북마크 삭제' : '북마크 추가',
                           ),
                         ],
                       ),

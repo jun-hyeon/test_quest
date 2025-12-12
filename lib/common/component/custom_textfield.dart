@@ -47,15 +47,17 @@ class CustomTextfield extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color:
-                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.6),
             width: 2.0,
           ),
         ),
         border: OutlineInputBorder(
           borderSide: BorderSide(
-            color:
-                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.6),
             width: 2.0,
           ),
         ),
@@ -63,19 +65,14 @@ class CustomTextfield extends StatelessWidget {
         hintText: hintText,
         labelText: labelText,
         suffixIcon: suffixIcon != null
-            ? Icon(
-                suffixIcon,
-                color: Theme.of(context).hintColor,
-              )
+            ? Icon(suffixIcon, color: Theme.of(context).hintColor)
             : null,
         prefixIcon: prefixIcon != null
-            ? Icon(
-                prefixIcon,
-                color: Theme.of(context).hintColor,
-              )
+            ? Icon(prefixIcon, color: Theme.of(context).hintColor)
             : null,
         hintStyle: TextStyle(
-            color: Theme.of(context).hintColor.withValues(alpha: 0.6)),
+          color: Theme.of(context).hintColor.withValues(alpha: 0.6),
+        ),
         fillColor: Theme.of(context).cardColor,
       ),
     );
@@ -103,10 +100,7 @@ class LabelTextField extends StatelessWidget {
     return TextField(
       obscureText: isPassword, // 비밀번호 필드 여부
       onChanged: onChanged,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 16.0,
-      ),
+      style: const TextStyle(color: Colors.white, fontSize: 16.0),
       decoration: InputDecoration(
         suffixIcon: suffixIcon,
         focusedBorder: const OutlineInputBorder(
@@ -117,14 +111,8 @@ class LabelTextField extends StatelessWidget {
         ),
         hintText: hintText ?? '',
         labelText: labelText ?? '',
-        hintStyle: const TextStyle(
-          color: Colors.grey,
-          fontSize: 16.0,
-        ),
-        labelStyle: const TextStyle(
-          color: Colors.grey,
-          fontSize: 16.0,
-        ),
+        hintStyle: const TextStyle(color: Colors.grey, fontSize: 16.0),
+        labelStyle: const TextStyle(color: Colors.grey, fontSize: 16.0),
       ),
     );
   }

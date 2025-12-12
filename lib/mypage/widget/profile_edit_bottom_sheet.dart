@@ -74,9 +74,7 @@ class _ProfileEditBottomSheetState
     if (!status.isGranted) {
       showDialog(
         context: context,
-        builder: (context) => const AlertDialog(
-          title: Text('권한이 거절되었습니다.'),
-        ),
+        builder: (context) => const AlertDialog(title: Text('권한이 거절되었습니다.')),
       );
       return;
     }
@@ -97,7 +95,9 @@ class _ProfileEditBottomSheetState
     setState(() => _isLoading = true);
 
     try {
-      await ref.read(userNotifierProvider.notifier).updateUser(
+      await ref
+          .read(userNotifierProvider.notifier)
+          .updateUser(
             (user) => user.copyWith(
               nickname: nicknameController.text.trim(),
               profileUrl: selectedImage != null

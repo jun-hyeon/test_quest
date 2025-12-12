@@ -22,6 +22,5 @@ class ResponseModel<T> with _$ResponseModel<T> {
   factory ResponseModel.fromJson(
     Map<String, dynamic> json,
     T Function(Object?) fromJsonT,
-  ) =>
-      _$ResponseModelFromJson(json, fromJsonT);
+  ) => _$ResponseModelFromJson(json, fromJsonT);
 }

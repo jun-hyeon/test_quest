@@ -5,10 +5,8 @@ part 'token_info.g.dart';
 
 @freezed
 abstract class TokenInfo with _$TokenInfo {
-  factory TokenInfo({
-    required String token,
-    required int expiresIn,
-  }) = _TokenInfo;
+  factory TokenInfo({required String token, required int expiresIn}) =
+      _TokenInfo;
 
   factory TokenInfo.fromJson(Map<String, dynamic> json) =>
       _$TokenInfoFromJson(json);
@@ -16,9 +14,7 @@ abstract class TokenInfo with _$TokenInfo {
 
 @freezed
 abstract class AccessResponse with _$AccessResponse {
-  factory AccessResponse({
-    required TokenInfo access,
-  }) = _AccessResponse;
+  factory AccessResponse({required TokenInfo access}) = _AccessResponse;
 
   factory AccessResponse.fromJson(Map<String, dynamic> json) =>
       _$AccessResponseFromJson(json);

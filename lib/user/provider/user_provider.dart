@@ -69,10 +69,7 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
         );
       }
       await _userRepository.setUser(user);
-      log(
-        '사용자 정보 저장 성공: ${user.nickname}',
-        name: 'UserNotifier.setUser',
-      );
+      log('사용자 정보 저장 성공: ${user.nickname}', name: 'UserNotifier.setUser');
       state = AsyncValue.data(user);
     } catch (e, stackTrace) {
       log(
@@ -131,8 +128,9 @@ class UserNotifier extends AsyncNotifier<UserInfo?> {
           imageFile: File(updatedUser.profileUrl!),
         );
       }
-      await _userRepository
-          .updateUser(updatedUser.copyWith(profileUrl: profileUrl));
+      await _userRepository.updateUser(
+        updatedUser.copyWith(profileUrl: profileUrl),
+      );
 
       state = AsyncValue.data(updatedUser);
 

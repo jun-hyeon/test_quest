@@ -27,9 +27,7 @@ class TestQuestSnackbar {
           Expanded(
             child: Text(
               message,
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-              ),
+              style: TextStyle(color: Theme.of(context).primaryColor),
             ),
           ),
         ],

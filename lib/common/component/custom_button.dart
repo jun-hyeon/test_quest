@@ -116,10 +116,7 @@ class CustomButton extends StatelessWidget {
       child: buttonChild,
     );
 
-    return SizedBox(
-      width: width ?? double.infinity,
-      child: button,
-    );
+    return SizedBox(width: width ?? double.infinity, child: button);
   }
 
   Widget _buildButton({
@@ -131,46 +128,43 @@ class CustomButton extends StatelessWidget {
     if (icon != null && _label != null) {
       return switch (type) {
         CustomButtonType.filled => FilledButton.icon(
-            onPressed: onPressed,
-            icon: Icon(icon),
-            label: child,
-          ),
+          onPressed: onPressed,
+          icon: Icon(icon),
+          label: child,
+        ),
         CustomButtonType.tonal => FilledButton.tonalIcon(
-            onPressed: onPressed,
-            icon: Icon(icon),
-            label: child,
-          ),
+          onPressed: onPressed,
+          icon: Icon(icon),
+          label: child,
+        ),
         CustomButtonType.outlined => OutlinedButton.icon(
-            onPressed: onPressed,
-            icon: Icon(icon),
-            label: child,
-          ),
+          onPressed: onPressed,
+          icon: Icon(icon),
+          label: child,
+        ),
         CustomButtonType.text => TextButton.icon(
-            onPressed: onPressed,
-            icon: Icon(icon),
-            label: child,
-          ),
+          onPressed: onPressed,
+          icon: Icon(icon),
+          label: child,
+        ),
       };
     }
 
     // 일반 버튼
     return switch (type) {
       CustomButtonType.filled => FilledButton(
-          onPressed: onPressed,
-          child: child,
-        ),
+        onPressed: onPressed,
+        child: child,
+      ),
       CustomButtonType.tonal => FilledButton.tonal(
-          onPressed: onPressed,
-          child: child,
-        ),
+        onPressed: onPressed,
+        child: child,
+      ),
       CustomButtonType.outlined => OutlinedButton(
-          onPressed: onPressed,
-          child: child,
-        ),
-      CustomButtonType.text => TextButton(
-          onPressed: onPressed,
-          child: child,
-        ),
+        onPressed: onPressed,
+        child: child,
+      ),
+      CustomButtonType.text => TextButton(onPressed: onPressed, child: child),
     };
   }
 

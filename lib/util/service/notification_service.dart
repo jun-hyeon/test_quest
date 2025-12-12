@@ -23,8 +23,9 @@ class NotificationService {
     tz.setLocalLocation(tz.getLocation('Asia/Seoul'));
 
     //prepare android init settings
-    const initSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const initSettingsAndroid = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
 
     //prepare ios init settings
     const initSettingsIOS = DarwinInitializationSettings(
@@ -63,12 +64,7 @@ class NotificationService {
     String? title,
     String? body,
   }) async {
-    return notificationsPlugin.show(
-      id,
-      title,
-      body,
-      notificationDetails(),
-    );
+    return notificationsPlugin.show(id, title, body, notificationDetails());
   }
 
   // Scheduled Notification
@@ -132,9 +128,7 @@ class NotificationService {
     );
   }
 
-  Future<void> showPostCreatedNotification({
-    required String title,
-  }) async {
+  Future<void> showPostCreatedNotification({required String title}) async {
     await showNotification(
       id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
       title: '✅ 글 작성 완료!',

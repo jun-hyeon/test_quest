@@ -18,7 +18,7 @@ extension TestPlatformExtension on TestPlatform {
       TestPlatform.console => 'console',
       TestPlatform.mobile => 'mobile',
       TestPlatform.pc => 'pc',
-      TestPlatform.unknown => 'unknown'
+      TestPlatform.unknown => 'unknown',
     };
   }
 }

@@ -10,8 +10,8 @@ import 'package:test_quest/repository/firebase/community/community_firestore.dar
 
 final testPostPaginationProvider =
     NotifierProvider<TestPostPaginationNotifier, PaginationState>(() {
-  return TestPostPaginationNotifier();
-});
+      return TestPostPaginationNotifier();
+    });
 
 class TestPostPaginationNotifier extends Notifier<PaginationState> {
   late final repository = ref.read(communityFirestoreRepositoryProvider);
@@ -36,10 +36,7 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
         // 로그아웃 시 상태 초기화 및 에러 상태로 설정
         log('[Pagination] 로그아웃 감지, 상태 초기화');
         _resetState();
-        state = PaginationError(
-          Exception('로그인이 필요합니다.'),
-          StackTrace.current,
-        );
+        state = PaginationError(Exception('로그인이 필요합니다.'), StackTrace.current);
       } else if (next is Authenticated && previous is! Authenticated) {
         // 로그인 시 다시 초기화
         log('[Pagination] 로그인 감지, 데이터 다시 로드');
@@ -53,10 +50,7 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
       _init();
     } else {
       // 인증되지 않은 상태면 에러 상태로 설정
-      state = PaginationError(
-        Exception('로그인이 필요합니다.'),
-        StackTrace.current,
-      );
+      state = PaginationError(Exception('로그인이 필요합니다.'), StackTrace.current);
     }
 
     return const PaginationLoading();
@@ -75,10 +69,7 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
     final authState = ref.read(authProvider);
     if (authState is! Authenticated) {
       log('[Pagination] 인증되지 않은 상태, 초기화 중단');
-      state = PaginationError(
-        Exception('로그인이 필요합니다.'),
-        StackTrace.current,
-      );
+      state = PaginationError(Exception('로그인이 필요합니다.'), StackTrace.current);
       return;
     }
 
@@ -117,10 +108,7 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
       final currentAuthState = ref.read(authProvider);
       if (currentAuthState is Unauthenticated) {
         log('[Pagination] 인증되지 않은 상태, 에러 상태로 설정');
-        state = PaginationError(
-          Exception('로그인이 필요합니다.'),
-          StackTrace.current,
-        );
+        state = PaginationError(Exception('로그인이 필요합니다.'), StackTrace.current);
         return;
       }
 
@@ -176,10 +164,7 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
       final currentAuthState = ref.read(authProvider);
       if (currentAuthState is Unauthenticated) {
         log('[Pagination] 인증되지 않은 상태, fetchMore 중단');
-        state = PaginationError(
-          Exception('로그인이 필요합니다.'),
-          StackTrace.current,
-        );
+        state = PaginationError(Exception('로그인이 필요합니다.'), StackTrace.current);
         return;
       }
 
@@ -194,10 +179,7 @@ class TestPostPaginationNotifier extends Notifier<PaginationState> {
     final authState = ref.read(authProvider);
     if (authState is! Authenticated) {
       log('[Pagination] 인증되지 않은 상태, refresh 중단');
-      state = PaginationError(
-        Exception('로그인이 필요합니다.'),
-        StackTrace.current,
-      );
+      state = PaginationError(Exception('로그인이 필요합니다.'), StackTrace.current);
       return;
     }
 

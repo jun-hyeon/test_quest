@@ -59,8 +59,23 @@ class EventReminderManager {
     }
   }
 
+  Future<void> deleteEventByPostId(String postId) async {
+    final event = await db.getEventByPostId(postId);
+    if (event != null) {
+      await db.deleteEvent(event.id);
+      for (int i = 1; i <= 3; i++) {
+        await notificationService.cancelNotification(event.id * 10 + i);
+      }
+    }
+  }
+
   Future<List<CalendarEvent>> getAllEvents() async {
     return await db.getAllEvents();
+  }
+
+  Future<bool> isBookmarked(String postId) async {
+    final event = await db.getEventByPostId(postId);
+    return event != null;
   }
 
   Future<void> updateEvent(CalendarEvent updateEvent) async {

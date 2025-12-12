@@ -70,12 +70,16 @@ class AuthNotifier extends Notifier<AuthState> {
 
     try {
       log('로그인 시작: $_email', name: 'AuthNotifier.login');
-      final userCredential =
-          await _authRepository.login(email: _email, password: _password);
+      final userCredential = await _authRepository.login(
+        email: _email,
+        password: _password,
+      );
 
       if (userCredential.user != null) {
-        log('Firebase Auth 로그인 성공: ${userCredential.user!.uid}',
-            name: 'AuthNotifier.login');
+        log(
+          'Firebase Auth 로그인 성공: ${userCredential.user!.uid}',
+          name: 'AuthNotifier.login',
+        );
         // 직접 사용자 데이터 로드
         state = Authenticated();
       } else {
@@ -92,8 +96,10 @@ class AuthNotifier extends Notifier<AuthState> {
       log('로그아웃 시작', name: 'AuthNotifier.logout');
       await _authRepository.logout();
       // Firebase Auth 상태 변화 리스너가 자동으로 처리
-      log('로그아웃 완료 - Router Provider가 자동으로 로그인 화면으로 리다이렉션',
-          name: 'AuthNotifier.logout');
+      log(
+        '로그아웃 완료 - Router Provider가 자동으로 로그인 화면으로 리다이렉션',
+        name: 'AuthNotifier.logout',
+      );
       state = Unauthenticated();
     } catch (e) {
       log('로그아웃 실패', name: 'AuthNotifier.logout', error: e);

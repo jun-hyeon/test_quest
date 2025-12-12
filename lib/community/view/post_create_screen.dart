@@ -422,7 +422,8 @@ class _PostCreateScreenState extends ConsumerState<PostCreateScreen> {
                             controller: _quillController,
                             focusNode: _editorFocusNode,
                             config: QuillEditorConfig(
-                              embedBuilders: FlutterQuillEmbeds.editorBuilders(),
+                              embedBuilders:
+                                  FlutterQuillEmbeds.editorBuilders(),
                             ),
                           ),
                         ),

@@ -6,8 +6,9 @@ import 'package:test_quest/auth/model/signup_form.dart';
 import 'package:test_quest/repository/firebase/auth/auth_repository.dart';
 import 'package:test_quest/util/service/firebase_service.dart';
 
-final firebaseAuthRepositoryProvider =
-    Provider<FirebaseAuthRepositoryImpl>((ref) {
+final firebaseAuthRepositoryProvider = Provider<FirebaseAuthRepositoryImpl>((
+  ref,
+) {
   return FirebaseAuthRepositoryImpl(ref.read(firebaseServiceProvider));
 });
 
@@ -22,11 +23,8 @@ class FirebaseAuthRepositoryImpl implements AuthRepository {
     required String password,
   }) async {
     try {
-      final userCredential =
-          await _firebaseService.auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      final userCredential = await _firebaseService.auth
+          .signInWithEmailAndPassword(email: email, password: password);
       return userCredential;
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
@@ -44,11 +42,11 @@ class FirebaseAuthRepositoryImpl implements AuthRepository {
     try {
       // 1. Firebase Auth에 계정 생성
       log('1️⃣ Firebase Auth 계정 생성 중...');
-      final userCredential =
-          await _firebaseService.auth.createUserWithEmailAndPassword(
-        email: data.email,
-        password: data.password,
-      );
+      final userCredential = await _firebaseService.auth
+          .createUserWithEmailAndPassword(
+            email: data.email,
+            password: data.password,
+          );
 
       final user = userCredential.user;
       if (user == null) {

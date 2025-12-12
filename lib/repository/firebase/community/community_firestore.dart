@@ -9,8 +9,10 @@ import 'package:test_quest/util/service/firebase_service.dart';
 
 final communityFirestoreRepositoryProvider =
     Provider<CommunityFirestoreRepositoryImpl>((ref) {
-  return CommunityFirestoreRepositoryImpl(ref.read(firebaseServiceProvider));
-});
+      return CommunityFirestoreRepositoryImpl(
+        ref.read(firebaseServiceProvider),
+      );
+    });
 
 class CommunityFirestoreRepositoryImpl implements TestPostRepository {
   final FirebaseService _firebaseService;
@@ -26,8 +28,10 @@ class CommunityFirestoreRepositoryImpl implements TestPostRepository {
 
   @override
   Future<TestPost> getPost(String id) async {
-    final doc =
-        await _firebaseService.firestore.collection('posts').doc(id).get();
+    final doc = await _firebaseService.firestore
+        .collection('posts')
+        .doc(id)
+        .get();
     if (doc.data() == null) {
       throw Exception('게시글을 찾을 수 없습니다.');
     }
@@ -51,7 +55,9 @@ class CommunityFirestoreRepositoryImpl implements TestPostRepository {
     String sortOrder = 'latest',
   }) async {
     try {
-      log('[Community] 포스트 조회 시작 - keyword: $keyword, pageSize: $pageSize, sortOrder: $sortOrder, lastId: $lastId');
+      log(
+        '[Community] 포스트 조회 시작 - keyword: $keyword, pageSize: $pageSize, sortOrder: $sortOrder, lastId: $lastId',
+      );
 
       // 키워드가 있으면 키워드 검색 쿼리, 없으면 일반 쿼리
       var query = _buildQuery(keyword: keyword);
@@ -100,7 +106,8 @@ class CommunityFirestoreRepositoryImpl implements TestPostRepository {
       // 키워드 검색의 경우 더 많은 데이터를 가져와서 클라이언트에서 필터링
       // (부분 문자열 포함 검색을 위해 - 첫 글자가 같은 모든 문서를 가져옴)
       final limitSize = (keyword != null && keyword.isNotEmpty)
-          ? (pageSize + 1) * 5 // 키워드 검색 시 5배 더 가져옴 (포함 검색을 위해)
+          ? (pageSize + 1) *
+                5 // 키워드 검색 시 5배 더 가져옴 (포함 검색을 위해)
           : pageSize + 1;
 
       query = query.limit(limitSize);
@@ -128,30 +135,29 @@ class CommunityFirestoreRepositoryImpl implements TestPostRepository {
       final hasNextPage = filteredDocs.length > pageSize;
 
       // 실제로는 pageSize만큼만 사용
-      final docsToUse =
-          hasNextPage ? filteredDocs.take(pageSize).toList() : filteredDocs;
+      final docsToUse = hasNextPage
+          ? filteredDocs.take(pageSize).toList()
+          : filteredDocs;
 
       final posts = docsToUse.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
-        return TestPost.fromJson({
-          'id': doc.id,
-          ...data,
-        });
+        return TestPost.fromJson({'id': doc.id, ...data});
       }).toList();
 
-      log('[Community] 포스트 조회 완료 - posts: ${posts.length}개, hasNext: $hasNextPage');
+      log(
+        '[Community] 포스트 조회 완료 - posts: ${posts.length}개, hasNext: $hasNextPage',
+      );
 
       // 마지막 문서 정보 로깅 (다음 쿼리 커서를 위해)
       if (posts.isNotEmpty) {
         final lastPost = posts.last;
-        log('[Community] 마지막 포스트 - id: ${lastPost.id}, createdAt: ${lastPost.createdAt}');
+        log(
+          '[Community] 마지막 포스트 - id: ${lastPost.id}, createdAt: ${lastPost.createdAt}',
+        );
         log('[Community] 다음 페이지네이션을 위해 lastId를 ${lastPost.id}로 설정하세요');
       }
 
-      return TestPostPagination(
-        posts: posts,
-        hasNext: hasNextPage,
-      );
+      return TestPostPagination(posts: posts, hasNext: hasNextPage);
     } catch (e, stackTrace) {
       log('[Community] 포스트 조회 실패: $e');
       log('[Community] 스택 트레이스: $stackTrace');
@@ -179,7 +185,9 @@ class CommunityFirestoreRepositoryImpl implements TestPostRepository {
     // Firestore Filter.or() 쿼리를 사용하여 title 또는 nickname 검색
     // 키워드의 첫 글자로 시작하는 모든 문서를 가져옴 (부분 문자열 검색을 위해)
     // 이후 클라이언트에서 실제 포함 검색 수행
-    return _firebaseService.firestore.collection('posts').where(
+    return _firebaseService.firestore
+        .collection('posts')
+        .where(
           Filter.or(
             Filter.and(
               Filter('title', isGreaterThanOrEqualTo: firstChar),

@@ -21,7 +21,9 @@ class DefaultInterceptor extends Interceptor {
 
   @override
   void onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     await _addAuthTokenIfNeeded(options);
     log('[Request] ${options.method} ${options.path}');
     handler.next(options);
@@ -29,7 +31,9 @@ class DefaultInterceptor extends Interceptor {
 
   @override
   Future<void> onError(
-      DioException err, ErrorInterceptorHandler handler) async {
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
     log('[Error] ${err.response?.statusCode} - ${err.requestOptions.path}');
 
     // 자동 재시도를 건너뛸 요청들
@@ -106,7 +110,9 @@ class DefaultInterceptor extends Interceptor {
 
   /// 토큰 갱신 및 재시도 처리
   Future<bool> _handleTokenRefresh(
-      DioException err, ErrorInterceptorHandler handler) async {
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
     log('[Token] 토큰 갱신 시도');
 
     final refreshSuccess = await _refreshAccessToken();
@@ -153,7 +159,9 @@ class DefaultInterceptor extends Interceptor {
 
   /// 응답에서 새 토큰 저장
   Future<bool> _saveNewTokenFromResponse(
-      Response response, StorageService storage) async {
+    Response response,
+    StorageService storage,
+  ) async {
     final data = response.data;
     if (data['code'] != "200" || data['data'] == null) {
       log('[Token] 잘못된 응답: ${data['message']}');
@@ -162,7 +170,9 @@ class DefaultInterceptor extends Interceptor {
 
     final accessResponse = AccessResponse.fromJson(data['data']);
     await storage.write(
-        key: ACCESS_TOKEN_KEY, value: accessResponse.access.token);
+      key: ACCESS_TOKEN_KEY,
+      value: accessResponse.access.token,
+    );
 
     log('[Token] 토큰 갱신 성공');
     return true;
@@ -170,12 +180,15 @@ class DefaultInterceptor extends Interceptor {
 
   /// 새 토큰으로 요청 재시도
   Future<void> _retryRequestWithNewToken(
-      DioException err, ErrorInterceptorHandler handler) async {
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
     try {
       log('[Retry] 새 토큰으로 재시도: ${err.requestOptions.path}');
 
-      final newToken =
-          await ref.read(storageProvider).read(key: ACCESS_TOKEN_KEY);
+      final newToken = await ref
+          .read(storageProvider)
+          .read(key: ACCESS_TOKEN_KEY);
       final retryOptions = _createRetryOptions(err.requestOptions, newToken!);
 
       // FormData인 경우 새로운 FormData 생성
@@ -211,9 +224,8 @@ class DefaultInterceptor extends Interceptor {
 
   /// 재시도용 RequestOptions 생성
   RequestOptions _createRetryOptions(RequestOptions original, String newToken) {
-    return original.copyWith(
-      extra: {...original.extra, 'retried': true},
-    )..headers['Authorization'] = 'Bearer $newToken';
+    return original.copyWith(extra: {...original.extra, 'retried': true})
+      ..headers['Authorization'] = 'Bearer $newToken';
   }
 
   // ==================== Logout 처리 ====================
@@ -228,21 +240,25 @@ class DefaultInterceptor extends Interceptor {
 
   /// 토큰 갱신용 Dio 인스턴스
   Dio _createRefreshDio() {
-    return Dio(BaseOptions(
-      baseUrl: dotenv.env['BASE_URL'] ?? '',
-      headers: {'Content-Type': 'application/json'},
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
-    ));
+    return Dio(
+      BaseOptions(
+        baseUrl: dotenv.env['BASE_URL'] ?? '',
+        headers: {'Content-Type': 'application/json'},
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
+      ),
+    );
   }
 
   /// 재시도용 Dio 인스턴스
   Dio _createRetryDio() {
-    return Dio(BaseOptions(
-      baseUrl: dotenv.env['BASE_URL'] ?? '',
-      headers: {'Content-Type': 'application/json'},
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
-    ));
+    return Dio(
+      BaseOptions(
+        baseUrl: dotenv.env['BASE_URL'] ?? '',
+        headers: {'Content-Type': 'application/json'},
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
+      ),
+    );
   }
 }

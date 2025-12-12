@@ -68,10 +68,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ref.listenManual<AuthState>(authProvider, (previous, next) {
       if (!mounted) return;
       if (next is Authenticated) {
-        TestQuestSnackbar.show(
-          context,
-          '로그인에 성공했습니다.',
-        );
+        TestQuestSnackbar.show(context, '로그인에 성공했습니다.');
 
         context.go("/root");
       }
@@ -89,11 +86,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (!mounted) return;
     if (currentState is AuthFormInvalid) {
       // Handle form validation errors if needed
-      TestQuestSnackbar.show(
-        context,
-        '로그인 정보를 확인해주세요.',
-        isError: true,
-      );
+      TestQuestSnackbar.show(context, '로그인 정보를 확인해주세요.', isError: true);
     }
   }
 

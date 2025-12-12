@@ -19,10 +19,7 @@ abstract class UserInfo with _$UserInfo {
 
 /// Firebase Auth User를 UserInfo로 변환하는 확장 메서드
 extension FirebaseUserExtension on User {
-  UserInfo toUserInfo({
-    required String name,
-    required String nickname,
-  }) {
+  UserInfo toUserInfo({required String name, required String nickname}) {
     return UserInfo(
       uid: uid,
       name: name,

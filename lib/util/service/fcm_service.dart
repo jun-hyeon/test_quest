@@ -29,8 +29,8 @@ class FCMService {
     FirebaseMessaging.onMessageOpenedApp.listen(_handleNotificationTap);
 
     // 앱 종료 상태에서 알림 탭 처리
-    RemoteMessage? initialMessage =
-        await _firebaseMessaging.getInitialMessage();
+    RemoteMessage? initialMessage = await _firebaseMessaging
+        .getInitialMessage();
     if (initialMessage != null) {
       _handleNotificationTap(initialMessage);
     }

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CircleNetworkImage extends StatelessWidget {
-  const CircleNetworkImage({
-    super.key,
-    required this.imageUrl,
-  });
+  const CircleNetworkImage({super.key, required this.imageUrl});
 
   final String imageUrl;
 
@@ -24,10 +21,7 @@ class CircleNetworkImage extends StatelessWidget {
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        child: const Icon(
-          Icons.person,
-          size: 100,
-        ),
+        child: const Icon(Icons.person, size: 100),
       );
     }
 
@@ -47,10 +41,7 @@ class CircleNetworkImage extends StatelessWidget {
           height: 100,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) {
-            return const Icon(
-              Icons.person,
-              size: 100,
-            );
+            return const Icon(Icons.person, size: 100);
           },
         ),
       ),

@@ -46,23 +46,33 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
     super.dispose();
   }
 
-  void onBookmarkPressed(TestPost event) {
-    final companion = CalendarEventsCompanion(
-      auth: Value(event.nickname),
-      postId: Value(event.id),
-      title: Value(event.title),
-      startDate: Value(event.startDate),
-      endDate: Value(event.endDate),
-      thumbnailUrl: Value(event.thumbnailUrl),
-    );
-
-    ref.read(bookmarkedEventProvider.notifier).addEvent(companion);
+  void onBookmarkPressed(TestPost event, bool isBookmarked) {
+    final notifier = ref.read(bookmarkedEventProvider.notifier);
+    if (isBookmarked) {
+      notifier.deleteEventByPostId(event.id);
+    } else {
+      final companion = CalendarEventsCompanion(
+        auth: Value(event.nickname),
+        postId: Value(event.id),
+        title: Value(event.title),
+        startDate: Value(event.startDate),
+        endDate: Value(event.endDate),
+        thumbnailUrl: Value(event.thumbnailUrl),
+      );
+      notifier.addEvent(companion);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(testPostPaginationProvider);
     final notifier = ref.read(testPostPaginationProvider.notifier);
+
+    final bookmarkedEventsState = ref.watch(bookmarkedEventProvider);
+
+    final bookmarkedPostIds =
+        bookmarkedEventsState.asData?.value.map((e) => e.postId).toSet() ??
+        <String>{};
 
     return Scaffold(
       floatingActionButton: Semantics(
@@ -160,6 +170,9 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
                                   // 실제 게시물 표시
                                   if (index < posts.length) {
                                     final e = posts[index];
+                                    final isPostBookmarked = bookmarkedPostIds
+                                        .contains(e.id);
+
                                     return CommunityCard(
                                       id: e.id,
                                       thumbnailUrl: e.thumbnailUrl,
@@ -169,8 +182,9 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
                                       endDate: e.endDate,
                                       views: e.views,
                                       status: '모집중',
+                                      isBookmarked: isPostBookmarked,
                                       onPressed: () {
-                                        onBookmarkPressed(e);
+                                        onBookmarkPressed(e, isPostBookmarked);
                                       },
                                       onTap: () {
                                         context.push(

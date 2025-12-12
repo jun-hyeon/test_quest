@@ -6,9 +6,7 @@ import 'package:test_quest/repository/firebase/community/community_firestore.dar
 
 /// 게시글 ID를 기반으로 상세 정보를 제공하는 Provider
 final postDetailProvider = AsyncNotifierProvider.autoDispose
-    .family<PostDetailNotifier, TestPost, String>(
-  PostDetailNotifier.new,
-);
+    .family<PostDetailNotifier, TestPost, String>(PostDetailNotifier.new);
 
 /// 게시글 상세 정보 Notifier
 class PostDetailNotifier extends AsyncNotifier<TestPost> {

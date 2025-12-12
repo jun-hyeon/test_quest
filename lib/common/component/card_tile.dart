@@ -27,8 +27,11 @@ class CardTile extends StatelessWidget {
       child: ListTile(
         leading: Icon(icon, color: colors.onSurface),
         title: Text(title, style: style.copyWith(color: colors.onSurface)),
-        trailing:
-            Icon(Icons.arrow_forward_ios, color: colors.onSurface, size: 16),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          color: colors.onSurface,
+          size: 16,
+        ),
         onTap: onTap,
       ),
     );

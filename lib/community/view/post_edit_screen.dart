@@ -38,11 +38,7 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
     ref.listenManual(postProvider, (previous, next) {
       if (next is PostSuccess) {
         if (mounted) {
-          TestQuestSnackbar.show(
-            context,
-            '글이 성공적으로 수정되었습니다!',
-            isError: false,
-          );
+          TestQuestSnackbar.show(context, '글이 성공적으로 수정되었습니다!', isError: false);
 
           // 수정된 데이터와 함께 이전 화면으로 돌아가기
           final updatedPost = widget.post.copyWith(
@@ -87,7 +83,9 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    ref.read(postProvider.notifier).updatePost(
+    ref
+        .read(postProvider.notifier)
+        .updatePost(
           id: widget.post.id,
           image: _selectedImage,
           title: _titleController.text.trim(),
@@ -109,9 +107,7 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('글 수정'),
-        ),
+        appBar: AppBar(title: const Text('글 수정')),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -126,8 +122,8 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
                       hintText: '제목',
                       validator: (value) =>
                           value == null || value.trim().isEmpty
-                              ? '제목을 입력하세요'
-                              : null,
+                          ? '제목을 입력하세요'
+                          : null,
                     ),
                     const SizedBox(height: 16),
                     GestureDetector(
@@ -140,38 +136,36 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
                               fit: BoxFit.cover,
                             )
                           : (widget.post.thumbnailUrl != null &&
-                                  widget.post.thumbnailUrl!.isNotEmpty &&
-                                  widget.post.thumbnailUrl!.startsWith('http')
-                              ? Image.network(
-                                  widget.post.thumbnailUrl!,
-                                  width: double.infinity,
-                                  height: 200,
-                                  fit: BoxFit.cover,
-                                )
-                              : Container(
-                                  height: 200,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: primaryColor,
+                                    widget.post.thumbnailUrl!.isNotEmpty &&
+                                    widget.post.thumbnailUrl!.startsWith('http')
+                                ? Image.network(
+                                    widget.post.thumbnailUrl!,
+                                    width: double.infinity,
+                                    height: 200,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Container(
+                                    height: 200,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: primaryColor),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          Icons.add_a_photo_outlined,
-                                          size: 48,
-                                          color: primaryColor,
-                                        ),
-                                        const SizedBox(height: 8),
-                                        const Text('사진을 추가하려면 탭하세요'),
-                                      ],
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.add_a_photo_outlined,
+                                            size: 48,
+                                            color: primaryColor,
+                                          ),
+                                          const SizedBox(height: 8),
+                                          const Text('사진을 추가하려면 탭하세요'),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                )),
+                                  )),
                     ),
                     const SizedBox(height: 16),
                     SizedBox(
@@ -181,15 +175,16 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
                         textAlign: TextAlign.start,
                         controller: _contentController,
                         decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: '내용을 입력해주세요'),
+                          border: OutlineInputBorder(),
+                          hintText: '내용을 입력해주세요',
+                        ),
                         maxLines: null,
                         expands: true,
                         keyboardType: TextInputType.multiline,
                         validator: (value) =>
                             value == null || value.trim().isEmpty
-                                ? '내용을 입력하세요'
-                                : null,
+                            ? '내용을 입력하세요'
+                            : null,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -199,8 +194,8 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
                       hintText: '링크',
                       validator: (value) =>
                           value == null || value.trim().isEmpty
-                              ? '링크를 입력해주세요'
-                              : null,
+                          ? '링크를 입력해주세요'
+                          : null,
                     ),
                     const SizedBox(height: 16),
                     CustomButton(

@@ -8,7 +8,8 @@ class CommentSectionWidget extends ConsumerStatefulWidget {
   final String postId;
 
   @override
-  ConsumerState<CommentSectionWidget> createState() => _CommentListWidgetState();
+  ConsumerState<CommentSectionWidget> createState() =>
+      _CommentListWidgetState();
 }
 
 class _CommentListWidgetState extends ConsumerState<CommentSectionWidget> {
@@ -29,7 +30,7 @@ class _CommentListWidgetState extends ConsumerState<CommentSectionWidget> {
 
         const Divider(height: 1),
 
-        CommentListWidget(postId: widget.postId)
+        CommentListWidget(postId: widget.postId),
       ],
     );
   }

@@ -16,7 +16,7 @@ class _RootTabState extends State<RootTab> {
   final List<Widget> _screens = [
     const ScheduleScreen(),
     const CommunityScreen(),
-    const MyPageScreen()
+    const MyPageScreen(),
   ];
 
   void _onItemTapped(int index) {

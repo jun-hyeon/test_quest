@@ -3,8 +3,9 @@ import 'package:test_quest/repository/firebase/user/user_repository.dart';
 import 'package:test_quest/user/model/user_info.dart';
 import 'package:test_quest/util/service/firebase_service.dart';
 
-final userFirestoreRepositoryProvider =
-    Provider<UserFirestoreRepositoryImpl>((ref) {
+final userFirestoreRepositoryProvider = Provider<UserFirestoreRepositoryImpl>((
+  ref,
+) {
   final firebaseService = ref.read(firebaseServiceProvider);
   return UserFirestoreRepositoryImpl(firebaseService);
 });
@@ -37,8 +38,10 @@ class UserFirestoreRepositoryImpl implements UserRepository {
 
   @override
   Future<UserInfo?> getUser(String uid) async {
-    final doc =
-        await _firebaseService.firestore.collection('users').doc(uid).get();
+    final doc = await _firebaseService.firestore
+        .collection('users')
+        .doc(uid)
+        .get();
     if (!doc.exists) {
       return null;
     }

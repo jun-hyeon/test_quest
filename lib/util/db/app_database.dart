@@ -7,7 +7,6 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:test_quest/schedule/model/test_post_event.dart';
 
-
 part 'app_database.g.dart';
 
 final dbProvider = Provider<AppDatabase>((ref) {
@@ -30,6 +29,13 @@ class AppDatabase extends _$AppDatabase {
 
   Stream<List<CalendarEvent>> watchAllEvents() =>
       select(calendarEvents).watch();
+
+  // Read by postId
+  Future<CalendarEvent?> getEventByPostId(String postId) {
+    return (select(
+      calendarEvents,
+    )..where((tbl) => tbl.postId.equals(postId))).getSingleOrNull();
+  }
 
   // Update
   Future<bool> updateEvent(CalendarEvent event) =>

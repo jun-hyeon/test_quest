@@ -53,8 +53,9 @@ class StorageRepository {
       log('업로드 시작...');
 
       // 파일 업로드
-      final uploadTask =
-          storageRef.child(storagePath).putFile(imageFile, metadata);
+      final uploadTask = storageRef
+          .child(storagePath)
+          .putFile(imageFile, metadata);
       log('UploadTask 생성됨: ${uploadTask.hashCode}');
 
       final snapshot = await uploadTask;

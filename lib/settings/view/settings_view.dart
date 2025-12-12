@@ -38,24 +38,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          '설정',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
+        title: Text('설정', style: Theme.of(context).textTheme.titleLarge),
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         children: [
           SwitchListTile(
-            title: Text(
-              '알림 설정',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
+            title: Text('알림 설정', style: Theme.of(context).textTheme.bodyLarge),
             subtitle: Text(
               _getNotificationStatusText(_notificationStatus),
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
             value: _notificationStatus.isGranted,
             onChanged: (value) async {
@@ -85,14 +79,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             title: Text(
               '회원 탈퇴',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: _isDeleting ? Colors.grey : Colors.red,
-                  ),
+                color: _isDeleting ? Colors.grey : Colors.red,
+              ),
             ),
             subtitle: _isDeleting
                 ? const Text('처리 중...')
                 : const Text('계정을 영구적으로 삭제합니다'),
-            onTap:
-                _isDeleting ? null : () => _showAccountDeletionDialog(context),
+            onTap: _isDeleting
+                ? null
+                : () => _showAccountDeletionDialog(context),
           ),
         ],
       ),
@@ -111,11 +106,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
       if (status.isGranted) {
         if (mounted) {
-          TestQuestSnackbar.show(
-            context,
-            '알림이 활성화되었습니다.',
-            isError: false,
-          );
+          TestQuestSnackbar.show(context, '알림이 활성화되었습니다.', isError: false);
         }
       } else if (status.isPermanentlyDenied) {
         if (mounted) {
@@ -124,11 +115,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       }
     } catch (e) {
       if (mounted) {
-        TestQuestSnackbar.show(
-          context,
-          '알림 권한 요청에 실패했습니다.',
-          isError: true,
-        );
+        TestQuestSnackbar.show(context, '알림 권한 요청에 실패했습니다.', isError: true);
       }
     }
   }
@@ -191,9 +178,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               Navigator.of(context).pop();
               _deleteAccount();
             },
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.red,
-            ),
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('탈퇴하기'),
           ),
         ],
@@ -213,11 +198,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       await ref.read(authProvider.notifier).logout();
 
       if (mounted) {
-        TestQuestSnackbar.show(
-          context,
-          '회원탈퇴가 완료되었습니다.',
-          isError: false,
-        );
+        TestQuestSnackbar.show(context, '회원탈퇴가 완료되었습니다.', isError: false);
       }
     } catch (e) {
       if (mounted) {

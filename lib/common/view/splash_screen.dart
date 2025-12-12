@@ -33,22 +33,19 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     log('[SplashScreen] 인증 상태 확인 시작');
 
     // Auth State 변화를 listen
-    ref.listenManual<AuthState>(
-      authProvider,
-      (previous, next) {
-        log('[SplashScreen] Auth State 변화: $previous → $next');
-        if (!mounted || _isNavigating) return;
+    ref.listenManual<AuthState>(authProvider, (previous, next) {
+      log('[SplashScreen] Auth State 변화: $previous → $next');
+      if (!mounted || _isNavigating) return;
 
-        _isNavigating = true;
-        if (next is Authenticated) {
-          log('[SplashScreen] 인증됨 → 메인 화면으로 이동');
-          context.go('/root');
-        } else if (next is Unauthenticated) {
-          log('[SplashScreen] 인증안됨 → 로그인 화면으로 이동');
-          context.go('/login');
-        }
-      },
-    );
+      _isNavigating = true;
+      if (next is Authenticated) {
+        log('[SplashScreen] 인증됨 → 메인 화면으로 이동');
+        context.go('/root');
+      } else if (next is Unauthenticated) {
+        log('[SplashScreen] 인증안됨 → 로그인 화면으로 이동');
+        context.go('/login');
+      }
+    });
 
     // Firebase Auth는 자동으로 상태를 관리하므로 별도 확인 불필요
     log('[SplashScreen] Firebase Auth 자동 상태 관리');
@@ -66,18 +63,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/images/test_quest_logo.png',
-              height: 300,
-            ),
+            Image.asset('assets/images/test_quest_logo.png', height: 300),
             AnimatedTextKit(
               animatedTexts: [
                 TyperAnimatedText(
                   'TestQuest',
-                  textStyle: textTheme.displayMedium?.copyWith(
-                    fontFamily: GoogleFonts.pressStart2p().fontFamily,
-                    color: colorScheme.onSurface,
-                  ) ?? GoogleFonts.pressStart2p(fontSize: 30),
+                  textStyle:
+                      textTheme.displayMedium?.copyWith(
+                        fontFamily: GoogleFonts.pressStart2p().fontFamily,
+                        color: colorScheme.onSurface,
+                      ) ??
+                      GoogleFonts.pressStart2p(fontSize: 30),
                 ),
               ],
               isRepeatingAnimation: false,
@@ -87,18 +83,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 });
               },
             ),
-            const SizedBox(
-              height: 8,
-            ),
+            const SizedBox(height: 8),
             Visibility(
               visible: _showSubtitle,
               child: AnimatedTextKit(
                 animatedTexts: [
                   TyperAnimatedText(
                     '게임 테스트 정보의 모든 것',
-                    textStyle: textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ) ?? const TextStyle(fontSize: 16),
+                    textStyle:
+                        textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ) ??
+                        const TextStyle(fontSize: 16),
                   ),
                 ],
                 isRepeatingAnimation: false,
