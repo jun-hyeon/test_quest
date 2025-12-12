@@ -77,6 +77,7 @@ dependencies:
   flutter_quill: ^11.5.0
   dart_quill_delta: ^10.8.3
   flutter_quill_extensions: ^11.0.0
+  timeago: ^3.7.1
 
 
 dev_dependencies:
