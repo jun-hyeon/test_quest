@@ -85,8 +85,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     if (!mounted) return;
     if (currentState is AuthFormInvalid) {
-      // Handle form validation errors if needed
       TestQuestSnackbar.show(context, '로그인 정보를 확인해주세요.', isError: true);
+    } else if (currentState is Unauthenticated &&
+        currentState.errorMessage != null) {
+      // 로그인 실패 시 스낵바 표시
+      TestQuestSnackbar.show(context, '로그인에 실패했습니다.', isError: true);
     }
   }
 
@@ -157,9 +160,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               labelText: "이메일",
               prefixIcon: Icons.email_outlined,
               validator: Validator.validateEmail,
-              errorText: emailError,
+              errorText: null,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
 
             // 비밀번호 필드
             CustomTextfield(
@@ -168,7 +171,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               labelText: "비밀번호",
               prefixIcon: Icons.lock_outline,
               validator: Validator.validatePassword,
-              errorText: passwordError,
+              errorText: null,
             ),
 
             Row(

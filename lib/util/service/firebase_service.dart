@@ -16,6 +16,8 @@ class FirebaseService {
   static final FirebaseService _instance = FirebaseService._();
   static FirebaseService get instance => _instance;
 
+  static bool _isInitialized = false;
+
   late final FirebaseAuth _auth;
   FirebaseAuth get auth => _auth;
 
@@ -26,10 +28,12 @@ class FirebaseService {
   FirebaseStorage get storage => _storage;
 
   void initialize() {
+    if (_isInitialized) return;
     try {
       _auth = FirebaseAuth.instance;
       _firestore = FirebaseFirestore.instance;
       _storage = FirebaseStorage.instance;
+      _isInitialized = true;
       log('FirebaseService initialize success');
     } on FirebaseException catch (e) {
       log('FirebaseService initialize error: $e');

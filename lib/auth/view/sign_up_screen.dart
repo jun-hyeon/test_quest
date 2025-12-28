@@ -177,127 +177,185 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
   Widget _buildAccountFields(BuildContext context, SignupProvider notifier) {
     final textColor = Theme.of(context).textTheme.bodyLarge?.color;
-    return SingleChildScrollView(
-      child: Form(
-        key: formKey,
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Text(
-              '계정 정보를 입력하세요',
-              style: TextStyle(fontSize: 14, color: textColor),
-            ),
-            const SizedBox(height: 20),
-            CustomTextfield(
-              obscure: false,
-              labelText: '이메일',
-              controller: emailController,
-              prefixIcon: Icons.email_outlined,
-              validator: notifier.validateEmail,
-            ),
-            const SizedBox(height: 16),
-            CustomTextfield(
-              obscure: true,
-              labelText: '비밀번호',
-              controller: passwordController,
-              prefixIcon: Icons.lock_open_outlined,
-              validator: notifier.validatePassword,
-            ),
-            const SizedBox(height: 16),
-            CustomTextfield(
-              obscure: true,
-              labelText: '비밀번호 확인',
-              controller: confirmController,
-              prefixIcon: Icons.lock_outline,
-              validator: (value) => notifier.validateConfirmPassword(
-                value,
-                passwordController.text,
+
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+
+                  Text(
+                    '계정 정보를 입력하세요',
+
+                    style: TextStyle(fontSize: 14, color: textColor),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  CustomTextfield(
+                    obscure: false,
+
+                    labelText: '이메일',
+
+                    controller: emailController,
+
+                    prefixIcon: Icons.email_outlined,
+
+                    validator: notifier.validateEmail,
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  CustomTextfield(
+                    obscure: true,
+
+                    labelText: '비밀번호',
+
+                    controller: passwordController,
+
+                    prefixIcon: Icons.lock_open_outlined,
+
+                    validator: notifier.validatePassword,
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  CustomTextfield(
+                    obscure: true,
+
+                    labelText: '비밀번호 확인',
+
+                    controller: confirmController,
+
+                    prefixIcon: Icons.lock_outline,
+
+                    validator: (value) => notifier.validateConfirmPassword(
+                      value,
+
+                      passwordController.text,
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // 이용약관 동의
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _termsAgreed,
+
+                        onChanged: (value) {
+                          setState(() {
+                            _termsAgreed = value ?? false;
+                          });
+
+                          notifier.setTermsAgreed(_termsAgreed);
+
+                          notifier.setTermsUrl(_termsUrl);
+                        },
+                      ),
+
+                      Expanded(
+                        child: Text(
+                          '이용약관에 동의합니다',
+
+                          style: TextStyle(fontSize: 14, color: textColor),
+                        ),
+                      ),
+
+                      TextButton(
+                        onPressed: () {
+                          _launchUrl(_termsUrl);
+                        },
+
+                        child: const Text('더보기'),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  // 개인정보처리방침 동의
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _privacyAgreed,
+
+                        onChanged: (value) {
+                          setState(() {
+                            _privacyAgreed = value ?? false;
+                          });
+
+                          notifier.setPrivacyAgreed(_privacyAgreed);
+
+                          notifier.setPrivacyUrl(_privacyUrl);
+                        },
+                      ),
+
+                      Expanded(
+                        child: Text(
+                          '개인정보처리방침에 동의합니다',
+
+                          style: TextStyle(fontSize: 14, color: textColor),
+                        ),
+                      ),
+
+                      TextButton(
+                        onPressed: () {
+                          _launchUrl(_privacyUrl);
+                        },
+
+                        child: const Text('더보기'),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 24),
-            // 이용약관 동의
-            Row(
-              children: [
-                Checkbox(
-                  value: _termsAgreed,
-                  onChanged: (value) {
-                    setState(() {
-                      _termsAgreed = value ?? false;
-                    });
-                    notifier.setTermsAgreed(_termsAgreed);
-                    notifier.setTermsUrl(_termsUrl);
-                  },
-                ),
-                Expanded(
-                  child: Text(
-                    '이용약관에 동의합니다',
-                    style: TextStyle(fontSize: 14, color: textColor),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    _launchUrl(_termsUrl);
-                  },
-                  child: const Text('더보기'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            // 개인정보처리방침 동의
-            Row(
-              children: [
-                Checkbox(
-                  value: _privacyAgreed,
-                  onChanged: (value) {
-                    setState(() {
-                      _privacyAgreed = value ?? false;
-                    });
-                    notifier.setPrivacyAgreed(_privacyAgreed);
-                    notifier.setPrivacyUrl(_privacyUrl);
-                  },
-                ),
-                Expanded(
-                  child: Text(
-                    '개인정보처리방침에 동의합니다',
-                    style: TextStyle(fontSize: 14, color: textColor),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    _launchUrl(_privacyUrl);
-                  },
-                  child: const Text('더보기'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 32),
-            CustomButton(
-              child: const Text('다음'),
-              onPressed: () {
-                if (formKey.currentState?.validate() != true) return;
-                if (!_termsAgreed) {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(const SnackBar(content: Text('이용약관에 동의해주세요')));
-                  return;
-                }
-                if (!_privacyAgreed) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('개인정보처리방침에 동의해주세요')),
-                  );
-                  return;
-                }
-                notifier.setEmailPassword(
-                  email: emailController.text,
-                  password: passwordController.text,
-                );
-                context.push('/signup/profile');
-              },
-            ),
-            const SizedBox(height: 20),
-          ],
+          ),
         ),
-      ),
+
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20.0),
+
+          child: CustomButton(
+            child: const Text('다음'),
+
+            onPressed: () {
+              if (formKey.currentState?.validate() != true) return;
+
+              if (!_termsAgreed) {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('이용약관에 동의해주세요')));
+
+                return;
+              }
+
+              if (!_privacyAgreed) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('개인정보처리방침에 동의해주세요')),
+                );
+
+                return;
+              }
+
+              notifier.setEmailPassword(
+                email: emailController.text,
+
+                password: passwordController.text,
+              );
+
+              context.push('/signup/profile');
+            },
+          ),
+        ),
+      ],
     );
   }
 }
