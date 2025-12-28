@@ -44,18 +44,18 @@ class CommunityCard extends StatelessWidget {
       button: true,
       child: Card.filled(
         margin: const EdgeInsets.symmetric(vertical: 8),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(16),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: 160,
-                  height: 160,
+                  width: 120,
+                  height: 120,
                   child: _buildThumbnailImage(thumbnailUrl),
                 ),
                 const SizedBox(width: 16),
@@ -65,6 +65,8 @@ class CommunityCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Expanded(
                             child: Text(
@@ -102,7 +104,7 @@ class CommunityCard extends StatelessWidget {
                           color: colorScheme.onSurfaceVariant,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 4),
                       Row(
                         children: [
                           Icon(
@@ -117,12 +119,19 @@ class CommunityCard extends StatelessWidget {
                               color: colorScheme.onSurfaceVariant,
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 8),
                           Chip(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 0,
+                              horizontal: 0,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                             label: Text(
                               isBeforeDeadline ? '모집 중' : '모집 완료',
                               style: textTheme.labelSmall?.copyWith(
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w400,
                                 color: isBeforeDeadline
                                     ? colorScheme.onPrimaryContainer
                                     : colorScheme.onSurfaceVariant,
