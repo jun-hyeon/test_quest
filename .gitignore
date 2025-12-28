@@ -367,3 +367,6 @@ CLAUDE.md
 # Fastlane Service Account JSON keys
 android/fastlane/*.json
 gemini.md
+
+# test 
+integration_test

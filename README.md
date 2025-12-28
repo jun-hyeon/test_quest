@@ -33,9 +33,6 @@
 |---------|-------|
 | <img src="assets/screenshots/test_quest_schedule_dark.gif" width="300"/> | <img src="assets/screenshots/test_quest_write_dark.gif" width="300"/> |
 
-| 글쓰기 2 | 글 상세보기 |
-|---------|-----------|
-| <img src="assets/screenshots/test_quest_write_2_dark.gif" width="300"/> | <img src="assets/screenshots/test_quest_detail_dark.png" width="300"/> |
 
 </details>
 
@@ -66,9 +63,6 @@
 |---------|-------|
 | <img src="assets/screenshots/test_quest_schedule_light.gif" width="300"/> | <img src="assets/screenshots/test_quest_write_light.gif" width="300"/> |
 
-| 글쓰기 2 | 글 상세보기 |
-|---------|-----------|
-| <img src="assets/screenshots/test_quest_write_2_light.gif" width="300"/> | <img src="assets/screenshots/test_quest_detail_light.png" width="300"/> |
 
 </details>
 
@@ -77,6 +71,7 @@
 - 📅 게임 테스트 일정 모아보기 
 - 🔍 CBT/OBT 정보 검색 및 필터링 
 - 🗣 유저 간 커뮤니티 
+- 💬 게시물 댓글 기능
 - 🧭 알림 및 푸시 기능 
 
 ---
@@ -102,6 +97,7 @@
 ```
 lib
  ├── auth            # 사용자의 권한 확인
+ ├── comment         # 댓글 관련 화면 및 로직
  ├── common          # 공통 위젯, 설정
  ├── community       # 게시판 글 관련 화면 및 로직
  ├── mypage          # 사용자 프로필 관련 화면 및 로직
