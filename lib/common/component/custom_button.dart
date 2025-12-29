@@ -8,26 +8,6 @@ enum CustomButtonType {
   text, // 최소 강조 액션 (TextButton)
 }
 
-/// Material 3 기반 커스텀 버튼
-///
-/// 사용 예시:
-/// ```dart
-/// CustomButton(
-///   onPressed: () {},
-///   child: Text('확인'),
-/// )
-///
-/// CustomButton.tonal(
-///   onPressed: () {},
-///   child: Text('취소'),
-/// )
-///
-/// CustomButton.withIcon(
-///   onPressed: () {},
-///   icon: Icons.add,
-///   label: '추가하기',
-/// )
-/// ```
 class CustomButton extends StatelessWidget {
   const CustomButton({
     super.key,
@@ -128,21 +108,41 @@ class CustomButton extends StatelessWidget {
     if (icon != null && _label != null) {
       return switch (type) {
         CustomButtonType.filled => FilledButton.icon(
+          style: FilledButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
           onPressed: onPressed,
           icon: Icon(icon),
           label: child,
         ),
         CustomButtonType.tonal => FilledButton.tonalIcon(
+          style: FilledButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
           onPressed: onPressed,
           icon: Icon(icon),
           label: child,
         ),
         CustomButtonType.outlined => OutlinedButton.icon(
+          style: OutlinedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
           onPressed: onPressed,
           icon: Icon(icon),
           label: child,
         ),
         CustomButtonType.text => TextButton.icon(
+          style: TextButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
           onPressed: onPressed,
           icon: Icon(icon),
           label: child,
@@ -153,18 +153,41 @@ class CustomButton extends StatelessWidget {
     // 일반 버튼
     return switch (type) {
       CustomButtonType.filled => FilledButton(
+        style: FilledButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
         onPressed: onPressed,
         child: child,
       ),
       CustomButtonType.tonal => FilledButton.tonal(
+        style: FilledButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
         onPressed: onPressed,
         child: child,
       ),
       CustomButtonType.outlined => OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
         onPressed: onPressed,
         child: child,
       ),
-      CustomButtonType.text => TextButton(onPressed: onPressed, child: child),
+      CustomButtonType.text => TextButton(
+        style: TextButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+        onPressed: onPressed,
+        child: child,
+      ),
     };
   }
 
