@@ -21,6 +21,14 @@ class MyPageScreen extends ConsumerWidget {
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
+        actions: [
+          IconButton(
+            onPressed: () {
+              ref.read(authProvider.notifier).logout();
+            },
+            icon: const Icon(Icons.logout),
+          ),
+        ],
       ),
       body: userAsync.when(
         data: (user) {
