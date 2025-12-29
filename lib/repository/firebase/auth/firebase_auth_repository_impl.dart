@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:test_quest/auth/model/signup_form.dart';
 import 'package:test_quest/repository/firebase/auth/auth_repository.dart';
 import 'package:test_quest/util/service/firebase_service.dart';
@@ -140,5 +141,29 @@ class FirebaseAuthRepositoryImpl implements AuthRepository {
       default:
         return '인증 오류가 발생했습니다: ${e.message}';
     }
+  }
+
+  @override
+  Future<UserCredential> signInWithApple() {
+    // TODO: implement signInWithApple
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount googleUser = await GoogleSignIn.instance
+        .authenticate();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      idToken: googleAuth.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }

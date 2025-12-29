@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_quest/auth/provider/auth_provider.dart';
@@ -10,6 +11,7 @@ import 'package:test_quest/auth/provider/auth_state.dart';
 import 'package:test_quest/common/component/custom_button.dart';
 import 'package:test_quest/common/component/custom_textfield.dart';
 import 'package:test_quest/common/component/testquest_snackbar.dart';
+import 'package:test_quest/settings/provider/theme_provider.dart';
 import 'package:test_quest/util/service/permission_service.dart';
 import 'package:test_quest/util/validator.dart';
 
@@ -106,6 +108,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget _buildBody(BuildContext context) {
+    final currentThemeMode = ref.watch(themeModeProvider); // 현재 테마 모드 감지
+
+    // 테마 모드에 따라 로고 이미지 경로 선택
+    final String googleLogoAssetPath = currentThemeMode == ThemeMode.dark
+        ? 'assets/icons/google/svg/dark/ios_dark_sq_na.svg'
+        : 'assets/icons/google/svg/neutral/ios_neutral_sq_na.svg';
     final authState = ref.watch(authProvider);
 
     if (authState is AuthLoading) {
@@ -192,7 +200,78 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               child: const Text('로그인'),
               onPressed: () async => await _handleLogin(),
             ),
+            const SizedBox(height: 24),
+
+            // 구분선
+            Row(
+              children: [
+                Expanded(child: Divider(color: colorScheme.outlineVariant)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    "또는",
+                    style: textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+                Expanded(child: Divider(color: colorScheme.outlineVariant)),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            // 개선된 Google 로그인 버튼
+            _googleSignInButton(currentThemeMode, googleLogoAssetPath),
             const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _googleSignInButton(
+    ThemeMode currentThemeMode,
+    String googleLogoAssetPath,
+  ) {
+    return SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: OutlinedButton(
+        onPressed: () async {
+          print("Google 로그인 버튼 클릭됨 ");
+          // ... 로그인 로직 ...
+          await ref.read(authProvider.notifier).signInWithGoogle();
+        },
+        style: OutlinedButton.styleFrom(
+          padding: EdgeInsets.zero,
+          backgroundColor: currentThemeMode == ThemeMode.dark
+              ? const Color(0xFF131314)
+              : Colors.white,
+          side: BorderSide(
+            color: currentThemeMode == ThemeMode.dark
+                ? const Color(0xFF8E918F)
+                : const Color(0xFF747775),
+          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: SvgPicture.asset(googleLogoAssetPath, height: 24),
+            ),
+            Text(
+              'Google 계정으로 로그인',
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: currentThemeMode == ThemeMode.dark
+                    ? const Color(0xFFE3E3E3)
+                    : const Color(0xFF1F1F1F),
+              ),
+            ),
           ],
         ),
       ),

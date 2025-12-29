@@ -2,9 +2,11 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:test_quest/auth/provider/auth_state.dart';
 import 'package:test_quest/repository/firebase/auth/firebase_auth_repository_impl.dart';
 import 'package:test_quest/repository/firebase/user/user_firestore_repository.dart';
+import 'package:test_quest/user/model/user_info.dart' as model;
 import 'package:test_quest/util/validator.dart';
 
 final authProvider = NotifierProvider<AuthNotifier, AuthState>(
@@ -94,6 +96,18 @@ class AuthNotifier extends Notifier<AuthState> {
   Future<void> logout() async {
     try {
       log('로그아웃 시작', name: 'AuthNotifier.logout');
+
+      // 구글 로그인 사용자 확인 및 로그아웃
+      final currentUser = _authRepository.getCurrentUser();
+      if (currentUser != null) {
+        for (final provider in currentUser.providerData) {
+          if (provider.providerId == 'google.com') {
+            log('Google 로그아웃 수행', name: 'AuthNotifier.logout');
+            await GoogleSignIn.instance.signOut();
+          }
+        }
+      }
+
       await _authRepository.logout();
       // Firebase Auth 상태 변화 리스너가 자동으로 처리
       log(
@@ -115,6 +129,46 @@ class AuthNotifier extends Notifier<AuthState> {
       state = Unauthenticated();
     } catch (e) {
       state = Unauthenticated(errorMessage: e.toString());
+    }
+  }
+
+  Future<void> signInWithGoogle() async {
+    state = AuthLoading();
+
+    try {
+      log('Google 로그인 시작', name: 'AuthNotifier.signInWithGoogle');
+      final userCredential = await _authRepository.signInWithGoogle();
+      final user = userCredential.user;
+
+      if (user != null) {
+        log(
+          'Firebase Auth Google 로그인 성공: ${user.uid}',
+          name: 'AuthNotifier.signInWithGoogle',
+        );
+
+        // Firestore 사용자 정보 확인 및 생성
+        final existingUser = await _userRepository.getUser(user.uid);
+        if (existingUser == null) {
+          log(
+            '새로운 Google 사용자, Firestore 문서 생성',
+            name: 'AuthNotifier.signInWithGoogle',
+          );
+          final newUser = model.UserInfo(
+            uid: user.uid,
+            name: user.displayName ?? 'Unknown',
+            nickname: user.displayName ?? 'User', // 닉네임 초기값은 이름으로 설정
+            profileUrl: user.photoURL,
+          );
+          await _userRepository.setUser(newUser);
+        }
+
+        state = Authenticated();
+      } else {
+        throw Exception('Google 로그인 후 사용자 정보를 가져올 수 없습니다.');
+      }
+    } catch (e) {
+      state = Unauthenticated(errorMessage: e.toString());
+      log('Google 로그인 실패', name: 'AuthNotifier.signInWithGoogle', error: e);
     }
   }
 

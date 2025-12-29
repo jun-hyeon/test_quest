@@ -11,4 +11,6 @@ abstract class AuthRepository {
   Future<void> deleteAccount();
   User? getCurrentUser();
   Stream<User?> authStateChanges();
+  Future<UserCredential> signInWithGoogle();
+  Future<UserCredential> signInWithApple();
 }
