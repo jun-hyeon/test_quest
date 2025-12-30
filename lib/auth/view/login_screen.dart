@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import 'package:test_quest/auth/provider/auth_state.dart';
 import 'package:test_quest/common/component/custom_button.dart';
 import 'package:test_quest/common/component/custom_textfield.dart';
 import 'package:test_quest/common/component/testquest_snackbar.dart';
-import 'package:test_quest/settings/provider/theme_provider.dart';
 import 'package:test_quest/util/service/permission_service.dart';
 import 'package:test_quest/util/validator.dart';
 
@@ -108,10 +108,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget _buildBody(BuildContext context) {
-    final currentThemeMode = ref.watch(themeModeProvider); // 현재 테마 모드 감지
+    // ThemeMode.system도 고려
+    final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     // 테마 모드에 따라 로고 이미지 경로 선택
-    final String googleLogoAssetPath = currentThemeMode == ThemeMode.dark
+    final String googleLogoAssetPath = isDarkMode
         ? 'assets/icons/google/svg/dark/ios_dark_sq_na.svg'
         : 'assets/icons/google/svg/neutral/ios_neutral_sq_na.svg';
     final authState = ref.watch(authProvider);
@@ -120,11 +121,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    String? emailError;
-    String? passwordError;
+    String? emailErrorText;
+    String? passwordErrorText;
 
     if (authState is Unauthenticated) {
-      emailError = authState.errorMessage;
+      emailErrorText = authState.errorMessage;
+      passwordErrorText =
+          authState.errorMessage; // Unauthenticated는 공통 메시지일 수 있음
+    } else if (authState is AuthFormInvalid) {
+      emailErrorText = authState.emailError;
+      passwordErrorText = authState.passwordError;
     }
 
     final textTheme = Theme.of(context).textTheme;
@@ -168,7 +174,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               labelText: "이메일",
               prefixIcon: Icons.email_outlined,
               validator: Validator.validateEmail,
-              errorText: null,
+              errorText: emailErrorText,
             ),
             const SizedBox(height: 24),
 
@@ -179,7 +185,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               labelText: "비밀번호",
               prefixIcon: Icons.lock_outline,
               validator: Validator.validatePassword,
-              errorText: null,
+              errorText: passwordErrorText,
             ),
 
             Row(
@@ -221,7 +227,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             const SizedBox(height: 24),
 
             // 개선된 Google 로그인 버튼
-            _googleSignInButton(currentThemeMode, googleLogoAssetPath),
+            _googleSignInButton(googleLogoAssetPath),
             const SizedBox(height: 16),
           ],
         ),
@@ -229,26 +235,37 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  Widget _googleSignInButton(
-    ThemeMode currentThemeMode,
-    String googleLogoAssetPath,
-  ) {
+  Widget _googleSignInButton(String googleLogoAssetPath) {
+    final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return SizedBox(
       width: double.infinity,
       height: 48,
       child: OutlinedButton(
         onPressed: () async {
-          print("Google 로그인 버튼 클릭됨 ");
-          // ... 로그인 로직 ...
-          await ref.read(authProvider.notifier).signInWithGoogle();
+          log("Google 로그인 버튼 클릭됨", name: "LoginScreen");
+          final authNotifier = ref.read(authProvider.notifier);
+          await authNotifier.signInWithGoogle();
+
+          if (!mounted) return;
+          final authState = ref.read(authProvider);
+
+          if (authState is Unauthenticated && authState.errorMessage != null) {
+            log(
+              "Google 로그인 실패: ${authState.errorMessage}",
+              name: "LoginScreen",
+            );
+            TestQuestSnackbar.show(
+              context,
+              'Google 로그인에 실패했습니다. ${authState.errorMessage}',
+              isError: true,
+            );
+          }
         },
         style: OutlinedButton.styleFrom(
           padding: EdgeInsets.zero,
-          backgroundColor: currentThemeMode == ThemeMode.dark
-              ? const Color(0xFF131314)
-              : Colors.white,
+          backgroundColor: isDarkMode ? const Color(0xFF131314) : Colors.white,
           side: BorderSide(
-            color: currentThemeMode == ThemeMode.dark
+            color: isDarkMode
                 ? const Color(0xFF8E918F)
                 : const Color(0xFF747775),
           ),
@@ -267,7 +284,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 fontFamily: 'Roboto',
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: currentThemeMode == ThemeMode.dark
+                color: isDarkMode
                     ? const Color(0xFFE3E3E3)
                     : const Color(0xFF1F1F1F),
               ),
