@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:test_quest/auth/model/signup_form.dart';
@@ -86,21 +87,23 @@ class FirebaseAuthRepositoryImpl implements AuthRepository {
         throw Exception('로그인된 사용자가 없습니다.');
       }
 
-      // // 1. Firestore에서 사용자 데이터 삭제
-      // await _firebaseService.firestore
-      //     .collection('users')
-      //     .doc(user.uid)
-      //     .delete();
+      // 1. Firestore에서 사용자 데이터 삭제
+      await _firebaseService.firestore
+          .collection('users')
+          .doc(user.uid)
+          .delete();
 
-      // // 2. 사용자의 게시글들도 삭제 (선택사항)
-      // final postsQuery = await _firebaseService.firestore
-      //     .collection('posts')
-      //     .where('userId', isEqualTo: user.uid)
-      //     .get();
+      // 2. 사용자의 게시글들도 삭제 (선택사항 - 현재는 주석 처리 유지하거나 필요 시 활성화, 여기서는 사용자 요청에 따라 기본 데이터 삭제 활성화)
+      /* 
+      final postsQuery = await _firebaseService.firestore
+          .collection('posts')
+          .where('userId', isEqualTo: user.uid)
+          .get();
 
-      // for (final doc in postsQuery.docs) {
-      //   await doc.reference.delete();
-      // }
+      for (final doc in postsQuery.docs) {
+        await doc.reference.delete();
+      } 
+      */
 
       //Firebase Auth에서 계정 삭제
       await user.delete();
@@ -144,9 +147,13 @@ class FirebaseAuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<UserCredential> signInWithApple() {
-    // TODO: implement signInWithApple
-    throw UnimplementedError();
+  Future<UserCredential> signInWithApple() async {
+    final appleProvider = AppleAuthProvider();
+    if (kIsWeb) {
+      return await FirebaseAuth.instance.signInWithPopup(appleProvider);
+    } else {
+      return await FirebaseAuth.instance.signInWithProvider(appleProvider);
+    }
   }
 
   @override

@@ -228,7 +228,68 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
             // 개선된 Google 로그인 버튼
             _googleSignInButton(googleLogoAssetPath),
+            const SizedBox(height: 12),
+            // Apple 로그인 버튼
+            _appleSignInButton(),
             const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _appleSignInButton() {
+    final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: ElevatedButton(
+        onPressed: () async {
+          log("Apple 로그인 버튼 클릭됨", name: "LoginScreen");
+          final authNotifier = ref.read(authProvider.notifier);
+          await authNotifier.signInWithApple();
+
+          if (!mounted) return;
+          final authState = ref.read(authProvider);
+
+          if (authState is Unauthenticated && authState.errorMessage != null) {
+            log("Apple 로그인 실패: ${authState.errorMessage}", name: "LoginScreen");
+            TestQuestSnackbar.show(
+              context,
+              'Apple 로그인에 실패했습니다. ${authState.errorMessage}',
+              isError: true,
+            );
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.zero,
+          backgroundColor: isDarkMode ? Colors.black : Colors.white,
+          foregroundColor: isDarkMode ? Colors.white : Colors.black,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+          elevation: 0,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Apple 로고는 SvgPicture나 Icon을 사용할 수 있음.
+            // 여기서는 텍스트 앞에 아이콘을 배치.
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0, bottom: 2.0),
+              child: Icon(
+                Icons.apple,
+                size: 24,
+                color: isDarkMode ? Colors.white : Colors.black,
+              ),
+            ),
+            Text(
+              'Apple 계정으로 로그인',
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: isDarkMode ? Colors.white : Colors.black,
+              ),
+            ),
           ],
         ),
       ),

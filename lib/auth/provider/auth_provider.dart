@@ -88,7 +88,7 @@ class AuthNotifier extends Notifier<AuthState> {
         throw Exception('로그인 후 사용자 정보를 가져올 수 없습니다.');
       }
     } catch (e) {
-      state = Unauthenticated(errorMessage: e.toString());
+      state = Unauthenticated(errorMessage: '로그인에 실패하였습니다.');
       log('로그인 실패', name: 'AuthNotifier.login', error: e);
     }
   }
@@ -117,7 +117,7 @@ class AuthNotifier extends Notifier<AuthState> {
       state = Unauthenticated();
     } catch (e) {
       log('로그아웃 실패', name: 'AuthNotifier.logout', error: e);
-      state = Unauthenticated(errorMessage: e.toString());
+      state = Unauthenticated(errorMessage: '로그아웃에 실패하였습니다.');
     }
   }
 
@@ -167,8 +167,39 @@ class AuthNotifier extends Notifier<AuthState> {
         throw Exception('Google 로그인 후 사용자 정보를 가져올 수 없습니다.');
       }
     } catch (e) {
-      state = Unauthenticated(errorMessage: e.toString());
+      state = Unauthenticated(errorMessage: 'Google 로그인에 실패하였습니다.');
       log('Google 로그인 실패', name: 'AuthNotifier.signInWithGoogle', error: e);
+    }
+  }
+
+  Future<void> signInWithApple() async {
+    state = AuthLoading();
+
+    try {
+      log('Apple 로그인 시작', name: 'AuthNotifier)');
+      final userCredential = await _authRepository.signInWithApple();
+      final user = userCredential.user;
+
+      if (user != null) {
+        log('Firebase Auth Apple 로그인 성공: ${user.uid}');
+
+        final existingUser = await _userRepository.getUser(user.uid);
+        if (existingUser == null) {
+          final newUser = model.UserInfo(
+            uid: user.uid,
+            name: user.displayName ?? 'Unknown',
+            nickname: user.displayName ?? 'User',
+            profileUrl: user.photoURL,
+          );
+          await _userRepository.setUser(newUser);
+        }
+        state = Authenticated();
+      } else {
+        throw Exception('Apple 로그인 후 사용자 정보를 가져올 수 없습니다.');
+      }
+    } on FirebaseAuthException catch (e) {
+      state = Unauthenticated(errorMessage: 'Apple 로그인에 실패하였습니다.');
+      log('Apple 로그인 실패', name: 'AuthNotifier.signInWithApple', error: e);
     }
   }
 
